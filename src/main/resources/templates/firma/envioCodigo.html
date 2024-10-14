@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta th:replace="~{static/cabeceraMeta :: meta}">
+    <link th:replace="~{static/cabeceraLink :: link}">
+    <script th:replace="~{static/cabeceraScript :: script}"></script>
+
+    <title>Código de validación</title>
+
+    <script type="text/javascript">
+		function validar(){
+			var campo = ['codigo'];
+			restablecer();
+			var validado = true;
+			for(var i=0; i < campo.length; i++){
+			    var nombreRol = document.getElementById(campo[i]);
+				if(nombreRol.value==''){
+					nombreRol.style.borderColor="red";
+					validado = false;
+				}
+			}
+
+			if(validado){
+				buttonBlock(document.getElementById('continueButton'));
+				buttonBlock(document.getElementById('cancelButton'));
+				return true;
+			} else {
+				document.getElementById('hayError').innerHTML = "Por favor rellenar campos obligatorios";
+				return false;
+			}
+		}
+
+		function restablecer(){
+			var errorSpan = document.getElementsByName('errorSpan');
+			for (var i = 0; i < errorSpan.length; i++) {
+				errorSpan[i].innerHTML='';
+			}
+			document.getElementById('hayError').innerHTML = '';
+			var campos = document.getElementsByClassName("form-control");
+			for (var i = 0; i < campos.length; i++) {
+				campos[i].style.borderColor="#ced4da";
+			}
+		}
+	</script>
+
+  </head>
+
+  <body>
+    <div th:replace="~{static/barraUsuario :: div}"></div>
+    <div th:replace="~{static/barraNav :: nav}"></div>
+
+    <div class="container mt-5">
+
+      <div th:if="${inscripcionError != null}" class="alert alert-danger text-center" role="alert"><span th:text="${inscripcionError}"></span></div>
+
+      <form action="#" th:action="@{/seguridad/validarCodigo}" th:object="${firmaCodigoModel}" method="post" onsubmit="return validar()">
+        <input type="hidden" name="idOperacion" th:value="*{idOperacion}"/>
+        <input type="hidden" name="operativaOriginal" th:value="*{operativaOriginal}"/>
+
+        <div class="row mb-3">
+          <div class="col-md-2 apartado">
+          </div>
+          <div class="col-12 col-md-8 text-center">
+            <h2>Para confirmar la validez de esta operación por favor intruduzca el código enviado
+              por correo electrónico <span th:if="${direccionCorreo != null}" th:text="${direccionCorreo}"></span></h2>
+            <h2>Cuenta con 15 minutos y 3 intentos</h2>
+          </div>
+          <div class="col-md-2">
+          </div>
+        </div>
+
+        <div class="row mb-5">
+          <div class="col-md-2">
+          </div>
+          <div class="col-3 col-md-2 text-center">
+            <label for="codigo">Código* </label>
+          </div>
+          <div class="col-9 col-md-4">
+            <input type="text" th:field="*{codigo}" id="codigo" class="form-control" placeholder="Código" size="6"/>
+          </div>
+          <div class="col-md-4">
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-4">
+          </div>
+          <div class="col-8">
+            <a class="colorOrange" href="#" th:href="@{'/seguridad/nuevoEnvioCodigo/' + ${firmaCodigoModel.operativaOriginal} + '/' + ${firmaCodigoModel.idOperacion}}">Enviar nuevo código al correo</a>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-2">
+          </div>
+          <div class="col-4 col-md-2">
+            <a class="btn btn-info" id="cancelButton" href="#" th:href="@{/principal/}">Salir</a>
+          </div>
+          <div class="col-2 col-md-2">
+          </div>
+          <div class="col-6 col-md-2">
+            <button class="btn btn-success btn-lg" id="continueButton" type="submit">Firmar ahora</button>
+          </div>
+          <div class="col-md-4">
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-4 col-md-6">
+          </div>
+          <div class="col-8 col-md-6">
+            <span id="hayError" class="colorRed"></span>
+          </div>
+        </div>
+
+      </form>
+
+    </div>
+  </body>
+
+  <footer th:replace="~{static/footer :: footer}"></footer>
+</html>

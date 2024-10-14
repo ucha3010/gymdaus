@@ -1,0 +1,7 @@
+        <div class="container">
+            <form th:action="@{/logout}" method="POST" id="formLogout"></form>
+            <h1>
+                ¡Hola <span th:text="${usuario.name}"></span>!
+                <a href="#" th:href="@{/usuario/formularioUsuario}"><span class="icofont-duotone icofont-manage-user"></span></a>
+            </h1>
+        </div>

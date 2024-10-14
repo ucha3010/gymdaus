@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta th:replace="~{static/cabeceraMeta :: meta}">
+    <link th:replace="~{static/cabeceraLink :: link}">
+    <script th:replace="~{static/cabeceraScript :: script}"></script>
+
+    <script async src='//www.google-analytics.com/analytics.js'></script>
+    <link rel="stylesheet" href="#" th:href="@{/css/login.css}" />
+
+    <title>Torneo - Acceso</title>
+  </head>
+
+  <body>
+    <div th:replace="~{static/barraNavNotAuthenticated :: nav}"></div>
+
+    <div class="container">
+      <section class="mt-5 text-center">
+        <h1 class="alert alert-info">Página de acceso</h1>
+      </section>
+
+      <section class="margenArribaAbajo3Porc text-center">
+        <div th:if="${altaUsuarioOK != null}" class="alert alert-success" role="alert"><span th:text="${altaUsuarioOK}"></span></div>
+        <div th:if="${avisoOK != null}" class="alert alert-success" role="alert"><span th:text="${avisoOK}"></span></div>
+        <div th:if="${avisoKO != null}" class="alert alert-warning" role="alert"><span th:text="${avisoKO}"></span></div>
+      </section>
+
+      <section class="margenArribaAbajo3Porc">
+        <div class="row align-items-center justify-content-end">
+          <div class="col-5">
+            <a href="#" th:href="@{/formulario/alta}" class="textDecoration-none">
+              <button class="btn btn-success" type="submit">Alta nuevo usuario</button>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="margenArribaAbajo3Porc">
+        <form class="form-signin" th:action="@{/logincheck}" method="POST">
+          <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+          <h2 class="form-signin-heading">Acceso</h2>
+          <input type="text" class="form-control" placeholder="DNI" name="username" id="username"/>
+          <input type="password" class="form-control" placeholder="Contraseña" name="password" id="password"/>
+          <div th:if="${error != null}" class="alert alert-danger" role="alert">DNI y/o contraseña inválido</div>
+          <div th:if="${logout != null}" class="alert alert-success" role="alert">Desconexión realizada correctamente</div>
+          <div class="d-grid gap-2 text-center mb-1">
+            <button class="btn btn-lg btn-primary mb-4" type="submit"><i class="icofont-login"></i> Acceder</button>
+            <a href="#" th:href="@{/olvidoClave}" class="mt-4">¿Olvidó su contraseña?</a>
+          </div>
+        </form>
+      </section>
+
+    </div>
+  </body>
+
+  <footer th:replace="~{static/footer :: footer}"></footer>
+</html>

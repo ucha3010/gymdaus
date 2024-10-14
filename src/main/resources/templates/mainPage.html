@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="es">
+    <head>
+        <meta th:replace="~{static/cabeceraMeta :: meta}">
+        <link th:replace="~{static/cabeceraLink :: link}">
+        <script th:replace="~{static/cabeceraScript :: script}"></script>
+
+        <title>Página principal</title>
+    </head>
+    <body>
+        <div th:replace="~{static/barraUsuario :: div}"></div>
+        <div th:replace="~{static/barraNav :: nav}"></div>
+
+        <section sec:authorize="hasRole('ROLE_ADMIN')" class="text-center">
+            <a href="#" th:href="@{/admin/adminList}" class="textDecoration-none">
+                <button class="btn btn-warning btn-lg anchoMinimo40 margenArribaAbajo3Porc" type="button">Administración</button>
+            </a>
+        </section>
+
+        <section sec:authorize="hasRole('ROLE_ROOT')" class="text-center">
+            <a href="#" th:href="@{/usuario/users}" class="textDecoration-none">
+                <button class="btn btn-danger btn-lg margenArribaAbajo3Porc" type="button">Usuarios</button>
+            </a>
+            <a href="#" th:href="@{/gimnasio/customers}" class="textDecoration-none">
+                <button class="btn btn-primary btn-lg" type="button">Empresas</button>
+            </a>
+            <a href="#" th:href="@{/usuario/registrations}" class="textDecoration-none">
+                <button class="btn btn-primary btn-lg" type="button">Inscripciones</button>
+            </a>
+            <a href="#" th:href="@{/adminCalidad/calidadList}" class="textDecoration-none">
+                <button class="btn btn-danger btn-lg margenArribaAbajo3Porc" type="button">Calidad</button>
+            </a>
+            <a href="#" th:href="@{/adminPais/paisList}" class="textDecoration-none">
+                <button class="btn btn-primary btn-lg" type="button">País</button>
+            </a>
+            <a href="#" th:href="@{/adminUtil/root-util}" class="textDecoration-none">
+                <button class="btn btn-danger btn-lg margenArribaAbajo3Porc" type="button">Configuración</button>
+            </a>
+            <a href="#" th:href="@{/adminMenu/menuList}" class="textDecoration-none">
+                <button class="btn btn-primary btn-lg" type="button">Barra menú</button>
+            </a>
+        </section>
+
+        <!-- Contenido de la página -->
+        <div class="container mt-3">
+            <section>
+                <div class="row justify-content-center">
+                    <div class="col colorGreen">
+                        <h1>Transforma tu entrenamiento</h1>
+                    </div>
+                </div>
+            </section>
+
+            <div class="row align-items-center justify-content-center">
+                <div class="col-12 col-xl-8">
+                    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active" data-bs-interval="3000">
+                                <img src="#" th:src="@{/imgs/principal/__${fotoPrincipal}__}" class="d-block w-100" alt="">
+                            </div>
+                            <div th:each="foto : ${listaFotos}" class="carousel-item" data-bs-interval="3000">
+                                <img src="#" th:src="@{/imgs/principal/__${foto}__}" class="d-block w-100" alt="">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Anterior</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Siguiente</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <footer th:replace="~{static/footer :: footer}"></footer>
+
+</html>
