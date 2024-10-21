@@ -1,0 +1,350 @@
+ACTIVITY (hecho)
+
+id
+name
+enabled
+
+AGE_CATEGORY (hecho)
+
+id
+name
+startAge
+endAge
+gymMoreRegistrationId
+position
+
+COUNTRY (hecho)
+
+id
+name
+position
+
+ENROLLMENT (inscripciones) (hecho)
+
+id
+own
+minor
+inclusive
+enrollmentDate
+gymActivityId
+gymMoreRegistrationId
+name (del torneo, licencia o lo que sea)
+gymName
+addressCity
+addressCountry
+addressNumber
+addressOther
+addressStreet
+addressZip
+userEnrollmentName
+userEnrollmentLastname
+userEnrollmentSecondLastname
+userEnrollmentIdCard
+userEnrollmentBirthdate
+userEnrollmentSex
+authorizerEnrollmentAddressCity
+authorizerEnrollmentAddressCountry
+authorizerEnrollmentAddressNumber
+authorizerEnrollmentAddressOther
+authorizerEnrollmentAddressZip
+authorizerEnrollmentAddressStreet
+authorizerEnrollmentName
+authorizerEnrollmentLastnamegymName
+authorizerEnrollmentSecondLastname
+authorizerEnrollmentIdCard
+authorizerEnrollmentBirthdate
+authorizerEnrollmentAs
+email
+phone
+paid
+paidDate
+sepaDirectDebit
+sepaAccountNumber
+sepaAccountPerson
+swift
+signed
+
+ENROLLMENT_MORE_DATA (hecho)
+
+category
+belt
+poomsae
+whatsappAuthorization
+notes
+
+enrollment_as (hecho)
+
+id
+name
+position
+
+ENROLLMENT_TEMPLATE (debe ir a archivo properties por el idioma)
+
+GYM (hecho)
+
+id
+name
+taxIdCode (CIF)
+enabled
+registrationDate
+modificationDate
+modificationUsername
+contractedRecords
+contractedVisibility
+
+gym_activity (hecho)
+
+id
+idActivity
+gymId
+registrationDate
+registrationUser
+
+gym_activity_schedule (hecho)
+
+id
+idGymActivity
+monday
+tuesday
+wednesday
+thursday
+friday
+saturday
+sunday
+specificDate
+startTime
+endTime
+
+gym_address (hecho)
+
+id
+name
+email
+emailHost
+emailPassword
+emailPort
+phone
+addressCity
+addressCountry
+addressNumber
+addressOther
+addressStreet
+addressZip
+
+gym_belt (hecho)
+
+id
+colour
+gymId
+position
+
+gym_category (hecho)
+
+id
+name
+startAge
+endAge
+ageCategoryId
+startBeltPosition
+endBeltPosition
+poomsaeId
+gymMoreRegistrationId
+position
+
+gym_document_manager (hecho)
+
+id
+creationDate
+deleteDate
+extention
+filename
+path
+gymId
+gymName
+signed
+section (el tipo de archivo que sea, por ejemplo contrato, ampliación de registros, etc)
+
+gym_more_registration (hecho)
+
+id
+gymId
+moreRegistrationId
+name
+registrationDate
+registrationUser
+enabled
+addressCity
+addressCountry
+addressNumber
+addressOther
+addressStreet
+addressZip
+needsPaid
+sepa
+
+gym_more_registration_belt (hecho)
+
+id
+gymMoreRegistrationId
+beltId
+position
+
+gym_more_registration_date (hecho)
+
+id
+gymMoreRegistrationId
+startDateTime
+endDateTime
+
+gym_more_registration_participating_entity (hecho)
+
+id
+gymMoreRegistrationId
+participatingEntityId
+registrationDate
+registrationUser
+
+gym_parameter (hecho)
+
+keyData
+value
+gymId
+modificationDate
+modificationUsername
+
+gym_photo (hecho)
+
+id
+creationDate
+deleteDate
+extention
+filename
+path
+gymId
+section (campo de escritura abierto para poder organizar las fotos)
+
+gym_poomsae (hecho)
+
+id
+name
+gymId
+position
+
+GYM_TEMPLATE (debe ir a archivo properties por el idioma. Para que se emitan los contratos a firmar con el idioma del cliente)
+
+gym_user (hecho)
+
+id
+gymId
+username
+registrationDate
+registrationUser
+
+manager_parameter (hecho)
+
+id
+email
+emailHost
+emailPort
+hostPageName
+password
+
+menu1 (hecho)
+
+id
+enabled
+name
+position
+
+menu2 (hecho)
+
+id
+idMenu1
+enabled
+name
+position
+url
+advise
+
+more_registration (hecho)
+
+id
+name
+enabled
+
+participating_entity (hecho)
+
+id
+name
+notes
+gymId
+position
+
+
+signature (hecho)
+
+id
+operationId (id de la operación que sea como una inscripción, una subida de documento, etc)
+operationName
+attempts
+gymId
+signed
+
+signature_code (hecho)
+
+id
+code
+username
+registrationDate
+expirationDate
+operationId
+operationName
+signedOkPage
+gymId
+
+token (hecho)
+
+id
+attempts
+expiration
+gymId
+username
+
+user (hecho)
+
+username
+password
+enabled
+name
+lastname
+secondLastname
+sex
+birthdate
+email
+phone
+address_street
+address_number
+address_other
+address_city
+address_zip
+idCountry
+registrationDate
+modificationDate
+modificationUsername
+
+user_document_manager (hecho)
+
+id
+creationDate
+deleteDate
+extention
+filename
+path
+username
+name (campo de escritura abierto para poder poner un nombre entendible a los archivos)
+
+USER_ROLE (hecho)
+
+userRoleId
+role
+username

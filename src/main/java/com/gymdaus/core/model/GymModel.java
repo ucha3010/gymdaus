@@ -15,7 +15,7 @@ import java.util.Date;
 @ToString
 public class GymModel {
 
-    private int id;
+    private Long id;
     private boolean enabled;
     private String name;
     private String taxId;
