@@ -13,11 +13,11 @@ import lombok.Setter;
 public class ManagerParameterModel {
 
     private Long id;
-    private String hostPageName;
     private String email;
-    private String password;
     private String emailHost;
     private String emailPort;
+    private String hostPageName;
+    private String password;
 
     @Override
     public String toString() {

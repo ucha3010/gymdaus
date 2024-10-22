@@ -23,7 +23,7 @@ public class UserModel {
 	private String sex;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date birthdate;
-	private CountryModel country;
+	private CountryModel countryModel;
 	private Date registrationDate;
 	private Date modificationDate;
 	private String modificationUsername;
@@ -35,29 +35,33 @@ public class UserModel {
 	private String addressZip;
 	private String phone;
 	private List<String> userRoles = new ArrayList<>();
+	private List<GymUserModel> gymUserModelList;
+	private List<UserDocumentManagerModel> userDocumentManagerModelList;
 
 	@Override
 	public String toString() {
 		return "UserModel{" +
-				"username='" + username + '\'' +
+				"username='" + username +
 				", enabled=" + enabled +
-				", name='" + name + '\'' +
-				", lastname='" + lastname + '\'' +
-				", secondLastname='" + secondLastname + '\'' +
-				", sex='" + sex + '\'' +
+				", name='" + name +
+				", lastname='" + lastname +
+				", secondLastname='" + secondLastname +
+				", sex='" + sex +
 				", birthdate=" + birthdate +
-				", country=" + country +
+				", countryModel=" + countryModel +
 				", registrationDate=" + registrationDate +
 				", modificationDate=" + modificationDate +
-				", modificationUsername='" + modificationUsername + '\'' +
-				", email='" + email + '\'' +
-				", addressStreet='" + addressStreet + '\'' +
-				", addressNumber='" + addressNumber + '\'' +
-				", addressOther='" + addressOther + '\'' +
-				", addressCity='" + addressCity + '\'' +
-				", addressZip='" + addressZip + '\'' +
-				", phone='" + phone + '\'' +
+				", modificationUsername='" + modificationUsername +
+				", email='" + email +
+				", addressStreet='" + addressStreet +
+				", addressNumber='" + addressNumber +
+				", addressOther='" + addressOther +
+				", addressCity='" + addressCity +
+				", addressZip='" + addressZip +
+				", phone='" + phone +
 				", userRoles=" + userRoles +
+				", gymUserModelList=" + gymUserModelList +
+				", userDocumentManagerModelList=" + userDocumentManagerModelList +
 				'}';
 	}
 }

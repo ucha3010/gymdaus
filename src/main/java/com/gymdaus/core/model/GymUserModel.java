@@ -10,14 +10,13 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class TokenModel {
+public class GymUserModel {
 
-    private String id;
-    private int attempts;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date expiration;
-    private String password;
+    private int id;
+    private String registrationUser;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date registrationDate;
+    private UserModel userModel;
     private GymModel gymModel;
-    private String username;
 
 }

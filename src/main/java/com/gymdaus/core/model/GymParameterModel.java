@@ -1,42 +1,32 @@
-package com.gymdaus.core.entity;
+package com.gymdaus.core.model;
 
-import com.gymdaus.core.util.Constants;
 import com.gymdaus.core.util.Utils;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
-@Entity
-@IdClass(ParameterId.class)
-@Table(name = "gym_parameter")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GymParameter {
+public class GymParameterModel {
 
-    @Id
-    @Column(nullable = false, length = Constants.KEY)
     private String keyData;
-    @Column(nullable = false, length = Constants.VALUE)
     private String value;
-    @Id
-    private Long gymId;
-    @Column(nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date modificationDate;
-    @Column(nullable = false, length = Constants.USERNAME_OR_ID_CARD)
     private String modificationUsername;
+    private GymModel gymModel;
 
     @Override
     public String toString() {
-        return "GymParameter{" +
+        return "GymParameterModel{" +
                 "keyData='" + keyData +
                 ", value='" + Utils.ofuscar(value) +
-                ", gymId=" + gymId +
                 ", modificationDate=" + modificationDate +
                 ", modificationUsername=" + modificationUsername +
                 '}';

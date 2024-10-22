@@ -14,7 +14,7 @@ public class MapperToken {
             localObject.setUsername(externObject.getUsername());
             localObject.setExpiration(externObject.getExpiration());
             localObject.setAttempts(externObject.getAttempts());
-            localObject.setGymId(externObject.getGymId());
+            localObject.getGymModel().setId(externObject.getGymId());
         }
         return localObject;
     }
@@ -25,7 +25,9 @@ public class MapperToken {
             localObject.setUsername(externObject.getUsername());
             localObject.setExpiration(externObject.getExpiration());
             localObject.setAttempts(externObject.getAttempts());
-            localObject.setGymId(externObject.getGymId());
+            if (externObject.getGymModel() != null) {
+                localObject.setGymId(externObject.getGymModel().getId());
+            }
         }
         return localObject;
     }

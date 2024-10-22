@@ -62,9 +62,6 @@ public class TokenServiceImpl implements TokenService {
         TokenModel tokenModelSend = new TokenModel();
         tokenModelSend.setId(tokenModel.getId());
         tokenModelSend.setUsername(userModel.getUsername());
-        tokenModelSend.setName(userModel.getName());
-        tokenModelSend.setLastname(userModel.getLastname());
-        tokenModelSend.setSecondLastname(userModel.getSecondLastname());
         return tokenModelSend;
     }
 }

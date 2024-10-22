@@ -9,16 +9,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Menu2Model {
+public class EnrollmentAsModel {
 
     private Long id;
-    private boolean enabled;
     private String name;
     private int position;
-    private String url;
-    private String advise;
-    private boolean checked;
-    private Menu1Model menu1Model;
-    private List<GymModel> gymModelList;
+    private List<EnrollmentAsModel> enrollmentAsModelList;
 
 }

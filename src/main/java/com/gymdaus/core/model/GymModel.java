@@ -1,12 +1,10 @@
 package com.gymdaus.core.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,14 +14,24 @@ import java.util.Date;
 public class GymModel {
 
     private Long id;
-    private boolean enabled;
     private String name;
+    private boolean enabled;
     private String taxId;
-    private int contractedVisibility;
-    private int numberContractedRecord;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date registrationDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date modificationDate;
-    private String modificationUser;
+    private String modificationUsername;
+    private int contractedRecords;
+    private int contractedVisibility;
+    private List<GymParameterModel> gymParameterModelList;
+    private List<GymAddressModel> gymAddressModelList;
+    private List<GymPhotoModel> gymPhotoModelList;
+    private List<GymActivityModel> gymActivityModelList;
+    private List<GymMoreRegistrationModel> gymMoreRegistrationModelList;
+    private List<GymPoomsaeModel> gymPoomsaeModelList;
+    private List<GymBeltModel> gymBeltModelList;
+    private List<GymUserModel> gymUserModelList;
+    private List<GymDocumentManagerModel> gymDocumentManagerModelList;
+    private List<ParticipatingEntityModel> participatingEntityModelList;
 }

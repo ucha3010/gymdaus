@@ -11,7 +11,7 @@ public class MapperMenu2 {
         Menu2Model localObject = new Menu2Model();
         if (externObject != null) {
             localObject.setId(externObject.getId());
-            localObject.setIdMenu1(externObject.getMenu1Id());
+            localObject.getMenu1Model().setId(externObject.getMenu1Id());
             localObject.setEnabled(externObject.isEnabled());
             localObject.setName(externObject.getName());
             localObject.setPosition(externObject.getPosition());
@@ -24,7 +24,9 @@ public class MapperMenu2 {
         Menu2 localObject = new Menu2();
         if (externObject != null) {
             localObject.setId(externObject.getId());
-            localObject.setMenu1Id(externObject.getIdMenu1());
+            if(externObject.getMenu1Model() != null) {
+                localObject.setMenu1Id(externObject.getMenu1Model().getId());
+            }
             localObject.setEnabled(externObject.isEnabled());
             localObject.setName(externObject.getName());
             localObject.setPosition(externObject.getPosition());

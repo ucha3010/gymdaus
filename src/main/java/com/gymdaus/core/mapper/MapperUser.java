@@ -29,7 +29,7 @@ public class MapperUser {
             localObject.setSecondLastname(externObject.getSecondLastname());
             localObject.setSex(externObject.getSex());
             localObject.setBirthdate(externObject.getBirthdate());
-            localObject.setCountry(countryService.findById(externObject.getCountryId()));
+            localObject.setCountryModel(countryService.findById(externObject.getCountryId()));
             localObject.setRegistrationDate(externObject.getRegistrationDate());
             localObject.setModificationDate(externObject.getModificationDate());
             localObject.setModificationUsername(externObject.getModificationUsername());
@@ -57,8 +57,8 @@ public class MapperUser {
             localObject.setSecondLastname(externObject.getSecondLastname());
             localObject.setSex(externObject.getSex());
             localObject.setBirthdate(externObject.getBirthdate());
-            if (externObject.getCountry() != null) {
-                localObject.setCountryId(externObject.getCountry().getId());
+            if (externObject.getCountryModel() != null) {
+                localObject.setCountryId(externObject.getCountryModel().getId());
             }
             localObject.setRegistrationDate(externObject.getRegistrationDate());
             localObject.setModificationDate(externObject.getModificationDate());
