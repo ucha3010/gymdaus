@@ -19,11 +19,11 @@ public class GymCategory {
     @SequenceGenerator(name = "gymCategoryGenerator", sequenceName = "CHANGE_LOW_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gymCategoryGenerator")
     private Long id;
-    private int gymMoreRegistrationId;
     @Column(nullable = false, length = Constants.GYM_CATEGORY_NAME)
     private String name;
     private Date startAge;
     private Date endAge;
+    private Long gymMoreRegistrationId;
     private Long ageCategoryId;
     private Long startBeltId;
     private Long endBeltId;

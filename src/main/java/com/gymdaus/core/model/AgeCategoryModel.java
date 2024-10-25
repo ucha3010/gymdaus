@@ -4,7 +4,6 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
@@ -20,6 +19,6 @@ public class AgeCategoryModel {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endAge;
     private int position;
-    private List<GymMoreRegistrationModel> gymMoreRegistrationModelList;
+    private GymMoreRegistrationModel gymMoreRegistrationModel;
 
 }

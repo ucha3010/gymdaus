@@ -24,6 +24,6 @@ public class SignatureCodeModel {
     private Long operationId;
     private String operationName;
     private String signedOkPage;
-    private GymModel gym;
+    private GymModel gymModel;
 
 }

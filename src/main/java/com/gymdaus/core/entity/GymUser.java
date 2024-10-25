@@ -25,6 +25,6 @@ public class GymUser {
     @Column(nullable = false)
     private Date registrationDate;
     @Column(nullable = false)
-    private Date registrationUser;
+    private String registrationUser;
 
 }

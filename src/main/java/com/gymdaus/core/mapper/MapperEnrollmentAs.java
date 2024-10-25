@@ -1,14 +1,14 @@
 package com.gymdaus.core.mapper;
 
-import com.gymdaus.core.entity.Country;
-import com.gymdaus.core.model.CountryModel;
+import com.gymdaus.core.entity.EnrollmentAs;
+import com.gymdaus.core.model.EnrollmentAsModel;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MapperCountry {
+public class MapperEnrollmentAs {
 
-    public CountryModel entity2Model(Country externObject) {
-        CountryModel localObject = new CountryModel();
+    public EnrollmentAsModel entity2Model(EnrollmentAs externObject) {
+        EnrollmentAsModel localObject = new EnrollmentAsModel();
         if (externObject != null) {
             localObject.setId(externObject.getId());
             localObject.setName(externObject.getName());
@@ -17,8 +17,8 @@ public class MapperCountry {
         return localObject;
     }
 
-    public Country model2Entity(CountryModel externObject) {
-        Country localObject = new Country();
+    public EnrollmentAs model2Entity(EnrollmentAsModel externObject) {
+        EnrollmentAs localObject = new EnrollmentAs();
         if (externObject != null) {
             localObject.setId(externObject.getId());
             localObject.setName(externObject.getName());

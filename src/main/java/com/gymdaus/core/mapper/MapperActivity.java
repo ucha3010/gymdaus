@@ -1,28 +1,28 @@
 package com.gymdaus.core.mapper;
 
-import com.gymdaus.core.entity.Country;
-import com.gymdaus.core.model.CountryModel;
+import com.gymdaus.core.entity.Activity;
+import com.gymdaus.core.model.ActivityModel;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MapperCountry {
+public class MapperActivity {
 
-    public CountryModel entity2Model(Country externObject) {
-        CountryModel localObject = new CountryModel();
+    public ActivityModel entity2Model(Activity externObject) {
+        ActivityModel localObject = new ActivityModel();
         if (externObject != null) {
             localObject.setId(externObject.getId());
             localObject.setName(externObject.getName());
-            localObject.setPosition(externObject.getPosition());
+            localObject.setEnabled(externObject.isEnabled());
         }
         return localObject;
     }
 
-    public Country model2Entity(CountryModel externObject) {
-        Country localObject = new Country();
+    public Activity model2Entity(ActivityModel externObject) {
+        Activity localObject = new Activity();
         if (externObject != null) {
             localObject.setId(externObject.getId());
             localObject.setName(externObject.getName());
-            localObject.setPosition(externObject.getPosition());
+            localObject.setEnabled(externObject.isEnabled());
         }
         return localObject;
     }

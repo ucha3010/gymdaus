@@ -14,6 +14,6 @@ public class EnrollmentAsModel {
     private Long id;
     private String name;
     private int position;
-    private List<EnrollmentAsModel> enrollmentAsModelList;
+    private List<EnrollmentModel> enrollmentModelList;
 
 }

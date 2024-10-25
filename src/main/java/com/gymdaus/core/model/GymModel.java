@@ -16,7 +16,7 @@ public class GymModel {
     private Long id;
     private String name;
     private boolean enabled;
-    private String taxId;
+    private String taxIdCode;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date registrationDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

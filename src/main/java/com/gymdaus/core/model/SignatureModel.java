@@ -15,7 +15,7 @@ public class SignatureModel {
     private Long operationId; //(id de la operación que sea como una inscripción, una subida de documento, etc)
     private String operationName;
     private int attempts;
-    private GymModel gym;
+    private GymModel gymModel;
     private boolean signed;
     private EnrollmentModel enrollmentModel;
     private GymDocumentManagerModel gymDocumentManagerModel;

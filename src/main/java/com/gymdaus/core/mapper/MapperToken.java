@@ -18,6 +18,7 @@ public class MapperToken {
         }
         return localObject;
     }
+
     public Token model2Entity(TokenModel externObject) {
         Token localObject = new Token();
         if (externObject != null) {
