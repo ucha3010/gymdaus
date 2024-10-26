@@ -39,7 +39,7 @@ public class ManagerParameter {
                 ", emailHost='" + emailHost + '\'' +
                 ", emailPort='" + emailPort + '\'' +
                 ", hostPageName='" + hostPageName + '\'' +
-                ", password='" + Utils.ofuscar(password) + '\'' +
+                ", password='" + Utils.obfuscate(password) + '\'' +
                 '}';
     }
 

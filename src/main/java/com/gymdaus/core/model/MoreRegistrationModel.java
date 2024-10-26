@@ -1,7 +1,5 @@
 package com.gymdaus.core.model;
 
-import com.gymdaus.core.util.Constants;
-import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;

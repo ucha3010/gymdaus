@@ -42,45 +42,45 @@ public class LoginController {
 
 	@GetMapping("/loginPage")
 	@PreAuthorize("permitAll()")
-	public String showLoginTorneoForm(Model model,
+	public String loginPage(Model model,
 								@RequestParam(name = "error", required = false) String error,
 								@RequestParam(name = "logout", required = false) String logout) {
 		model.addAttribute("error", error);
 		model.addAttribute("logout", logout);
-		LoggerMapper.methodOut(Level.INFO, Utils.obtenerNombreMetodo(), model, getClass());
+		LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), model, getClass());
 		return Constants.LOGIN;
 	}
 
-	@GetMapping("/olvidoClave")
+	@GetMapping("/forgotPass")
 	@PreAuthorize("permitAll()")
-	public ModelAndView olvidoClave(ModelAndView modelAndView) {
-		modelAndView.setViewName("formularioOlvidoClave");
+	public ModelAndView forgotPass(ModelAndView modelAndView) {
+		modelAndView.setViewName("formForgotPass");
 		if (modelAndView.isEmpty() || !modelAndView.getModel().containsKey("userPasswordModel")) {
 			modelAndView.addObject("userPasswordModel", new UserPasswordModel());
 		}
-		LoggerMapper.methodOut(Level.INFO, Utils.obtenerNombreMetodo(), modelAndView, getClass());
+		LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
 		return modelAndView;
 	}
 
-	@PostMapping("/nuevaClave")
+	@PostMapping("/newPass")
 	@PreAuthorize("permitAll()")
-	public ModelAndView nuevaClave(@ModelAttribute("userPasswordModel") UserPasswordModel userPasswordModel, ModelAndView modelAndView) {
+	public ModelAndView newPass(@ModelAttribute("userPasswordModel") UserPasswordModel userPasswordModel, ModelAndView modelAndView) {
 		try {
-			UserModel usuario = userService.findModelByUsername(userPasswordModel.getUsername());
+			UserModel userModel = userService.findModelByUsername(userPasswordModel.getUsername());
 			TokenModel tokenModel = new TokenModel();
 			tokenModel.setId(UUID.randomUUID().toString());
 			tokenModel.setUsername(userPasswordModel.getUsername());
-			tokenModel.setExpiration(Utils.sumaRestaMinutos(15));
+			tokenModel.setExpiration(Utils.addSubtractMinutes(15));
 			tokenService.add(tokenModel);
-			emailService.sendChangePassword(usuario, tokenModel);
+			emailService.sendChangePassword(userModel, tokenModel);
 			modelAndView.addObject("emailEnvio", "Se ha enviado un correo para el cambio de " +
-					"contraseña a " + Utils.ofuscar(usuario.getEmail()));
+					"contraseña a " + Utils.obfuscate(userModel.getEmail()));
 		} catch (PersistenceException | SenderException e) {
 			mostrarExcepcion(e, userPasswordModel, modelAndView);
 		}
 		modelAndView.addObject("userPasswordModel", userPasswordModel);
-		LoggerMapper.methodOut(Level.INFO, Utils.obtenerNombreMetodo(), modelAndView, getClass());
-		return olvidoClave(modelAndView);
+		LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+		return forgotPass(modelAndView);
 	}
 
 	@GetMapping("/pass-new")
@@ -89,7 +89,7 @@ public class LoginController {
 		if (Utils.isNullOrEmpty(username) || Utils.isNullOrEmpty(token)) {
 			modelAndView.addObject("avisoKO", "Problemas con la redirección");
 			modelAndView.setViewName(Constants.LOGIN);
-			LoggerMapper.methodOut(Level.INFO, Utils.obtenerNombreMetodo(), modelAndView, getClass());
+			LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
 			return modelAndView;
 		}
 		tokenService.deleteExpired();
@@ -100,12 +100,12 @@ public class LoginController {
 				/*|| userModel.getCodigoGimnasio() != tokenModel.getCodigoGimnasio()*/) {
 			modelAndView.addObject("avisoKO", "El intento de cambio de contraseña expiró o superó su límite");
 			modelAndView.setViewName(Constants.LOGIN);
-			LoggerMapper.methodOut(Level.INFO, Utils.obtenerNombreMetodo(), modelAndView, getClass());
+			LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
 			return modelAndView;
 		}
 		modelAndView.addObject("tokenModel", tokenService.fillTokenToSend(tokenModel, userModel));
 		modelAndView.setViewName("formularioNuevaClave");
-		LoggerMapper.methodOut(Level.INFO, Utils.obtenerNombreMetodo(), modelAndView, getClass());
+		LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
 		return modelAndView;
 	}
 
@@ -116,7 +116,7 @@ public class LoginController {
 		if (Utils.isNullOrEmpty(tokenModel.getUsername()) || Utils.isNullOrEmpty(tokenModel.getId())
 				|| Utils.isNullOrEmpty(tokenModel.getPassword())) {
 			modelAndView.addObject("avisoKO", "Problemas con la redirección");
-			LoggerMapper.methodOut(Level.INFO, Utils.obtenerNombreMetodo(), modelAndView, getClass());
+			LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
 			return modelAndView;
 		}
 		tokenService.deleteExpired();
@@ -126,7 +126,7 @@ public class LoginController {
 				|| userModel.getUsername() == null || !userModel.getUsername().equals(tokenModelBBDD.getUsername())
 				/*|| userModel.getCodigoGimnasio() != tokenModelBBDD.getCodigoGimnasio()*/) {
 			modelAndView.addObject("avisoKO", "El intento de cambio de contraseña expiró o superó su límite");
-			LoggerMapper.methodOut(Level.INFO, Utils.obtenerNombreMetodo(), modelAndView, getClass());
+			LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
 			return modelAndView;
 		}
 		userModel.setPassword(userService.encodePassword(tokenModel.getPassword()));
@@ -139,7 +139,7 @@ public class LoginController {
 			LoggerMapper.log(Level.ERROR, "changePass", pe.getMessage(), getClass());
 			modelAndView.addObject("avisoKO", "Problemas al guardar la contraseña. Por favor inténtelo de nuevo.");
 		}
-		LoggerMapper.methodOut(Level.INFO, Utils.obtenerNombreMetodo(), modelAndView, getClass());
+		LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
 		return modelAndView;
 	}
 

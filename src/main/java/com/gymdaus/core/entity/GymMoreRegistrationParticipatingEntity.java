@@ -24,5 +24,6 @@ public class GymMoreRegistrationParticipatingEntity {
     private Date registrationDate;
     @Column(nullable = false)
     private Date registrationUser;
+    private int position;
 
 }

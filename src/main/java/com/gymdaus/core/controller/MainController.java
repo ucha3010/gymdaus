@@ -27,16 +27,16 @@ public class MainController {
     @PreAuthorize("isAuthenticated()")
     public ModelAndView mainPage(ModelAndView modelAndView) {
         modelAndView.setViewName("mainPage");
-        String ruta = "src" + File.separator + "main" + File.separator + "resources" + File.separator
+        String path = "src" + File.separator + "main" + File.separator + "resources" + File.separator
                 + "static" + File.separator + "imgs" + File.separator + File.separator + "principal";
-        User usuario = mainService.cargaBasicaCompleta(modelAndView);
-        List<String> fotosList = new ArrayList<>(Utils.obtenerNombresArchivos(ruta));
-        if (!fotosList.isEmpty()) {
-            modelAndView.addObject("fotoPrincipal", fotosList.get(0));
-            fotosList.remove(0);
+        User user = mainService.basicCompleteCharge(modelAndView);
+        List<String> photoList = new ArrayList<>(Utils.getFileName(path));
+        if (!photoList.isEmpty()) {
+            modelAndView.addObject("mainPhoto", photoList.get(0));
+            photoList.remove(0);
         }
-        modelAndView.addObject("listaFotos", fotosList);
-        LoggerMapper.methodOut(Level.INFO, Utils.obtenerNombreMetodo(), modelAndView, getClass());
+        modelAndView.addObject("photoList", photoList);
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return modelAndView;
     }
 

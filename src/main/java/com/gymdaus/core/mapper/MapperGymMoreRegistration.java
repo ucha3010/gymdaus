@@ -1,7 +1,6 @@
 package com.gymdaus.core.mapper;
 
 import com.gymdaus.core.entity.GymMoreRegistration;
-import com.gymdaus.core.model.CountryModel;
 import com.gymdaus.core.model.GymModel;
 import com.gymdaus.core.model.GymMoreRegistrationModel;
 import com.gymdaus.core.model.MoreRegistrationModel;

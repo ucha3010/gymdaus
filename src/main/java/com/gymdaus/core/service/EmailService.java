@@ -1,13 +1,9 @@
 package com.gymdaus.core.service;
 
 
-import com.gymdaus.core.entity.User;
 import com.gymdaus.core.exception.SenderException;
 import com.gymdaus.core.model.TokenModel;
 import com.gymdaus.core.model.UserModel;
-
-import java.io.File;
-import java.util.List;
 
 public interface EmailService {
 

@@ -50,8 +50,8 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
-    public void delete(Long idCountry) {
-        countryRepository.deleteById(idCountry);
+    public void delete(Long id) {
+        countryRepository.deleteById(id);
         List<Country> countryList = countryRepository.findAllByOrderByPositionAsc();
         for (int i = 0; i < countryList.size(); i++) {
             if (countryList.get(i).getPosition() != i) {

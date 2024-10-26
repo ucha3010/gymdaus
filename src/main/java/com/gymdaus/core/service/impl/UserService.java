@@ -52,10 +52,10 @@ public class UserService implements UserDetailsService {
 		return mapperUser.entity2Model(user);
 	}
 
-	public void updatePass(UserModel usuario) throws PersistenceException {
-		usuario.setModificationDate(new Date());
+	public void updatePass(UserModel userModel) throws PersistenceException {
+		userModel.setModificationDate(new Date());
 		try {
-			userRepository.save(mapperUser.model2Entity(usuario));
+			userRepository.save(mapperUser.model2Entity(userModel));
 		} catch (Exception exception) {
 			throw new PersistenceException();
 		}

@@ -1,7 +1,5 @@
 package com.gymdaus.core.model;
 
-import com.gymdaus.core.util.Constants;
-import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -21,6 +19,8 @@ public class EnrollmentModel {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date enrollmentDate;
     private String name; //del torneo, licencia o lo que sea
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date tournamentDate;
     private String gymName;
     private String addressStreet;
     private String addressNumber;
@@ -58,9 +58,10 @@ public class EnrollmentModel {
     private String sepaAccountPerson;
     private String swift;
     private boolean signed;
+    private GymModel gymModel;
+    private UserModel userModel;
     private GymActivityModel gymActivityModel;
     private GymMoreRegistrationModel gymMoreRegistrationModel;
-    private UserModel userModel;
     private EnrollmentAsModel enrollmentAsModel;
     private EnrollmentMoreDataModel enrollmentMoreDataModel;
     private SignatureModel signatureModel;

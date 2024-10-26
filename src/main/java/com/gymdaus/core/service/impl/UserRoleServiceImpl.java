@@ -75,31 +75,31 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public void actualizarRoles(UserRoleModel userRoleModel) {
-        int elimino = 0;
-        int mantengo = 0;
-        int inserto = 0;
+    public void updateRoles(UserRoleModel userRoleModel) {
+        int deleteRole = 0;
+        int keepRole = 0;
+        int insertRole = 0;
         User user = findUserByUsername(userRoleModel.getUsername());
-        Set<UserRole> rolesViejos = findRolesByUser(user);
-        List<String> rolesNuevos = userRoleModel.getRoles();
-        for (UserRole rolViejo : rolesViejos) {
-            if (!rolesNuevos.contains(rolViejo.getRole())) {
-                userRoleRepository.delete(rolViejo);
-                elimino++;
+        Set<UserRole> oldRoles = findRolesByUser(user);
+        List<String> newRoles = userRoleModel.getRoles();
+        for (UserRole oldRol : oldRoles) {
+            if (!newRoles.contains(oldRol.getRole())) {
+                userRoleRepository.delete(oldRol);
+                deleteRole++;
             } else {
-                rolesNuevos.remove(rolViejo.getRole());
-                mantengo++;
+                newRoles.remove(oldRol.getRole());
+                keepRole++;
             }
         }
         UserRole userRole;
-        for (String rolNuevo : rolesNuevos) {
+        for (String newRol : newRoles) {
             userRole = new UserRole();
-            userRole.setRole(rolNuevo);
+            userRole.setRole(newRol);
             userRole.setUser(user);
             userRoleRepository.save(userRole);
-            inserto++;
+            insertRole++;
         }
-        LoggerMapper.log(Level.INFO, "actualizarRoles", "Inserto: " + inserto + ", mantengo: " + mantengo + ", elimino: " + elimino, getClass());
+        LoggerMapper.log(Level.INFO, "updateRoles", "Insert: " + insertRole + ", keepRole: " + keepRole + ", deleteRole: " + deleteRole, getClass());
     }
 
     @Override

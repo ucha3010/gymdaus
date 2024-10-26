@@ -8,25 +8,25 @@ h1 {
 	text-align: center
 }
 
-.anchoMinimo40 {
+.minimumWidth40 {
     min-width: 40%;
 }
 
-.anchoMinimo50 {
+.minimumWidth50 {
     min-width: 50%;
 }
 
-.item_navegacion {
+.item_navigation {
 	width: 15%;
 	padding-left: 1%;
 }
 
-.margenAbajo2Porc{
-    margin: 0% 0% 2% 0%; /*arriba, derecha, abajo, izquierda*/
+.marginBottom2Percentage{
+    margin: 0% 0% 2% 0%; /*top, right, bottom, left*/
 }
 
-.margenArribaAbajo3Porc {
-    margin: 3% 0%; /*arriba y abajo, a los costados*/
+.marginTopBottom3Percentage {
+    margin: 3% 0%; /*top and right, bottom and left*/
 }
 
 .mb-1 {
@@ -100,7 +100,7 @@ a:link, a:visited,  a:hover, a:active
   color: #fff!important;
 }
 
-.boderNone {
+.borderNone {
     border: none;
 }
 
@@ -208,12 +208,12 @@ a:link, a:visited,  a:hover, a:active
   transform: rotate(45deg);
 }
 
-.bloqueOpaco {
+.blockOpaque {
     opacity: 0.4;
     pointer-events: none;
 }
 
-.bloqueNormal {
+.blockNormal {
     opacity: 1;
     pointer-events: auto;
 }

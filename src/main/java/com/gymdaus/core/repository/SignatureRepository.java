@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository()
 public interface SignatureRepository extends JpaRepository<Signature, Long> {
 
+    Signature findByOperationId(Long operationId);
+
 }

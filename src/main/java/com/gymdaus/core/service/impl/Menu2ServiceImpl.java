@@ -4,7 +4,6 @@ package com.gymdaus.core.service.impl;
 import com.gymdaus.core.entity.Menu2;
 import com.gymdaus.core.exception.RemoveException;
 import com.gymdaus.core.mapper.MapperMenu2;
-import com.gymdaus.core.model.GymModel;
 import com.gymdaus.core.model.Menu2Model;
 import com.gymdaus.core.repository.Menu2Repository;
 import com.gymdaus.core.service.Menu2Service;
@@ -38,13 +37,7 @@ public class Menu2ServiceImpl implements Menu2Service {
     @Override
     public Menu2Model findById(Long id) {
         try {
-            Menu2Model menu2Model = mapperMenu2.entity2Model(menu2Repository.findById(id).orElse(null));
-            /*List<GymModel> gymModelList = new ArrayList<>();
-            for(GimnasioMenu2Model gimnasioMenu2: gimnasioMenu2Service.findByIdMenu2(id)) {
-                gymModelList.add(gimnasioService.findById(gimnasioMenu2.getIdGimnasio()));
-            }
-            menu2Model.setGimnasioModelList(gymModelList);*/
-            return menu2Model;
+            return mapperMenu2.entity2Model(menu2Repository.findById(id).orElse(null));
         } catch (EntityNotFoundException e) {
             return new Menu2Model();
         }
@@ -74,10 +67,9 @@ public class Menu2ServiceImpl implements Menu2Service {
                     }
                 }
             }
-//            gimnasioMenu2Service.deleteByIdMenu2(id);
         } catch (IllegalArgumentException e){
             LoggerMapper.log(Level.ERROR, "delete", e.getMessage(), getClass());
-            throw new RemoveException(Constants.ERROR_BORRAR_MENU, "Error al borrar el menú secundario");
+            throw new RemoveException(Constants.ERROR_BORRAR_MENU, "Error deleting submenu id " + id);
         }
         LoggerMapper.methodOut(Level.INFO, "delete", menu2 != null ? menu2.getId() : 0, getClass());
     }

@@ -72,8 +72,8 @@ public class Menu1ServiceImpl implements Menu1Service {
                 }
             }
         } else {
-            LoggerMapper.log(Level.ERROR, "delete", "idMenu1: " + id + " tiene submenú asociado", getClass());
-            throw new RemoveException(Constants.ERROR_BORRAR_MENU_CON_SUBMENU, "Error al borrar el menú principal");
+            LoggerMapper.log(Level.ERROR, "delete", "idMenu1: " + id + " has associated submenu", getClass());
+            throw new RemoveException(Constants.ERROR_BORRAR_MENU_CON_SUBMENU, "Error deleting main menu");
         }
     }
 

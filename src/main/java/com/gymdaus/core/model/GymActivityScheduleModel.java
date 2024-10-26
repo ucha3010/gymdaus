@@ -1,7 +1,5 @@
 package com.gymdaus.core.model;
 
-import com.gymdaus.core.util.Constants;
-import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -35,5 +33,6 @@ public class GymActivityScheduleModel {
     private String name;
     private String roomName;
     private GymActivityModel gymActivityModel;
+    private int position;
 
 }

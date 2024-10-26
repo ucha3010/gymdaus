@@ -13,6 +13,7 @@ public class MapperActivity {
             localObject.setId(externObject.getId());
             localObject.setName(externObject.getName());
             localObject.setEnabled(externObject.isEnabled());
+            localObject.setPosition(externObject.getPosition());
         }
         return localObject;
     }
@@ -23,6 +24,7 @@ public class MapperActivity {
             localObject.setId(externObject.getId());
             localObject.setName(externObject.getName());
             localObject.setEnabled(externObject.isEnabled());
+            localObject.setPosition(externObject.getPosition());
         }
         return localObject;
     }

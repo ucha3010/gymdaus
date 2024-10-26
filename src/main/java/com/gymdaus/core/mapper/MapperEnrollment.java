@@ -1,9 +1,7 @@
 package com.gymdaus.core.mapper;
 
 import com.gymdaus.core.entity.Enrollment;
-import com.gymdaus.core.model.EnrollmentModel;
-import com.gymdaus.core.model.GymActivityModel;
-import com.gymdaus.core.model.GymMoreRegistrationModel;
+import com.gymdaus.core.model.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,6 +16,7 @@ public class MapperEnrollment {
             localObject.setInclusive(externObject.isInclusive());
             localObject.setEnrollmentDate(externObject.getEnrollmentDate());
             localObject.setName(externObject.getName());
+            localObject.setTournamentDate(externObject.getTournamentDate());
             localObject.setGymName(externObject.getGymName());
             localObject.setAddressStreet(externObject.getAddressStreet());
             localObject.setAddressNumber(externObject.getAddressNumber());
@@ -52,6 +51,16 @@ public class MapperEnrollment {
             localObject.setSepaAccountPerson(externObject.getSepaAccountPerson());
             localObject.setSwift(externObject.getSwift());
             localObject.setSigned(externObject.isSigned());
+            if (externObject.getGymId() != 0) {
+                GymModel gymModel = new GymModel();
+                gymModel.setId(externObject.getGymId());
+                localObject.setGymModel(gymModel);
+            }
+            if (externObject.getUsername() != null) {
+                UserModel userModel = new UserModel();
+                userModel.setUsername(externObject.getUsername());
+                localObject.setUserModel(userModel);
+            }
             if (externObject.getGymActivityId() != 0) {
                 GymActivityModel gymActivityModel = new GymActivityModel();
                 gymActivityModel.setId(externObject.getGymActivityId());
@@ -75,6 +84,7 @@ public class MapperEnrollment {
             localObject.setInclusive(externObject.isInclusive());
             localObject.setEnrollmentDate(externObject.getEnrollmentDate());
             localObject.setName(externObject.getName());
+            localObject.setTournamentDate(externObject.getTournamentDate());
             localObject.setGymName(externObject.getGymName());
             localObject.setAddressStreet(externObject.getAddressStreet());
             localObject.setAddressNumber(externObject.getAddressNumber());
@@ -109,6 +119,14 @@ public class MapperEnrollment {
             localObject.setSepaAccountPerson(externObject.getSepaAccountPerson());
             localObject.setSwift(externObject.getSwift());
             localObject.setSigned(externObject.isSigned());
+            if (externObject.getGymModel() != null) {
+                localObject.setGymId(externObject.getGymModel().getId());
+            } else {
+                localObject.setGymId(0L);
+            }
+            if (externObject.getUserModel() != null) {
+                localObject.setUsername(externObject.getUserModel().getUsername());
+            }
             if (externObject.getGymActivityModel() != null) {
                 localObject.setGymActivityId(externObject.getGymActivityModel().getId());
             } else {

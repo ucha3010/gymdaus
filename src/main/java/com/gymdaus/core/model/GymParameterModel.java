@@ -26,7 +26,7 @@ public class GymParameterModel {
     public String toString() {
         return "GymParameterModel{" +
                 "keyData='" + keyData +
-                ", value='" + Utils.ofuscar(value) +
+                ", value='" + Utils.obfuscate(value) +
                 ", modificationDate=" + modificationDate +
                 ", modificationUsername=" + modificationUsername +
                 '}';

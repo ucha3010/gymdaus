@@ -15,6 +15,7 @@ public class MapperGymMoreRegistrationParticipatingEntity {
             localObject.setId(externObject.getId());
             localObject.setRegistrationDate(externObject.getRegistrationDate());
             localObject.setRegistrationUser(externObject.getRegistrationUser());
+            localObject.setPosition(externObject.getPosition());
             if (externObject.getGymMoreRegistrationId() != 0) {
                 GymMoreRegistrationModel gymMoreRegistrationModel = new GymMoreRegistrationModel();
                 gymMoreRegistrationModel.setId(externObject.getGymMoreRegistrationId());
@@ -35,6 +36,7 @@ public class MapperGymMoreRegistrationParticipatingEntity {
             localObject.setId(externObject.getId());
             localObject.setRegistrationDate(externObject.getRegistrationDate());
             localObject.setRegistrationUser(externObject.getRegistrationUser());
+            localObject.setPosition(externObject.getPosition());
             if (externObject.getGymMoreRegistrationModel() != null) {
                 localObject.setGymMoreRegistrationId(externObject.getGymMoreRegistrationModel().getId());
             } else {

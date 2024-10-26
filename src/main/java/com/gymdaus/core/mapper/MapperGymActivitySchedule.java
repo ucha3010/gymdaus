@@ -30,6 +30,7 @@ public class MapperGymActivitySchedule {
             localObject.setEndTime(externObject.getEndTime());
             localObject.setName(externObject.getName());
             localObject.setRoomName(externObject.getRoomName());
+            localObject.setPosition(externObject.getPosition());
         }
         return localObject;
     }
@@ -56,6 +57,7 @@ public class MapperGymActivitySchedule {
             localObject.setEndTime(externObject.getEndTime());
             localObject.setName(externObject.getName());
             localObject.setRoomName(externObject.getRoomName());
+            localObject.setPosition(externObject.getPosition());
         }
         return localObject;
     }

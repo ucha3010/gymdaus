@@ -23,10 +23,14 @@ public class Enrollment {
     private boolean inclusive;
     @Column(nullable = false)
     private Date enrollmentDate;
+    private Long gymId;
+    @Column(nullable = false, length = Constants.USERNAME_OR_ID_CARD)
+    private String username;
     private Long gymActivityId;
     private Long gymMoreRegistrationId;
     @Column(nullable = false, length = Constants.ENROLLMENT_NAME)
     private String name; //del torneo, licencia o lo que sea
+    private Date tournamentDate;
     @Column(length = Constants.GYM_NAME)
     private String gymName;
     @Column(length = Constants.ADDRESS_STREET)

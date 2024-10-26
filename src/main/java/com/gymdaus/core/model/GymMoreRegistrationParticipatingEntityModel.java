@@ -19,5 +19,6 @@ public class GymMoreRegistrationParticipatingEntityModel {
     private Date registrationUser;
     private GymMoreRegistrationModel gymMoreRegistrationModel;
     private ParticipatingEntityModel participatingEntityModel;
+    private int position;
 
 }

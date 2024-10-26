@@ -14,6 +14,7 @@ public class ActivityModel {
     private Long id;
     private String name;
     private boolean enabled;
+    private int position;
     private List<GymActivityModel> gymActivityModelList;
 
 }

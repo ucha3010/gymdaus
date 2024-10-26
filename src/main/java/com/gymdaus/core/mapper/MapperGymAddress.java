@@ -1,7 +1,6 @@
 package com.gymdaus.core.mapper;
 
 import com.gymdaus.core.entity.GymAddress;
-import com.gymdaus.core.model.CountryModel;
 import com.gymdaus.core.model.GymAddressModel;
 import com.gymdaus.core.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;

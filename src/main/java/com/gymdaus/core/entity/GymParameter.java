@@ -35,7 +35,7 @@ public class GymParameter {
     public String toString() {
         return "GymParameter{" +
                 "keyData='" + keyData +
-                ", value='" + Utils.ofuscar(value) +
+                ", value='" + Utils.obfuscate(value) +
                 ", gymId=" + gymId +
                 ", modificationDate=" + modificationDate +
                 ", modificationUsername=" + modificationUsername +

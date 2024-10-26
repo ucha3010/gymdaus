@@ -48,49 +48,49 @@ public class Utils {
         // create instance of the PasswordGenerator class
         PasswordGenerator passGen = new PasswordGenerator();
 
-        // call generatePassword() method of PasswordGenerator class to get Passay generated password
-        // return Passay generated password to the main() method
+        // call generatePassword() method of PasswordGenerator class to get Pass generated password
+        // return Pass generated password to the main() method
         return passGen.generatePassword(8, LCR, UCR, DR);
     }
 
-    public static long milisegEntreDosFechas(Date fechaMayor, Date fechaMenor) {
-        return (fechaMayor.getTime() - fechaMenor.getTime());
+    public static long millisecondsBetweenTwoDates(Date majorDate, Date minorDate) {
+        return (majorDate.getTime() - minorDate.getTime());
     }
-    public static Date sumaRestaMinutos (int minutos) {
-        Date ahora = new Date();
-        Calendar caducidad = Calendar.getInstance();
-        caducidad.setTime(ahora);
-        caducidad.add(Calendar.MINUTE, minutos);
-        return caducidad.getTime();
+    public static Date addSubtractMinutes(int minutes) {
+        Date now = new Date();
+        Calendar expiration = Calendar.getInstance();
+        expiration.setTime(now);
+        expiration.add(Calendar.MINUTE, minutes);
+        return expiration.getTime();
     }
-    public static Date cambiarHMS(Date fechaOriginal, int hora, int min, int seg) {
+    public static Date changeHMS(Date originalDate, int hora, int min, int seg) {
 
-        Calendar calendario = Calendar.getInstance();
-        calendario.setTime(fechaOriginal);
-        // si deseo no cambiar hora, minutos o segundos envío ese dato como negativo
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(originalDate);
+        // If I do not want to change the hour, minutes or seconds, I send that data as negative
         if (hora >= 0) {
-            calendario.set(Calendar.HOUR_OF_DAY, hora);
+            calendar.set(Calendar.HOUR_OF_DAY, hora);
         }
         if (min >= 0) {
-            calendario.set(Calendar.MINUTE, min);
+            calendar.set(Calendar.MINUTE, min);
         }
         if (seg >= 0) {
-            calendario.set(Calendar.SECOND, seg);
+            calendar.set(Calendar.SECOND, seg);
         }
-        return calendario.getTime();
+        return calendar.getTime();
     }
 
-    public static String ofuscar(String entrada) {
+    public static String obfuscate(String toObfuscate) {
         StringBuilder sb = new StringBuilder();
-        if(entrada != null) {
-            int tamanio = entrada.length();
-            int visible = tamanio/3;
-            if (tamanio > 3) {
-                sb.append(entrada, 0, visible);
-                for(int j=visible;j<(tamanio-visible);j++) {
+        if(toObfuscate != null) {
+            int size = toObfuscate.length();
+            int visible = size/3;
+            if (size > 3) {
+                sb.append(toObfuscate, 0, visible);
+                for(int j=visible;j<(size-visible);j++) {
                     sb.append("*");
                 }
-                sb.append(entrada, tamanio-visible, tamanio);
+                sb.append(toObfuscate, size-visible, size);
             } else {
                 sb.append("***");
             }
@@ -98,47 +98,31 @@ public class Utils {
         return sb.toString();
     }
 
-    public static List<UtilModel> cargarListaSiNo() {
-        List<UtilModel> listaSiNo = new ArrayList<>();
-        listaSiNo.add(new UtilModel("Si", Constants.TRUE));
-        listaSiNo.add(new UtilModel("No", Constants.FALSE));
-        return listaSiNo;
+    public static List<UtilModel> chargeListYesNo() {
+        List<UtilModel> listYesNo = new ArrayList<>();
+        listYesNo.add(new UtilModel("Si", Constants.TRUE));
+        listYesNo.add(new UtilModel("No", Constants.FALSE));
+        return listYesNo;
     }
 
-    public static List<UtilModel> cargarListaProveedoresHost() {
-        List<UtilModel> listaHost = new ArrayList<>();
+    public static List<UtilModel> chargeListHostProvider() {
+        List<UtilModel> listHost = new ArrayList<>();
         for (EmailEnum emailEnum : EmailEnum.values()) {
-            listaHost.add(new UtilModel(emailEnum.getProveedor(),emailEnum.getHost()));
+            listHost.add(new UtilModel(emailEnum.getProveedor(),emailEnum.getHost()));
         }
-        return listaHost;
+        return listHost;
     }
 
-    public static String calculateSeason(Date date) {
-        String[] dateArray = new SimpleDateFormat("dd-MM-yyyy").format(date).split("-");
-        int season = Integer.parseInt(dateArray[2]);
-        // en noviembre y diciembre se hace la autorización para la temporada del año siguiente
-        if ("11".equals(dateArray[1]) || "12".equals(dateArray[1])) {
-            season++;
-        }
-        return String.valueOf(season);
-    }
-
-    public static String obtenerNombreMetodo() {
-        // Obtiene la pila de llamadas (stack trace) del hilo actual
+    public static String getMethodName() {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-
-        // El índice 1 representa el método que llamó a esta función
-        // El índice 0 es getStackTrace() y el índice 1 es el método actual
-        StackTraceElement metodoActual = stackTrace[2];
-
-        // Devuelve el nombre del método actual
-        return metodoActual.getMethodName();
+        StackTraceElement currentMethod = stackTrace[2];
+        return currentMethod.getMethodName();
     }
 
-    public static List<String> obtenerNombresArchivos(String rutaCarpeta) {
-        File directorio = new File(rutaCarpeta);
-        if (directorio.list() != null) {
-            return Arrays.asList(directorio.list());
+    public static List<String> getFileName(String folderPath) {
+        File folder = new File(folderPath);
+        if (folder.list() != null) {
+            return Arrays.asList(folder.list());
         } else {
             return new ArrayList<>();
         }

@@ -38,5 +38,6 @@ public class GymActivitySchedule {
     private String name;
     @Column(length = Constants.GYM_ACTIVITY_SCHEDULE_ROOM_NAME)
     private String roomName;
+    private int position;
 
 }

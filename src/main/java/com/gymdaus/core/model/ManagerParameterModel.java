@@ -25,7 +25,7 @@ public class ManagerParameterModel {
                 "id=" + id +
                 ", hostPageName='" + hostPageName + '\'' +
                 ", email='" + email + '\'' +
-                ", password='" + Utils.ofuscar(password) + '\'' +
+                ", password='" + Utils.obfuscate(password) + '\'' +
                 ", emailHost='" + emailHost + '\'' +
                 ", emailPort='" + emailPort + '\'' +
                 '}';

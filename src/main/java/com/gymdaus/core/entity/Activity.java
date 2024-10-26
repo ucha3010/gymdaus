@@ -20,5 +20,6 @@ public class Activity {
     @Column(nullable = false, length = Constants.ACTIVITY_NAME)
     private String name;
     private boolean enabled;
+    private int position;
 
 }

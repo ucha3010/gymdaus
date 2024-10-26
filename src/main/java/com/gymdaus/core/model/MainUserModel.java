@@ -13,10 +13,10 @@ import java.util.Date;
 @ToString
 public class MainUserModel {
 
-    private int id;
+    private Long id;
     private Date registrationDate;
     private String tournamentName;
-    private String tournamentDate;
+    private Date tournamentDate;
     private String name;
     private String lastname;
     private String secondLastname;

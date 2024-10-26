@@ -22,7 +22,7 @@ public interface UserRoleService {
 
     void deleteByUsername(String username);
 
-    void actualizarRoles(UserRoleModel userRoleModel);
+    void updateRoles(UserRoleModel userRoleModel);
 
     List<UserRole> adminAvailableRoles();
 
