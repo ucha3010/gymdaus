@@ -17,18 +17,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/main")
+@RequestMapping("/")
 public class MainController {
 
     @Autowired
     private MainService mainService;
 
     @GetMapping("/")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("permitAll()")
     public ModelAndView mainPage(ModelAndView modelAndView) {
         modelAndView.setViewName("mainPage");
         String path = "src" + File.separator + "main" + File.separator + "resources" + File.separator
-                + "static" + File.separator + "imgs" + File.separator + File.separator + "principal";
+                + "static" + File.separator + "imgs" + File.separator + File.separator + "mainPage";
         User user = mainService.basicCompleteCharge(modelAndView);
         List<String> photoList = new ArrayList<>(Utils.getFileName(path));
         if (!photoList.isEmpty()) {
@@ -38,6 +38,11 @@ public class MainController {
         modelAndView.addObject("photoList", photoList);
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return modelAndView;
+    }
+
+    @GetMapping("/favicon.ico")
+    String favicon() {
+        return "redirect:/imgs/favicon.ico";
     }
 
 }

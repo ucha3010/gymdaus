@@ -19,6 +19,7 @@ public class MapperGym {
             localObject.setModificationUsername(externObject.getModificationUsername());
             localObject.setContractedRecords(externObject.getContractedRecords());
             localObject.setContractedVisibility(externObject.getContractedVisibility());
+            localObject.setPosition(externObject.getPosition());
         }
         return localObject;
     }
@@ -35,6 +36,7 @@ public class MapperGym {
             localObject.setModificationUsername(externObject.getModificationUsername());
             localObject.setContractedRecords(externObject.getContractedRecords());
             localObject.setContractedVisibility(externObject.getContractedVisibility());
+            localObject.setPosition(externObject.getPosition());
         }
         return localObject;
     }

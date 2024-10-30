@@ -31,6 +31,15 @@ public class GymServiceImpl implements GymService {
     }
 
     @Override
+    public List<GymModel> findAllEnabled() {
+        List<GymModel> gymModelList = new ArrayList<>();
+        for (Gym gym : gymRepository.findAllByEnabledTrueOrderByPositionAsc()) {
+            gymModelList.add(mapperGym.entity2Model(gym));
+        }
+        return gymModelList;
+    }
+
+    @Override
     public GymModel findById(Long id) {
         try {
             return mapperGym.entity2Model(gymRepository.findById(id).orElse(null));

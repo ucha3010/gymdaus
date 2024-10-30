@@ -4,8 +4,10 @@ package com.gymdaus.core.service.impl;
 import com.gymdaus.core.entity.Menu2;
 import com.gymdaus.core.exception.RemoveException;
 import com.gymdaus.core.mapper.MapperMenu2;
+import com.gymdaus.core.model.GymModel;
 import com.gymdaus.core.model.Menu2Model;
 import com.gymdaus.core.repository.Menu2Repository;
+import com.gymdaus.core.service.GymService;
 import com.gymdaus.core.service.Menu2Service;
 import com.gymdaus.core.util.Constants;
 import com.gymdaus.core.util.LoggerMapper;
@@ -24,12 +26,38 @@ public class Menu2ServiceImpl implements Menu2Service {
     private Menu2Repository menu2Repository;
     @Autowired
     private MapperMenu2 mapperMenu2;
+    @Autowired
+    private GymService gymService;
 
     @Override
     public List<Menu2Model> findAll(Long idMenu1) {
         List<Menu2Model> menu2ModelList = new ArrayList<>();
         for (Menu2 menu2: menu2Repository.findByMenu1IdOrderByPositionAsc(idMenu1)) {
             menu2ModelList.add(mapperMenu2.entity2Model(menu2));
+        }
+        return menu2ModelList;
+    }
+
+    @Override
+    public List<Menu2Model> findAllEnabled(Long idMenu1) {
+        List<Menu2Model> menu2ModelList = new ArrayList<>();
+        for (Menu2 menu2: menu2Repository.findByMenu1IdAndEnabledTrueOrderByPositionAsc(idMenu1)) {
+            menu2ModelList.add(mapperMenu2.entity2Model(menu2));
+        }
+        return menu2ModelList;
+    }
+
+    @Override
+    public List<Menu2Model> findAllGymList() {
+        List<GymModel> gymModelList = gymService.findAllEnabled();
+        List<Menu2Model> menu2ModelList = new ArrayList<>();
+        Menu2Model menu2Model;
+        for (GymModel gymModel: gymModelList) {
+            menu2Model = new Menu2Model();
+            menu2Model.setName(gymModel.getName());
+            menu2Model.setAdvise(Constants.GYM_ADVISE);
+            menu2Model.setUrl(Constants.GYM_DETAIL + gymModel.getId());
+            menu2ModelList.add(menu2Model);
         }
         return menu2ModelList;
     }

@@ -1,9 +1,11 @@
 package com.gymdaus.core.util;
 
+import com.google.common.collect.Iterators;
+
 public class Constants {
 
 	// vistas
-	public static final String LOGIN = "loginPage";
+	public static final String LOGIN = "login-page";
 
 	// posibles roles
 	public static final String ROLE_USER = "ROLE_USER";
@@ -68,4 +70,7 @@ public class Constants {
 	public static final int TOKEN_ID = 36;
 	public static final int ROLE = 45;
 
+	//Nuevas constantes
+    public static final String GYM_ADVISE = "gymAdvise";
+	public static final String GYM_DETAIL = "/gym/detail/";
 }

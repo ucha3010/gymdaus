@@ -1,7 +1,18 @@
-        <div class="container">
+        <div sec:authorize="isAuthenticated()" class="container">
             <form th:action="@{/logout}" method="POST" id="formLogout"></form>
             <h1>
-                ¡Hola <span th:text="${usuario.name}"></span>!
+                ¡<span th:text="#{Hello}"></span> <span th:text="${user.name}"></span>!
                 <a href="#" th:href="@{/usuario/formularioUsuario}"><span class="icofont-duotone icofont-manage-user"></span></a>
             </h1>
+        </div>
+        <div sec:authorize="not isAuthenticated()" class="container">
+            <div class="row align-items-center justify-content-end">
+                <div class="col-5">
+                </div>
+                <div class="col-3">
+                </div>
+                <div class="col-3 col-md-2">
+                    <a class="btn btn-success" href="#" th:href="@{/login-page/}"><span th:text="#{Login}"></span> <i class="icofont-login"></i></a>
+                </div>
+            </div>
         </div>

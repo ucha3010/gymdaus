@@ -8,6 +8,7 @@ import java.util.List;
 public interface GymService {
 
     List<GymModel> findAll();
+    List<GymModel> findAllEnabled();
 
     GymModel findById(Long id);
 

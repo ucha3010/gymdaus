@@ -1,6 +1,7 @@
 package com.gymdaus.core.mapper;
 
 import com.gymdaus.core.entity.Menu2;
+import com.gymdaus.core.model.Menu1Model;
 import com.gymdaus.core.model.Menu2Model;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +12,9 @@ public class MapperMenu2 {
         Menu2Model localObject = new Menu2Model();
         if (externObject != null) {
             localObject.setId(externObject.getId());
-            localObject.getMenu1Model().setId(externObject.getMenu1Id());
+            Menu1Model menu1Model = new Menu1Model();
+            menu1Model.setId(externObject.getMenu1Id());
+            localObject.setMenu1Model(menu1Model);
             localObject.setEnabled(externObject.isEnabled());
             localObject.setName(externObject.getName());
             localObject.setPosition(externObject.getPosition());

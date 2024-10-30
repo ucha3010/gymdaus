@@ -13,7 +13,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 public class UserRole {
 
     @Id
@@ -33,4 +32,12 @@ public class UserRole {
         this.role = role;
     }
 
+    @Override
+    public String toString() {
+        return "UserRole{" +
+                "userRoleId=" + userRoleId +
+                ", username=" + user.getUsername() +
+                ", role='" + role + '\'' +
+                '}';
+    }
 }

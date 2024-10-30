@@ -10,6 +10,8 @@ import java.util.List;
 public interface Menu2Service {
 
     List<Menu2Model> findAll(Long idMenu1);
+    List<Menu2Model> findAllEnabled(Long idMenu1);
+    List<Menu2Model> findAllGymList();
     Menu2Model findById(Long id);
     void add(Menu2Model menu2Model);
     void update(Menu2Model menu2Model);

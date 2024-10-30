@@ -49,25 +49,25 @@ public class SecurityConfiguration {
 				.authorizeHttpRequests(authorizeRequests ->
 						authorizeRequests
 								/*Estas son las rutas que se permiten sin autenticación*/
-								.requestMatchers("/css/*", "/imgs/*", "/js/*").permitAll()
-								.requestMatchers("/", "/olvidoClave", "/nuevaClave", "/pass-new", "/change-pass", "/formulario/alta").permitAll()
+								.requestMatchers("/css/*", "/imgs/*", "/imgs/mainPage/*", "/imgs/icons/*", "/imgs/icons/fonts/*", "/js/*", "/favicon.ico").permitAll()
+								.requestMatchers("/","/login-page/*", "/olvidoClave", "/nuevaClave", "/pass-new", "/change-pass", "/formulario/alta").permitAll()
 								.anyRequest().authenticated()
 				)
 				.formLogin(formLogin ->
 						/*Esta es la configuración del login personalizado*/
 						formLogin
-								.loginPage("/loginPage")
+								.loginPage("/login-page/")
 								.loginProcessingUrl("/logincheck")
 								.usernameParameter("username")
 								.passwordParameter("password")
-								.defaultSuccessUrl("/principal/")
+								.defaultSuccessUrl("/")
 								.permitAll()
 				)
 				.logout(logout ->
 						/*Esta es la configuración de logout personalizada*/
 						logout
 								.logoutUrl("/logout")
-								.logoutSuccessUrl("/loginPage?logout")
+								.logoutSuccessUrl("/?logout")
 								.permitAll()
 				);
 

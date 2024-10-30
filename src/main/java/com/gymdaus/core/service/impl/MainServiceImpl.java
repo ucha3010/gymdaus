@@ -60,9 +60,14 @@ public class MainServiceImpl implements MainService {
 
     @Override
     public User basicCompleteCharge(ModelAndView modelAndView) {
-        User user = userService.getLoggedUser();
-        modelAndView.addObject("user", user);
-        modelAndView.addObject("menu1List", menu1Service.findAll());
-        return user;
+        try {
+            User user = userService.getLoggedUser();
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("menu1List", menu1Service.findAllEnabled());
+            modelAndView.addObject("menu1GymList", menu1Service.findMenu1GymList());
+            return user;
+        } catch (ClassCastException e) {
+            return null;
+        }
     }
 }

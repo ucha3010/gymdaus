@@ -24,6 +24,7 @@ public class GymModel {
     private String modificationUsername;
     private int contractedRecords;
     private int contractedVisibility;
+    private int position;
     private List<GymParameterModel> gymParameterModelList;
     private List<GymAddressModel> gymAddressModelList;
     private List<GymPhotoModel> gymPhotoModelList;

@@ -12,6 +12,7 @@ public interface Menu2Repository extends JpaRepository<Menu2, Long> {
     Menu2 findTopByMenu1IdOrderByPositionDesc(Long menu1Id);
 
     List<Menu2> findByMenu1IdOrderByPositionAsc(Long menu1Id);
+    List<Menu2> findByMenu1IdAndEnabledTrueOrderByPositionAsc(Long menu1Id);
 
     Menu2 findByMenu1IdAndPosition(Long menu1Id, int position);
 

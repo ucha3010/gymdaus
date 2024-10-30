@@ -31,5 +31,6 @@ public class Gym {
     private String modificationUsername;
     private int contractedRecords;
     private int contractedVisibility;
+    private int position;
 
 }

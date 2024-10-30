@@ -5,10 +5,10 @@
 	<link th:replace="~{static/headerLink :: link}">
 	<script th:replace="~{static/headerScript :: script}"></script>
 
-	<title th:text="#{pagina.no.autorizada}"></title>
+	<title th:text="#{not.authorized.page}"></title>
 </head>
 <body>
-<div th:replace="~{static/barraNavNotAuthenticated :: nav}"></div>
+<div th:replace="~{static/barraNav :: nav}"></div>
 
 <div class="jumbotron">
 	<div class="container mt-5 mb-5">
@@ -17,11 +17,11 @@
 					<img src="#" th:src="@{/imgs/403.gif}"  alt="Error 403"/>
 			</div>
 			<div class="col-12 mb-5">
-				<h1><span th:text="#{pagina.no.autorizada}"></span></h1>
+				<h1><span th:text="#{not.authorized.page}"></span></h1>
 			</div>
 			<div class="col-12">
 				<form action="#" th:action="@{/principal/}" >
-					<button class="btn btn-primary btn-lg" type="submit" th:text="#{volver.pagina.principal}"></button>
+					<button class="btn btn-primary btn-lg" type="submit" th:text="#{back.main.page}"></button>
 				</form>
 			</div>
 		</div>

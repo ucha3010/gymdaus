@@ -10,6 +10,7 @@ import java.util.List;
 public interface Menu1Repository extends JpaRepository<Menu1, Long> {
 
     List<Menu1> findAllByOrderByPositionAsc();
+    List<Menu1> findAllByEnabledTrueOrderByPositionAsc();
 
     Menu1 findByPosition(int position);
 

@@ -24,7 +24,7 @@ import java.io.StringWriter;
 import java.util.UUID;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/login-page")
 public class LoginController {
 
 	@Autowired
@@ -40,7 +40,7 @@ public class LoginController {
 		return Constants.LOGIN;
 	}
 
-	@GetMapping("/loginPage")
+	@GetMapping("/login-page")
 	@PreAuthorize("permitAll()")
 	public String loginPage(Model model,
 								@RequestParam(name = "error", required = false) String error,
@@ -51,7 +51,7 @@ public class LoginController {
 		return Constants.LOGIN;
 	}
 
-	@GetMapping("/forgotPass")
+	@GetMapping("/forgot-pass")
 	@PreAuthorize("permitAll()")
 	public ModelAndView forgotPass(ModelAndView modelAndView) {
 		modelAndView.setViewName("formForgotPass");
@@ -62,7 +62,7 @@ public class LoginController {
 		return modelAndView;
 	}
 
-	@PostMapping("/newPass")
+	@PostMapping("/new-pass")
 	@PreAuthorize("permitAll()")
 	public ModelAndView newPass(@ModelAttribute("userPasswordModel") UserPasswordModel userPasswordModel, ModelAndView modelAndView) {
 		try {

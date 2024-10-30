@@ -41,6 +41,18 @@ public class Menu1ServiceImpl implements Menu1Service {
     }
 
     @Override
+    public List<Menu1Model> findAllEnabled() {
+        List<Menu1Model> menu1ModelList = new ArrayList<>();
+        Menu1Model menu1Model;
+        for (Menu1 menu1: menu1Repository.findAllByEnabledTrueOrderByPositionAsc()) {
+            menu1Model = mapperMenu1.entity2Model(menu1);
+            menu1Model.setMenu2ModelList(menu2Service.findAllEnabled(menu1.getId()));
+            menu1ModelList.add(menu1Model);
+        }
+        return menu1ModelList;
+    }
+
+    @Override
     public Menu1Model findById(Long id) {
         try {
             return mapperMenu1.entity2Model(menu1Repository.findById(id).orElse(null));
@@ -102,6 +114,14 @@ public class Menu1ServiceImpl implements Menu1Service {
         } else {
             return -1;
         }
+    }
+
+    @Override
+    public Menu1Model findMenu1GymList() {
+        Menu1Model menu1Model = new Menu1Model();
+        menu1Model.setName("menu1.gyms");
+        menu1Model.setMenu2ModelList(menu2Service.findAllGymList());
+        return menu1Model;
     }
 
     private void moveItem(int position, boolean moveUp) {

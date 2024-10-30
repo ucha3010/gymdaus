@@ -5,7 +5,7 @@
         <link th:replace="~{static/headerLink :: link}">
         <script th:replace="~{static/headerScript :: script}"></script>
 
-        <title>Página principal</title>
+        <title th:text="#{header.title}"></title>
     </head>
     <body>
         <div th:replace="~{static/barraUser :: div}"></div>
@@ -13,40 +13,39 @@
 
         <section sec:authorize="hasRole('ROLE_ADMIN')" class="text-center">
             <a href="#" th:href="@{/admin/adminList}" class="textDecoration-none">
-                <button class="btn btn-warning btn-lg minimumWidth40 marginTopBottom3Percentage" type="button">Administración</button>
+                <button class="btn btn-warning btn-lg minimumWidth40 marginTopBottom3Percentage" type="button"><span th:text="#{administration}"></span></button>
             </a>
         </section>
 
         <section sec:authorize="hasRole('ROLE_ROOT')" class="text-center">
-            <a href="#" th:href="@{/usuario/users}" class="textDecoration-none">
-                <button class="btn btn-danger btn-lg marginTopBottom3Percentage" type="button">Usuarios</button>
+            <a href="#" th:href="@{/user/users}" class="textDecoration-none">
+                <button class="btn btn-danger btn-lg marginTopBottom3Percentage" type="button"><span th:text="#{users}"></span></button>
             </a>
-            <a href="#" th:href="@{/gimnasio/customers}" class="textDecoration-none">
-                <button class="btn btn-primary btn-lg" type="button">Empresas</button>
+            <a href="#" th:href="@{/gym/customers}" class="textDecoration-none">
+                <button class="btn btn-primary btn-lg" type="button"><span th:text="#{companies}"></span></button>
             </a>
-            <a href="#" th:href="@{/usuario/registrations}" class="textDecoration-none">
-                <button class="btn btn-primary btn-lg" type="button">Inscripciones</button>
+            <a href="#" th:href="@{/user/registrations}" class="textDecoration-none">
+                <button class="btn btn-primary btn-lg" type="button"><span th:text="#{registrations}"></span></button>
             </a>
-            <a href="#" th:href="@{/adminCalidad/calidadList}" class="textDecoration-none">
-                <button class="btn btn-danger btn-lg marginTopBottom3Percentage" type="button">Calidad</button>
+            <a href="#" th:href="@{/adminRegistrationAs/registrationAsList}" class="textDecoration-none">
+                <button class="btn btn-danger btn-lg marginTopBottom3Percentage" type="button"><span th:text="#{registration.as}"></span></button>
             </a>
             <a href="#" th:href="@{/adminPais/paisList}" class="textDecoration-none">
-                <button class="btn btn-primary btn-lg" type="button">País</button>
+                <button class="btn btn-primary btn-lg" type="button"><span th:text="#{country}"></span></button>
             </a>
             <a href="#" th:href="@{/adminUtil/root-util}" class="textDecoration-none">
-                <button class="btn btn-danger btn-lg marginTopBottom3Percentage" type="button">Configuración</button>
+                <button class="btn btn-danger btn-lg marginTopBottom3Percentage" type="button"><span th:text="#{configuration}"></span></button>
             </a>
             <a href="#" th:href="@{/adminMenu/menuList}" class="textDecoration-none">
-                <button class="btn btn-primary btn-lg" type="button">Barra menú</button>
+                <button class="btn btn-primary btn-lg" type="button"><span th:text="#{menu.bar}"></span></button>
             </a>
         </section>
 
-        <!-- Contenido de la página -->
         <div class="container mt-3">
             <section>
                 <div class="row justify-content-center">
                     <div class="col colorGreen">
-                        <h1>Transforma tu entrenamiento</h1>
+                        <h1 th:text="#{body.title}"></h1>
                     </div>
                 </div>
             </section>
@@ -56,19 +55,19 @@
                     <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">
                             <div class="carousel-item active" data-bs-interval="3000">
-                                <img src="#" th:src="@{/imgs/principal/__${mainPhoto}__}" class="d-block w-100" alt="">
+                                <img src="#" th:src="@{/imgs/mainPage/__${mainPhoto}__}" class="d-block w-100" alt="">
                             </div>
-                            <div th:each="foto : ${photoList}" class="carousel-item" data-bs-interval="3000">
-                                <img src="#" th:src="@{/imgs/principal/__${foto}__}" class="d-block w-100" alt="">
+                            <div th:each="photo : ${photoList}" class="carousel-item" data-bs-interval="3000">
+                                <img src="#" th:src="@{/imgs/mainPage/__${photo}__}" class="d-block w-100" alt="">
                             </div>
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Anterior</span>
+                            <span class="visually-hidden" th:text="#{Previous}"></span>
                         </button>
                         <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Siguiente</span>
+                            <span class="visually-hidden" th:text="#{Next}"></span>
                         </button>
                     </div>
                 </div>
