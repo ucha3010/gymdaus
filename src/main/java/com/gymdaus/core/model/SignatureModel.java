@@ -20,4 +20,7 @@ public class SignatureModel {
     private EnrollmentModel enrollmentModel;
     private GymDocumentManagerModel gymDocumentManagerModel;
 
+    public SignatureModel(Long operationId) {
+        this.operationId = operationId;
+    }
 }

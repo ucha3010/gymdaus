@@ -1,6 +1,7 @@
 package com.gymdaus.core.configuration;
 
 import com.gymdaus.core.model.GymModel;
+import com.gymdaus.core.model.UserModel;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.annotation.Scope;
@@ -17,5 +18,6 @@ public class SessionData {
 
     private GymModel gymModel;
     private Locale selectedLocale = Locale.getDefault();
+    private UserModel userModel;
 
 }

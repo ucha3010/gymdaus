@@ -13,7 +13,7 @@ import java.util.*;
 
 public class Utils {
 
-    public static String date2String (Date date) {
+    public static String date2String(Date date) {
         if (date != null) {
             DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
             return df.format(date);
@@ -56,6 +56,7 @@ public class Utils {
     public static long millisecondsBetweenTwoDates(Date majorDate, Date minorDate) {
         return (majorDate.getTime() - minorDate.getTime());
     }
+
     public static Date addSubtractMinutes(int minutes) {
         Date now = new Date();
         Calendar expiration = Calendar.getInstance();
@@ -63,6 +64,7 @@ public class Utils {
         expiration.add(Calendar.MINUTE, minutes);
         return expiration.getTime();
     }
+
     public static Date changeHMS(Date originalDate, int hora, int min, int seg) {
 
         Calendar calendar = Calendar.getInstance();
@@ -82,15 +84,15 @@ public class Utils {
 
     public static String obfuscate(String toObfuscate) {
         StringBuilder sb = new StringBuilder();
-        if(toObfuscate != null) {
+        if (toObfuscate != null) {
             int size = toObfuscate.length();
-            int visible = size/3;
+            int visible = size / 3;
             if (size > 3) {
                 sb.append(toObfuscate, 0, visible);
-                for(int j=visible;j<(size-visible);j++) {
+                for (int j = visible; j < (size - visible); j++) {
                     sb.append("*");
                 }
-                sb.append(toObfuscate, size-visible, size);
+                sb.append(toObfuscate, size - visible, size);
             } else {
                 sb.append("***");
             }
@@ -98,17 +100,10 @@ public class Utils {
         return sb.toString();
     }
 
-    public static List<UtilModel> chargeListYesNo() {
-        List<UtilModel> listYesNo = new ArrayList<>();
-        listYesNo.add(new UtilModel("Si", Constants.TRUE));
-        listYesNo.add(new UtilModel("No", Constants.FALSE));
-        return listYesNo;
-    }
-
     public static List<UtilModel> chargeListHostProvider() {
         List<UtilModel> listHost = new ArrayList<>();
         for (EmailEnum emailEnum : EmailEnum.values()) {
-            listHost.add(new UtilModel(emailEnum.getProveedor(),emailEnum.getHost()));
+            listHost.add(new UtilModel(emailEnum.getProveedor(), emailEnum.getHost()));
         }
         return listHost;
     }

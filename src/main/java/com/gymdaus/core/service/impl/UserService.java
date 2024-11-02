@@ -61,6 +61,10 @@ public class UserService implements UserDetailsService {
 		}
 	}
 
+	public UserModel getLoggedUserModel() {
+		return mapperUser.entity2Model(getLoggedUser());
+	}
+
 	public com.gymdaus.core.entity.User getLoggedUser() {
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return findByUsername(user.getUsername());
@@ -82,5 +86,19 @@ public class UserService implements UserDetailsService {
 			grantedAuthorities.add(new SimpleGrantedAuthority(userRole.getRole()));
 		}
 		return new ArrayList<>(grantedAuthorities);
+	}
+
+	public UserModel addOrUpdate(UserModel userModel) throws PersistenceException {
+		try {
+			userModel.setPassword(findModelByUsername(userModel.getUsername()).getPassword());
+		} catch (NoResultException ignored) {
+		}
+		userModel.setModificationDate(new Date());
+		userModel.setModificationUsername(getLoggedUser().getUsername());
+		try {
+			return mapperUser.entity2Model(userRepository.save(mapperUser.model2Entity(userModel)));
+		} catch (Exception exception) {
+			throw new PersistenceException();
+		}
 	}
 }

@@ -1,13 +1,19 @@
 package com.gymdaus.core.service;
 
 
+import com.gymdaus.core.entity.User;
 import com.gymdaus.core.exception.SenderException;
 import com.gymdaus.core.model.TokenModel;
 import com.gymdaus.core.model.UserModel;
 
+import java.io.File;
+import java.util.List;
+
 public interface EmailService {
 
     void sendChangePassword(UserModel userModel, TokenModel tokenModel) throws SenderException;
+
+    void sendCodeValidation(User userModel, String code, List<File> files) throws SenderException;
 /*
     void sendTournamentRegistration(UserModel userModel, DocumentManagerModel documentManagerModel, TournamentRegistrationModel tournamentRegistrationModel) throws SenderException;
 
@@ -16,8 +22,6 @@ public interface EmailService {
     void sendGymJoining(InscripcionTaekwondoModel inscripcionTaekwondoModel, List<File> files) throws SenderException;
 
     void confirmAdminGymJoining(InscripcionTaekwondoModel inscripcionTaekwondoModel) throws SenderException;
-
-    void sendCodeValidation(User userModel, String code, List<File> files) throws SenderException;
 
     void confirmAdminSepaSigned(InscripcionTaekwondoModel inscripcionTaekwondoModel) throws SenderException;
 

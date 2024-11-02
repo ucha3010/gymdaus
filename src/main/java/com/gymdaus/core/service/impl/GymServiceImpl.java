@@ -5,7 +5,9 @@ import com.gymdaus.core.mapper.MapperGym;
 import com.gymdaus.core.model.GymModel;
 import com.gymdaus.core.repository.GymRepository;
 import com.gymdaus.core.service.GymService;
+import com.gymdaus.core.util.LoggerMapper;
 import jakarta.persistence.EntityNotFoundException;
+import org.apache.logging.log4j.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,5 +63,22 @@ public class GymServiceImpl implements GymService {
     @Override
     public void delete(Long id) {
         gymRepository.deleteById(id);
+    }
+
+    @Override
+    public void enableDisable(Long gymIdModel, boolean enableDisable) {
+        GymModel gymModel = findById(gymIdModel);
+        gymModel.setEnabled(enableDisable);
+        try {
+            update(gymModel);
+        } catch (Exception e) {
+            LoggerMapper.log(Level.ERROR, "enableDisable", e.getMessage(), this.getClass());
+        }
+    }
+
+    @Override
+    public boolean verifyEnable(Long gymIdModel) {
+        GymModel gymModel = findById(gymIdModel);
+        return gymModel.getId() != 0 && gymModel.isEnabled();
     }
 }

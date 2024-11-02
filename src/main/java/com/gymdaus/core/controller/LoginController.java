@@ -1,5 +1,6 @@
 package com.gymdaus.core.controller;
 
+import com.gymdaus.core.configuration.SessionData;
 import com.gymdaus.core.exception.SenderException;
 import com.gymdaus.core.model.TokenModel;
 import com.gymdaus.core.model.UserModel;

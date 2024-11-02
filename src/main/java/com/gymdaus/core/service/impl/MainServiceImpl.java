@@ -57,17 +57,4 @@ public class MainServiceImpl implements MainService {
         enrollmentService.delete(enrollmentId);
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), enrollmentId, getClass());
     }
-
-    @Override
-    public User basicCompleteCharge(ModelAndView modelAndView) {
-        try {
-            User user = userService.getLoggedUser();
-            modelAndView.addObject("user", user);
-            modelAndView.addObject("menu1List", menu1Service.findAllEnabled());
-            modelAndView.addObject("menu1GymList", menu1Service.findMenu1GymList());
-            return user;
-        } catch (ClassCastException e) {
-            return null;
-        }
-    }
 }

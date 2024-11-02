@@ -1,5 +1,6 @@
 package com.gymdaus.core.service.impl;
 
+import com.gymdaus.core.entity.User;
 import com.gymdaus.core.exception.SenderException;
 import com.gymdaus.core.model.EmailModel;
 import com.gymdaus.core.model.TokenModel;
@@ -11,6 +12,9 @@ import com.gymdaus.core.util.Constants;
 import com.gymdaus.core.util.SendMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.util.List;
 
 @Service()
 public class EmailServiceImpl implements EmailService {
@@ -37,6 +41,18 @@ public class EmailServiceImpl implements EmailService {
             throw new SenderException(Constants.AVISO_EMAIL,e.getMessage());
         }
 
+    }
+
+    @Override
+    public void sendCodeValidation(User user, String code, List<File> files) throws SenderException {// envía plataforma
+        try {
+            ManagerParameterModel utilManagerModel = managerParameterService.get();
+            sendMessage.enviarCorreo(new EmailModel(utilManagerModel.getEmail(), user.getEmail(),
+                    "Código de validación", textMessageCodeValidation(user, code), files,
+                    utilManagerModel.getEmailHost(), utilManagerModel.getEmailPort(), utilManagerModel.getPassword()));
+        } catch (Exception e) {
+            throw new SenderException(Constants.AVISO_EMAIL,e.getMessage());
+        }
     }
 /*
     @Override
@@ -84,18 +100,6 @@ public class EmailServiceImpl implements EmailService {
             GimnasioModel gimnasioModel = gimnasioService.findById(inscripcionTaekwondoModel.getCodigoGimnasio());
             sendMessage.enviarCorreo(new EmailModel(utilManagerModel.getEmail(), gimnasioModel.getCorreo(), "Nueva inscripción en el gimnasio",
                     textMessageConfirmAdminGymJoining(inscripcionTaekwondoModel), null,
-                    utilManagerModel.getEmailHost(), utilManagerModel.getEmailPort(), utilManagerModel.getPassword()));
-        } catch (Exception e) {
-            throw new SenderException(Constants.AVISO_EMAIL,e.getMessage());
-        }
-    }
-
-    @Override
-    public void sendCodeValidation(User user, String code, List<File> files) throws SenderException {// envía plataforma
-        try {
-            ManagerParameterModel utilManagerModel = managerParameterService.get();
-            sendMessage.enviarCorreo(new EmailModel(utilManagerModel.getEmail(), user.getCorreo(),
-                    "Código de validación", textMessageCodeValidation(user, code), files,
                     utilManagerModel.getEmailHost(), utilManagerModel.getEmailPort(), utilManagerModel.getPassword()));
         } catch (Exception e) {
             throw new SenderException(Constants.AVISO_EMAIL,e.getMessage());
@@ -193,6 +197,27 @@ public class EmailServiceImpl implements EmailService {
         stringBuilder.append("</BODY></HTML>");
         return stringBuilder.toString();
     }
+
+    private String textMessageCodeValidation(User user, String code) {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<!DOCTYPE html>");
+        stringBuilder.append("<HTML><BODY>");
+        String name = user.getName() != null ? " " + user.getName() : "";
+        stringBuilder.append("<h1>Hola<b>").append(name).append("</b>!</h1><br>");
+        stringBuilder.append("<p>El código de validación que debes utilizar es el siguiente</p>");
+        stringBuilder.append("<br>");
+        stringBuilder.append("<h2>").append(code).append("</h2>");
+        stringBuilder.append("<br><br>");
+        stringBuilder.append("<p>Este código tiene una validez de 15 minutos.</p>");
+        stringBuilder.append("<br><br>");
+        stringBuilder.append("<p>Al firmar con este código, estarás firmando todos los documentos que requieran " +
+                "firma y estén adjuntos en este correo.</p>");
+        stringBuilder.append("<br><br>");
+        stringBuilder.append("<p>¡Que pases un buen día!</p>");
+        stringBuilder.append("</BODY></HTML>");
+        return stringBuilder.toString();
+    }
 /*
     private String textMessageTournamentRegistration(UserModel userModel) {
 
@@ -269,27 +294,6 @@ public class EmailServiceImpl implements EmailService {
             stringBuilder.append("<p>Está autorizado por ").append(mayor.getName()).append(" ").append(mayor.getLastname())
                     .append(" ").append(mayor.getSecondLastname()).append(".</p>");
         }
-        stringBuilder.append("<br><br>");
-        stringBuilder.append("<p>¡Que pases un buen día!</p>");
-        stringBuilder.append("</BODY></HTML>");
-        return stringBuilder.toString();
-    }
-
-    private String textMessageCodeValidation(User user, String code) {
-
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<!DOCTYPE html>");
-        stringBuilder.append("<HTML><BODY>");
-        String name = user.getName() != null ? " " + user.getName() : "";
-        stringBuilder.append("<h1>Hola<b>").append(name).append("</b>!</h1><br>");
-        stringBuilder.append("<p>El código de validación que debes utilizar es el siguiente</p>");
-        stringBuilder.append("<br>");
-        stringBuilder.append("<h2>").append(code).append("</h2>");
-        stringBuilder.append("<br><br>");
-        stringBuilder.append("<p>Este código tiene una validez de 15 minutos.</p>");
-        stringBuilder.append("<br><br>");
-        stringBuilder.append("<p>Al firmar con este código, estarás firmando todos los documentos que requieran " +
-                "firma y estén adjuntos en este correo.</p>");
         stringBuilder.append("<br><br>");
         stringBuilder.append("<p>¡Que pases un buen día!</p>");
         stringBuilder.append("</BODY></HTML>");

@@ -12,6 +12,4 @@ public interface MainService {
     List<MainUserModel> findByUsername(String username);
 
     void deleteEnrollment(Long enrollmentId);
-
-    User basicCompleteCharge(ModelAndView modelAndView);
 }

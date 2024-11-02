@@ -1,7 +1,9 @@
 package com.gymdaus.core.controller;
 
-import com.gymdaus.core.entity.User;
-import com.gymdaus.core.service.MainService;
+import com.gymdaus.core.configuration.SessionData;
+import com.gymdaus.core.model.UserModel;
+import com.gymdaus.core.service.UtilService;
+import com.gymdaus.core.service.impl.UserService;
 import com.gymdaus.core.util.LoggerMapper;
 import com.gymdaus.core.util.Utils;
 import org.apache.logging.log4j.Level;
@@ -21,15 +23,19 @@ import java.util.List;
 public class MainController {
 
     @Autowired
-    private MainService mainService;
+    private UtilService utilService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private SessionData sessionData;
 
     @GetMapping("/")
     @PreAuthorize("permitAll()")
     public ModelAndView mainPage(ModelAndView modelAndView) {
-        modelAndView.setViewName("mainPage");
+        modelAndView.setViewName("main-page");
         String path = "src" + File.separator + "main" + File.separator + "resources" + File.separator
                 + "static" + File.separator + "imgs" + File.separator + File.separator + "mainPage";
-        User user = mainService.basicCompleteCharge(modelAndView);
+        utilService.basicDataCharge(modelAndView);
         List<String> photoList = new ArrayList<>(Utils.getFileName(path));
         if (!photoList.isEmpty()) {
             modelAndView.addObject("mainPhoto", photoList.get(0));
@@ -38,6 +44,20 @@ public class MainController {
         modelAndView.addObject("photoList", photoList);
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return modelAndView;
+    }
+
+    @GetMapping("/logged")
+    @PreAuthorize("isAuthenticated()")
+    public ModelAndView logged(ModelAndView modelAndView) {
+        sessionData.setUserModel(userService.getLoggedUserModel());
+        return mainPage(modelAndView);
+    }
+
+    @GetMapping("/logout-close")
+    @PreAuthorize("permitAll()")
+    public ModelAndView logoutClose(ModelAndView modelAndView) {
+        sessionData.setUserModel(new UserModel());
+        return mainPage(modelAndView);
     }
 
     @GetMapping("/favicon.ico")

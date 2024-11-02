@@ -18,4 +18,8 @@ public interface GymService {
 
     void delete(Long id);
 
+    void enableDisable(Long gymIdModel, boolean enableDisable);
+
+    boolean verifyEnable(Long gymIdModel);
+
 }
