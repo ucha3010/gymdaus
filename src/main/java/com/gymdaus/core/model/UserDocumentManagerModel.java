@@ -13,6 +13,7 @@ import java.util.Date;
 public class UserDocumentManagerModel {
 
     private Long id;
+    private boolean enabled;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date creationDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

@@ -3,6 +3,7 @@ package com.gymdaus.core.controller;
 
 import com.gymdaus.core.configuration.SessionData;
 import com.gymdaus.core.entity.UserRole;
+import com.gymdaus.core.model.UserDocumentManagerModel;
 import com.gymdaus.core.model.UserModel;
 import com.gymdaus.core.model.UserPasswordModel;
 import com.gymdaus.core.service.SecurityService;
@@ -18,7 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+
+import static com.google.common.io.Files.getFileExtension;
 
 @Controller
 @RequestMapping("/user")
@@ -44,8 +48,9 @@ public class UserController {
 	public ModelAndView profile(ModelAndView modelAndView) {
 		securityService.userAccessValidation("/user/profile");
 		modelAndView.setViewName("user/user-profile");
-		utilService.basicDataCharge(modelAndView);
+		UserModel user = utilService.basicDataCharge(modelAndView);
 		utilService.chargeBasicDataSelect(modelAndView);
+		modelAndView.addObject("profilePhoto", userDocumentManagerService.findByUsernameEnabled(user.getUsername()));
 		LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
 		return modelAndView;
 	}
@@ -64,6 +69,31 @@ public class UserController {
 		}
 		LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
 		return profile(modelAndView);
+	}
+
+	@GetMapping("/photo")
+	@PreAuthorize("isAuthenticated()")
+	public ModelAndView photo(ModelAndView modelAndView) {
+		securityService.userAccessValidation("/user/photo");
+		modelAndView.setViewName("user/user-profile-photo");
+		UserModel user = utilService.basicDataCharge(modelAndView);
+		modelAndView.addObject("profilePhoto", userDocumentManagerService.findByUsernameEnabled(user.getUsername()));
+		LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+		return modelAndView;
+	}
+
+	@PostMapping("/upload-photo")
+	@PreAuthorize("isAuthenticated()")
+	public ModelAndView uploadPhoto(ModelAndView modelAndView, @RequestParam("file") MultipartFile file) {
+
+		LoggerMapper.methodIn(Level.INFO, "user/upload-photo", file.getOriginalFilename(), getClass());
+		securityService.userAccessValidation("/user/upload-photo");
+		UserModel userModel = utilService.basicDataCharge(modelAndView);
+		UserDocumentManagerModel userDocumentManagerModel = userDocumentManagerService.findByUsernameEnabled(userModel.getUsername());
+		if(!userDocumentManagerService.addPhoto(userModel, file)) {
+			modelAndView.addObject("uploadError", "uploadError");
+		}
+		return photo(modelAndView);
 	}
 
 	@GetMapping("/change-pass")

@@ -53,6 +53,56 @@ url("./fonts/icofont.woff") format("woff");
   content: "\13b5d";
 }
 
+.icofont-duotone.icofont-pencil:before
+{
+  content: "\13b7d";
+}
+
+.icofont-duotone.icofont-pencil:after
+{
+  content: "\13b7c";
+}
+
+.icofont-duotone.icofont-apply:before
+{
+  content: "\13abb";
+}
+
+.icofont-duotone.icofont-apply:after
+{
+  content: "\13aba";
+}
+
+.icofont-duotone.icofont-add-users:before
+{
+  content: "\13ab7";
+}
+
+.icofont-duotone.icofont-add-users:after
+{
+  content: "\13ab6";
+}
+
+.icofont-duotone.icofont-info:before
+{
+  content: "\13b47";
+}
+
+.icofont-duotone.icofont-info:after
+{
+  content: "\13b46";
+}
+
+.icofont-duotone.icofont-user:before
+{
+  content: "\13d06";
+}
+
+.icofont-duotone.icofont-user:after
+{
+  content: "\13d13";
+}
+
 [class^="icofont-"].icofont-duotone,
 	[class*=" icofont-"].icofont-duotone
 {

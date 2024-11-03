@@ -60,6 +60,17 @@
 			<input type="hidden" name="username" th:value="${user.username}"/>
 			<input th:if="${user.registrationDate != null}" type="hidden" name="registrationDate" th:value="${#dates.format(user.registrationDate, 'yyyy/MM/dd HH:mm:ss')}"/>
 
+
+			<div class="row align-items-center justify-content-end">
+				<div class="col-3 col-md-2">
+					<img th:if="${profilePhoto == null}" src="#" th:src="@{/imgs/Logo.png}" alt="" width="100">
+					<img th:if="${profilePhoto != null}" src="#" th:src="@{/files/userPhotos/__${profilePhoto.filename}__}" alt="" width="100">
+					<a class="navbar-brand" href="#" th:href="@{/user/photo}">
+						<i class="icofont-duotone icofont-pencil" aria-hidden="true"></i>
+					</a>
+				</div>
+			</div>
+
 			<div class="row mt-2 mb-1">
 				<div class="col-3 col-md-2">
 					<label for="username" th:text="#{username}"></label>

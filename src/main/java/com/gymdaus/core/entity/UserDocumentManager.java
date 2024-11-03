@@ -19,6 +19,7 @@ public class UserDocumentManager {
     @SequenceGenerator(name = "userDocumentManagerGenerator", sequenceName = "CHANGE_LOW_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userDocumentManagerGenerator")
     private Long id;
+    private boolean enabled;
     @Column(nullable = false)
     private Date creationDate;
     private Date deleteDate;

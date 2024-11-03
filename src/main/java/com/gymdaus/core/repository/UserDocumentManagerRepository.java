@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository()
 public interface UserDocumentManagerRepository extends JpaRepository<UserDocumentManager, Long> {
 
+    UserDocumentManager findByUsernameAndEnabledTrue(String username);
 }

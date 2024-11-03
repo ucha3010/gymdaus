@@ -8,9 +8,11 @@ import org.springframework.stereotype.Component;
 public class MapperUserDocumentManager {
 
     public UserDocumentManagerModel entity2Model(UserDocumentManager externObject) {
-        UserDocumentManagerModel localObject = new UserDocumentManagerModel();
+        UserDocumentManagerModel localObject = null;
         if (externObject != null) {
+            localObject = new UserDocumentManagerModel();
             localObject.setId(externObject.getId());
+            localObject.setEnabled(externObject.isEnabled());
             localObject.setCreationDate(externObject.getCreationDate());
             localObject.setDeleteDate(externObject.getDeleteDate());
             localObject.setExtension(externObject.getExtension());
@@ -26,6 +28,7 @@ public class MapperUserDocumentManager {
         UserDocumentManager localObject = new UserDocumentManager();
         if (externObject != null) {
             localObject.setId(externObject.getId());
+            localObject.setEnabled(externObject.isEnabled());
             localObject.setCreationDate(externObject.getCreationDate());
             localObject.setDeleteDate(externObject.getDeleteDate());
             localObject.setExtension(externObject.getExtension());

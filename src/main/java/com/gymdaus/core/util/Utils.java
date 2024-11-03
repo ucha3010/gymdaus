@@ -2,11 +2,14 @@ package com.gymdaus.core.util;
 
 import com.gymdaus.core.model.UtilModel;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Level;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -125,5 +128,43 @@ public class Utils {
 
     public static boolean isNullOrEmpty(String string) {
         return StringUtils.isBlank(string);
+    }
+
+    public static String getAbsolutePath() {
+        String[] absolute = new String[1];
+        try {
+            File f = new File("program.txt");
+            absolute = f.getAbsolutePath().split(f.getName());
+        }
+        catch (Exception e) {
+            LoggerMapper.log(Level.ERROR, Utils.getMethodName(), e.getMessage(), Utils.class);
+        }
+        return absolute[0];
+    }
+    public static String getFileExtension(MultipartFile file) {
+        String fileName = file.getOriginalFilename();
+        if (fileName != null) {
+            int dotIndex = fileName.lastIndexOf('.');
+            if (dotIndex > 0 && dotIndex < fileName.length() - 1) {
+                return fileName.substring(dotIndex);
+            }
+        }
+        return "";
+    }
+    public static boolean uploadFile(MultipartFile file, String relativePath) {
+        boolean answer = false;
+        if (!file.isEmpty()) {
+            try {
+                file.transferTo(new File(getAbsolutePath() + relativePath + File.separator + getClearFilename(file)));
+                answer = true;
+            } catch (IOException e) {
+                LoggerMapper.log(Level.ERROR, getMethodName(), e.getMessage(), Utils.class);
+            }
+        }
+        return answer;
+    }
+
+    public static String getClearFilename (MultipartFile file) {
+        return file.getOriginalFilename().replaceAll("[^a-zA-Z0-9.]", "");
     }
 }
