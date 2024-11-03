@@ -16,6 +16,7 @@ import com.gymdaus.core.util.LoggerMapper;
 import com.gymdaus.core.util.Utils;
 import org.apache.logging.log4j.Level;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -99,35 +100,38 @@ public class UserController {
 
 	@GetMapping("/change-pass")
 	@PreAuthorize("isAuthenticated()")
-	public ModelAndView formularioCambioClave(ModelAndView modelAndView) {
-		modelAndView.setViewName("formularioCambioClave");
+	public ModelAndView changePass(ModelAndView modelAndView, UserPasswordModel userPasswordModel) {
+		securityService.userAccessValidation("/user/change-pass");
+		modelAndView.setViewName("user/user-change-password");
 		UserModel user = utilService.basicDataCharge(modelAndView);
-		UserPasswordModel userPasswordModel = new UserPasswordModel();
 		userPasswordModel.setUsername(user.getUsername());
 		modelAndView.addObject("userPasswordModel", userPasswordModel);
 		LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
 		return modelAndView;
 	}
 
-	@PostMapping("/actualizarClaveUsuario")
+	@PostMapping("/update-pass")
 	@PreAuthorize("isAuthenticated()")
-	public ModelAndView actualizarClaveUsuario(@ModelAttribute("userPasswordModel") UserPasswordModel userPasswordModel ) {
+	public ModelAndView updatePass(@ModelAttribute("userPasswordModel") UserPasswordModel userPasswordModel ) {
+		securityService.userAccessValidation("/user/update-pass");
+		if (userPasswordModel == null || Utils.isNullOrEmpty(userPasswordModel.getUsername()) || sessionData.getUserModel() == null ||
+				Utils.isNullOrEmpty(sessionData.getUserModel().getUsername()) ||
+				!userPasswordModel.getUsername().equalsIgnoreCase(sessionData.getUserModel().getUsername())) {
+			throw new AccessDeniedException("/user/update-pass");
+		}
 		ModelAndView modelAndView = new ModelAndView();
 		UserModel userModel = userService.findModelByUsername(userPasswordModel.getUsername());
-		securityService.userAccessValidation("/usuario/actualizarClaveUsuario");
 		if (userService.comparePassword(userPasswordModel.getOldPassword(), userModel.getPassword())) {
 			userModel.setPassword(userService.encodePassword(userPasswordModel.getNewPassword()));
 			userService.updatePass(userModel);
-			modelAndView.addObject("claveModificada", "claveModificada");
-			LoggerMapper.log(Level.INFO, "actualizarUsuario", "Contraseña actualizada", getClass());
+			modelAndView.addObject("modifiedPass", "modifiedPass");
+			LoggerMapper.log(Level.INFO, Utils.getMethodName(), "Password updated " + userModel.getUsername(), getClass());
 		} else {
-			modelAndView.addObject("antiguaDistinta", "antiguaDistinta");
-			LoggerMapper.log(Level.INFO, "actualizarUsuario", "Contraseña antigua distinta", getClass());
+			modelAndView.addObject("oldDifferent", "oldDifferent");
+			LoggerMapper.log(Level.INFO, Utils.getMethodName(), "Old password different", getClass());
 		}
-		modelAndView.addObject("usuario", userModel);
-		modelAndView.addObject("userPasswordModel", userPasswordModel);
 		LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
-		return formularioCambioClave(modelAndView);
+		return changePass(modelAndView, userPasswordModel);
 	}
 
 	@GetMapping("/users")
