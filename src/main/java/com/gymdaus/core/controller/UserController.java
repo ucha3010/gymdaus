@@ -50,7 +50,7 @@ public class UserController {
 		modelAndView.setViewName("user/user-profile");
 		UserModel user = utilService.basicDataCharge(modelAndView);
 		utilService.chargeBasicDataSelect(modelAndView);
-		modelAndView.addObject("profilePhoto", userDocumentManagerService.findByUsernameEnabled(user.getUsername()));
+		modelAndView.addObject("profilePhoto", userDocumentManagerService.getProfilePhotoPath(user.getUsername()));
 		LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
 		return modelAndView;
 	}
@@ -77,7 +77,7 @@ public class UserController {
 		securityService.userAccessValidation("/user/photo");
 		modelAndView.setViewName("user/user-profile-photo");
 		UserModel user = utilService.basicDataCharge(modelAndView);
-		modelAndView.addObject("profilePhoto", userDocumentManagerService.findByUsernameEnabled(user.getUsername()));
+		modelAndView.addObject("profilePhoto", userDocumentManagerService.getProfilePhotoPath(user.getUsername()));
 		LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
 		return modelAndView;
 	}
@@ -89,9 +89,10 @@ public class UserController {
 		LoggerMapper.methodIn(Level.INFO, "user/upload-photo", file.getOriginalFilename(), getClass());
 		securityService.userAccessValidation("/user/upload-photo");
 		UserModel userModel = utilService.basicDataCharge(modelAndView);
-		UserDocumentManagerModel userDocumentManagerModel = userDocumentManagerService.findByUsernameEnabled(userModel.getUsername());
 		if(!userDocumentManagerService.addPhoto(userModel, file)) {
 			modelAndView.addObject("uploadError", "uploadError");
+		} else {
+			modelAndView.addObject("uploadOk", "uploadOk");
 		}
 		return photo(modelAndView);
 	}

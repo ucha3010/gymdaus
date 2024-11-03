@@ -21,4 +21,7 @@ public interface UserDocumentManagerService {
 
     UserDocumentManagerModel findByUsernameEnabled(String username);
     boolean addPhoto(UserModel userModel, MultipartFile file);
+
+    String getProfilePhotoPath(String username);
+
 }

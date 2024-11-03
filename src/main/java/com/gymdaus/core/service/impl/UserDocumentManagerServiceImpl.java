@@ -19,6 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service()
 public class UserDocumentManagerServiceImpl implements UserDocumentManagerService {
@@ -74,9 +75,10 @@ public class UserDocumentManagerServiceImpl implements UserDocumentManagerServic
             UserDocumentManagerModel userDocumentManagerModel = findByUsernameEnabled(userModel.getUsername());
             if (userDocumentManagerModel != null) {
                 userDocumentManagerModel.setEnabled(Boolean.FALSE);
+                userDocumentManagerModel.setDeleteDate(new Date());
                 update(userDocumentManagerModel);
             }
-            userDocumentManagerModel = fillObject(userModel, file, "userPhotos");
+            userDocumentManagerModel = fillObject(userModel, file, "userPhotos" + File.separator + userModel.getUsername());
             if(answer) {
                 answer = Utils.uploadFile(file, userDocumentManagerModel.getPath());
             }
@@ -87,12 +89,25 @@ public class UserDocumentManagerServiceImpl implements UserDocumentManagerServic
         return answer;
     }
 
+    @Override
+    public String getProfilePhotoPath(String username) {
+        UserDocumentManagerModel userDocumentManagerModel = findByUsernameEnabled(username);
+        if (userDocumentManagerModel == null) {
+            return null;
+        } else {
+            String[] path = userDocumentManagerModel.getPath().split(Pattern.quote(File.separator));
+            String answer = "";
+            for (int i=1; i < path.length; i++) {
+                answer = answer.concat("/").concat(path[i]);
+            }
+            return answer.concat("/").concat(userDocumentManagerModel.getFilename());
+        }
+    }
 
 
     private UserDocumentManagerModel fillObject(UserModel userModel, MultipartFile file, @NotNull String section) {
 
-        String ruta = "src" + File.separator + "main" + File.separator + "resources" + File.separator
-                + "static" + File.separator + "files" + File.separator + section;
+        String ruta = "files" + File.separator + section;
         File folder = new File(Utils.getAbsolutePath() + ruta);
         if (!folder.exists()) {
             if(!folder.mkdirs()) {
