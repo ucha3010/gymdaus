@@ -18,5 +18,6 @@ public class GymUserModel {
     private Date registrationDate;
     private UserModel userModel;
     private GymModel gymModel;
+    private String gymRole;
 
 }

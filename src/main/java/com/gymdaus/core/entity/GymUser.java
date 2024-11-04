@@ -19,6 +19,7 @@ public class GymUser {
     @SequenceGenerator(name = "gymUserGenerator", sequenceName = "CHANGE_LOW_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gymUserGenerator")
     private Long id;
+    @Column(nullable = false)
     private Long gymId;
     @Column(nullable = false, length = Constants.USERNAME_OR_ID_CARD)
     private String username;
@@ -26,5 +27,7 @@ public class GymUser {
     private Date registrationDate;
     @Column(nullable = false)
     private String registrationUser;
+    @Column(nullable = false, length = Constants.ROLE)
+    private String gymRole;
 
 }

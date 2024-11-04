@@ -11,6 +11,7 @@ public class MapperEnrollment {
         EnrollmentModel localObject = new EnrollmentModel();
         if (externObject != null) {
             localObject.setId(externObject.getId());
+            localObject.setEnrollmentKind(externObject.getEnrollmentKind());
             localObject.setOwn(externObject.isOwn());
             localObject.setMinor(externObject.isMinor());
             localObject.setInclusive(externObject.isInclusive());
@@ -79,6 +80,7 @@ public class MapperEnrollment {
         Enrollment localObject = new Enrollment();
         if (externObject != null) {
             localObject.setId(externObject.getId());
+            localObject.setEnrollmentKind(externObject.getEnrollmentKind());
             localObject.setOwn(externObject.isOwn());
             localObject.setMinor(externObject.isMinor());
             localObject.setInclusive(externObject.isInclusive());

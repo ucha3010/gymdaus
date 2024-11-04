@@ -22,4 +22,5 @@ public interface GymService {
 
     boolean verifyEnable(Long gymIdModel);
 
+    GymModel findByIdEnabled(Long id);
 }

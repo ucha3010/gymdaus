@@ -8,8 +8,9 @@ import org.springframework.stereotype.Component;
 public class MapperGym {
 
     public GymModel entity2Model(Gym externObject) {
-        GymModel localObject = new GymModel();
+        GymModel localObject = null;
         if (externObject != null) {
+            localObject = new GymModel();
             localObject.setId(externObject.getId());
             localObject.setName(externObject.getName());
             localObject.setEnabled(externObject.isEnabled());

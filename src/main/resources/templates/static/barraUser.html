@@ -1,12 +1,12 @@
-        <div sec:authorize="isAuthenticated()" class="container">
+        <div sec:authorize="isAuthenticated()">
             <div class="row align-items-center justify-content-end">
-                <div class="col-1 col-md-3">
+                <div class="col-md-3">
                     <form th:action="@{/logout}" method="POST" id="formLogout"></form>
                 </div>
-                <div class="col-7 col-md-6">
+                <div class="col-8 col-md-6">
                     <h1>
                         ¡<span th:text="#{Hello}"></span> <span th:text="${user.name}"></span>!
-                        <a href="#" th:href="@{/user/profile}"><span class="icofont-duotone icofont-manage-user"></span></a>
+                        <a href="#" th:href="@{/user/profile}"><i class="icofont-duotone icofont-manage-user"></i></a>
                     </h1>
                 </div>
                 <div class="col-4 col-md-3">

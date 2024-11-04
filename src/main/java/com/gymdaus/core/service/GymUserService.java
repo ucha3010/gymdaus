@@ -17,4 +17,7 @@ public interface GymUserService {
 
     void delete(Long id);
 
+    List<GymUserModel> findByUsername(String username);
+
+    List<GymUserModel> findByGymId(Long id);
 }

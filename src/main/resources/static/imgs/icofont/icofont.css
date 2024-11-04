@@ -103,6 +103,11 @@ url("./fonts/icofont.woff") format("woff");
   content: "\13d13";
 }
 
+.icofont-web:before
+{
+  content: "\f028";
+}
+
 [class^="icofont-"].icofont-duotone,
 	[class*=" icofont-"].icofont-duotone
 {

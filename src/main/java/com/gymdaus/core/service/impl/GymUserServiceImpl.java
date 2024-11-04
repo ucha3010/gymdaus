@@ -53,4 +53,22 @@ public class GymUserServiceImpl implements GymUserService {
     public void delete(Long id) {
         gymUserRepository.deleteById(id);
     }
+
+    @Override
+    public List<GymUserModel> findByUsername(String username) {
+        List<GymUserModel> gymUserModelList = new ArrayList<>();
+        for (GymUser gymUser : gymUserRepository.findByUsername(username)) {
+            gymUserModelList.add(mapperGymUser.entity2Model(gymUser));
+        }
+        return gymUserModelList;
+    }
+
+    @Override
+    public List<GymUserModel> findByGymId(Long id) {
+        List<GymUserModel> gymUserModelList = new ArrayList<>();
+        for (GymUser gymUser : gymUserRepository.findByGymId(id)) {
+            gymUserModelList.add(mapperGymUser.entity2Model(gymUser));
+        }
+        return gymUserModelList;
+    }
 }

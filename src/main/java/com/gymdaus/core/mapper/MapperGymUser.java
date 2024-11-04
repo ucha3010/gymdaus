@@ -18,6 +18,7 @@ public class MapperGymUser {
             UserModel userModel = new UserModel();
             userModel.setUsername(externObject.getUsername());
             localObject.setUserModel(userModel);
+            localObject.setGymRole(externObject.getGymRole());
             if (externObject.getGymId() != 0) {
                 GymModel gymModel = new GymModel();
                 gymModel.setId(externObject.getGymId());
@@ -33,6 +34,7 @@ public class MapperGymUser {
             localObject.setId(externObject.getId());
             localObject.setRegistrationDate(externObject.getRegistrationDate());
             localObject.setRegistrationUser(externObject.getRegistrationUser());
+            localObject.setGymRole(externObject.getGymRole());
             if (externObject.getGymModel() != null) {
                 localObject.setGymId(externObject.getGymModel().getId());
             } else {

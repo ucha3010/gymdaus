@@ -13,6 +13,7 @@ import java.util.Date;
 public class EnrollmentModel {
 
     private Long id;
+    private int enrollmentKind;
     private boolean own;
     private boolean minor;
     private boolean inclusive;

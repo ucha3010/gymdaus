@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="es">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
     <head>
         <meta th:replace="~{static/headerMeta :: meta}">
         <link th:replace="~{static/headerLink :: link}">
@@ -12,8 +12,8 @@
         <div th:replace="~{static/barraNav :: nav}"></div>
 
         <section sec:authorize="hasRole('ROLE_ADMIN')" class="text-center">
-            <a href="#" th:href="@{/admin/adminList}" class="textDecoration-none">
-                <button class="btn btn-warning btn-lg minimumWidth40 marginTopBottom3Percentage" type="button"><span th:text="#{administration}"></span></button>
+            <a href="#" th:href="@{/gym/}" class="textDecoration-none">
+                <button class="btn btn-warning btn-lg minimumWidth40 marginTopBottom3Percentage" type="button"><span th:text="#{administration}"></span> <i class="icofont-web"></i></button>
             </a>
         </section>
 

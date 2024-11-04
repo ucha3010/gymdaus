@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta th:replace="~{static/headerMeta :: meta}">
+		<link th:replace="~{static/headerLink :: link}">
+		<script th:replace="~{static/headerScript :: script}"></script>
+
+		<title th:text="#{select.gym}"></title>
+
+		<script type="text/javascript">
+			function goAdminPage(id){
+				var relativeUrl = "gym/gym-admin/" + id;
+				var domain = getDomain(location.href);
+				location.href = domain + relativeUrl;
+			}
+		</script>
+	</head>
+	<body>
+		<div th:replace="~{static/barraUser :: div}"></div>
+		<div th:replace="~{static/barraNav :: nav}"></div>
+
+		<div class="container text-center">
+			<section>
+				<div class="row align-items-center justify-content-end">
+					<div class="col-md-2">
+					</div>
+					<div class="col-6 col-md-8 colorGreen">
+						<h1 th:if="${not #lists.isEmpty(gymModelList)}" th:text="#{select.gym}"></h1>
+					</div>
+					<div class="col-3 col-md-2">
+						<a class="btn btn-info" href="#" th:href="@{/}"><span th:text="#{back}"></span></a>
+					</div>
+				</div>
+			</section>
+
+			<section class="marginTopBottom3Percentage text-center">
+				<div th:if="${#lists.isEmpty(gymModelList)}" class="alert alert-danger textAlignCenter" role="alert"><span th:text="#{no.gyms.assigned}"></span></div>
+			</section>
+
+			<section sec:authorize="hasRole('ROLE_ADMIN')" th:each="unit : ${gymModelList}">
+				<button class="btn btn-info btn-lg minimumWidth40 marginTopBottom3Percentage" type="button" th:text="${unit.name}" th:attr="onclick=|goAdminPage('${unit.id}')|"></button>
+			</section>
+
+		</div>
+	</body>
+
+	<footer th:replace="~{static/footer :: footer}"></footer>
+</html>

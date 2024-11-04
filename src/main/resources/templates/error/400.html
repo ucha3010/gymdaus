@@ -8,7 +8,6 @@
 	<title th:text="#{not.found.page}"></title>
 </head>
 <body>
-<div th:replace="~{static/barraNav :: nav}"></div>
 
 <div class="jumbotron">
 	<div class="container mt-5 mb-5">
@@ -20,7 +19,7 @@
 				<h1><span th:text="#{not.found.page}"></span></h1>
 			</div>
 			<div class="col-12">
-				<form action="#" th:action="@{/principal/}" >
+				<form action="#" th:action="@{/}" >
 					<button class="btn btn-primary btn-lg" type="submit" th:text="#{back.main.page}"></button>
 				</form>
 			</div>
