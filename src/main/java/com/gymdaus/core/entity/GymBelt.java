@@ -17,8 +17,8 @@ public class GymBelt {
     @SequenceGenerator(name = "gymBeltGenerator", sequenceName = "CHANGE_LOW_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gymBeltGenerator")
     private Long id;
-    @Column(nullable = false, length = Constants.BELT_COLOUR)
-    private String colour;
+    @Column(nullable = false, length = Constants.BELT_COLOR)
+    private String color;
     private Long gymId;
     private int position;
 

@@ -44,6 +44,7 @@ public class GymController {
     @GetMapping("/")
     @PreAuthorize("isAuthenticated()")
     public ModelAndView gymMainPage(ModelAndView modelAndView) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         securityService.userAccessValidation("/gym/");
         UserModel user = utilService.basicDataCharge(modelAndView);
         List<GymUserModel> gymUserModelList = gymUserService.findByUsername(user.getUsername());
@@ -84,23 +85,13 @@ public class GymController {
     @GetMapping("/gym-admin/{id}")
     @PreAuthorize("isAuthenticated()")
     public ModelAndView gymAdmin(ModelAndView modelAndView, @PathVariable Long id) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), id, getClass());
         securityService.userAccessValidation("/gym/gym-admin/" + id);
         UserModel user = utilService.basicDataCharge(modelAndView);
-        List<GymUserModel> gymUserModelList = gymUserService.findByGymId(id);
-        boolean validAccess = false;
-        for (GymUserModel gymUserModel : gymUserModelList) {
-            if(gymUserModel.getGymModel().getId().equals(id)) {
-                validAccess = true;
-                break;
-            }
-        }
-        if (!validAccess) {
-            throw new AccessDeniedException("/gym/gym-admin/" + id);
-        } else {
-            modelAndView.setViewName("gym/gym-admin");
-            modelAndView.addObject("backButton", "/gym/");
-            modelAndView.addObject("gymModel", gymService.findByIdEnabled(id));
-        }
+        securityService.enabledAdministrationGymUser(user.getUsername(), id, "/gym/gym-admin/");
+        modelAndView.setViewName("gym/gym-admin");
+        modelAndView.addObject("backButton", "/gym/");
+        modelAndView.addObject("gymModel", gymService.findByIdEnabled(id));
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return modelAndView;
     }

@@ -1,13 +1,14 @@
 package com.gymdaus.core.service;
 
 
+import com.gymdaus.core.exception.RemoveException;
 import com.gymdaus.core.model.GymBeltModel;
 
 import java.util.List;
 
 public interface GymBeltService {
 
-    List<GymBeltModel> findAll();
+    List<GymBeltModel> findAllByGymId(Long gymId);
 
     GymBeltModel findById(Long id);
 
@@ -15,10 +16,10 @@ public interface GymBeltService {
 
     void update(GymBeltModel model);
 
-    void delete(Long id);
+    void delete(Long id) throws RemoveException;
 
-    void dragOfPosition(int initialPosition, int finalPosition);
+    void dragOfPosition(Long gymId, int initialPosition, int finalPosition);
 
-    int findMaxPosition();
+    int findMaxPosition(Long gymId);
 
 }

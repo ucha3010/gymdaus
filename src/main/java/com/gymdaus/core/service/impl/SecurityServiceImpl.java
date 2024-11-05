@@ -3,14 +3,12 @@ package com.gymdaus.core.service.impl;
 import com.gymdaus.core.configuration.SessionData;
 import com.gymdaus.core.entity.User;
 import com.gymdaus.core.exception.ValidationException;
+import com.gymdaus.core.model.GymUserModel;
 import com.gymdaus.core.model.SignatureCodeModel;
 import com.gymdaus.core.model.SignatureModel;
 import com.gymdaus.core.model.UserModel;
 import com.gymdaus.core.service.*;
-import com.gymdaus.core.util.Constants;
-import com.gymdaus.core.util.LoggerMapper;
 import com.gymdaus.core.util.Utils;
-import org.apache.logging.log4j.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -109,16 +107,25 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public void enabledAdministrationGym(Long gymId, String uri) throws AccessDeniedException {
-        if (!gymService.verifyEnable(gymId)) {
+        if (gymService.findByIdEnabled(gymId) == null) {
             throw new AccessDeniedException(uri);
         }
     }
 
     @Override
     public void enabledAdministrationGymUser(String username, Long gymId, String uri) throws AccessDeniedException {
-/*        if(gymUserService.findByUsernameAndGymId(username, gymId) == null) {
-            throw new AccessDeniedException(uri);
-        }*/
+
+        List<GymUserModel> gymUserModelList = gymUserService.findByGymId(gymId);
+        boolean validAccess = false;
+        for (GymUserModel gymUserModel : gymUserModelList) {
+            if (gymUserModel.getGymModel().getId().equals(gymId)) {
+                validAccess = true;
+                break;
+            }
+        }
+        if (!validAccess || gymService.findByIdEnabled(gymId) == null) {
+            throw new AccessDeniedException(uri + ", gymId=" + gymId);
+        }
     }
 
     @Override

@@ -12,7 +12,7 @@ public class MapperGymBelt {
         GymBeltModel localObject = new GymBeltModel();
         if (externObject != null) {
             localObject.setId(externObject.getId());
-            localObject.setColour(externObject.getColour());
+            localObject.setColor(externObject.getColor());
             localObject.setPosition(externObject.getPosition());
             if (externObject.getGymId() != 0) {
                 GymModel gymModel = new GymModel();
@@ -27,7 +27,7 @@ public class MapperGymBelt {
         GymBelt localObject = new GymBelt();
         if (externObject != null) {
             localObject.setId(externObject.getId());
-            localObject.setColour(externObject.getColour());
+            localObject.setColor(externObject.getColor());
             localObject.setPosition(externObject.getPosition());
             if (externObject.getGymModel() != null) {
                 localObject.setGymId(externObject.getGymModel().getId());

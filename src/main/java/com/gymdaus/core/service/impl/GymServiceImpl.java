@@ -77,12 +77,6 @@ public class GymServiceImpl implements GymService {
     }
 
     @Override
-    public boolean verifyEnable(Long gymIdModel) {
-        GymModel gymModel = findById(gymIdModel);
-        return gymModel.getId() != 0 && gymModel.isEnabled();
-    }
-
-    @Override
     public GymModel findByIdEnabled(Long id) {
         return mapperGym.entity2Model(gymRepository.findByIdAndEnabledTrue(id).orElse(null));
     }

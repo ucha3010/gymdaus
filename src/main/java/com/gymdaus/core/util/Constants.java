@@ -54,7 +54,7 @@ public class Constants {
 	public static final int GYM_CATEGORY_NAME = 100;
 	public static final int GYM_ACTIVITY_SCHEDULE_ROOM_NAME = 100;
 	public static final int PASSWORD = 60;
-	public static final int BELT_COLOUR = 30;
+	public static final int BELT_COLOR = 30;
 	public static final int FILE_EXTENSION = 15;
 	public static final int FILE_NAME = 100;
 	public static final int FILE_PATH = 200;

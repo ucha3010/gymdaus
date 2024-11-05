@@ -10,7 +10,7 @@ import lombok.*;
 public class GymBeltModel {
 
     private Long id;
-    private String colour;
+    private String color;
     private int position;
     private GymModel gymModel;
 

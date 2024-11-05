@@ -1,6 +1,7 @@
 package com.gymdaus.core.service.impl;
 
 import com.gymdaus.core.entity.GymBelt;
+import com.gymdaus.core.exception.RemoveException;
 import com.gymdaus.core.mapper.MapperGymBelt;
 import com.gymdaus.core.model.GymBeltModel;
 import com.gymdaus.core.repository.GymBeltRepository;
@@ -22,9 +23,9 @@ public class GymBeltServiceImpl implements GymBeltService {
     private MapperGymBelt mapperGymBelt;
 
     @Override
-    public List<GymBeltModel> findAll() {
+    public List<GymBeltModel> findAllByGymId(Long gymId) {
         List<GymBeltModel> gymBeltModelList = new ArrayList<>();
-        for (GymBelt gymBelt : gymBeltRepository.findAllByOrderByPositionAsc()) {
+        for (GymBelt gymBelt : gymBeltRepository.findAllByGymIdOrderByPositionAsc(gymId)) {
             gymBeltModelList.add(mapperGymBelt.entity2Model(gymBelt));
         }
         return gymBeltModelList;
@@ -50,28 +51,35 @@ public class GymBeltServiceImpl implements GymBeltService {
     }
 
     @Override
-    public void delete(Long id) {
-        gymBeltRepository.deleteById(id);
-        List<GymBelt> gymBeltList = gymBeltRepository.findAllByOrderByPositionAsc();
-        for (int i = 0; i < gymBeltList.size(); i++) {
-            if (gymBeltList.get(i).getPosition() != i) {
-                gymBeltList.get(i).setPosition(i);
-                gymBeltRepository.save(gymBeltList.get(i));
+    public void delete(Long id) throws RemoveException {
+        GymBelt gymBelt = gymBeltRepository.findById(id).orElse(null);
+        if (gymBelt != null) {
+            try {
+                gymBeltRepository.deleteById(id);
+                List<GymBelt> gymBeltList = gymBeltRepository.findAllByGymIdOrderByPositionAsc(gymBelt.getGymId());
+                for (int i = 0; i < gymBeltList.size(); i++) {
+                    if (gymBeltList.get(i).getPosition() != i) {
+                        gymBeltList.get(i).setPosition(i);
+                        gymBeltRepository.save(gymBeltList.get(i));
+                    }
+                }
+            } catch (Exception e) {
+                throw new RemoveException("1000", e.getMessage());
             }
         }
     }
 
     @Override
-    public void dragOfPosition(int initialPosition, int finalPosition) {
-        GymBelt gymBelt = gymBeltRepository.findByPosition(initialPosition);
+    public void dragOfPosition(Long gymId, int initialPosition, int finalPosition) {
+        GymBelt gymBelt = gymBeltRepository.findByGymIdAndPosition(gymId, initialPosition);
         if (initialPosition > finalPosition) {
             for (int i = initialPosition - 1; i >= finalPosition; i--) {
-                moveItem(i, true);
+                moveItem(gymId, i, true);
             }
         }
         if (initialPosition < finalPosition) {
             for (int i = initialPosition + 1; i <= finalPosition; i++) {
-                moveItem(i, false);
+                moveItem(gymId, i, false);
             }
         }
         gymBelt.setPosition(finalPosition);
@@ -79,8 +87,8 @@ public class GymBeltServiceImpl implements GymBeltService {
     }
 
     @Override
-    public int findMaxPosition() {
-        GymBelt gymBelt = gymBeltRepository.findTopByOrderByPositionDesc();
+    public int findMaxPosition(Long gymId) {
+        GymBelt gymBelt = gymBeltRepository.findTopByGymIdOrderByPositionDesc(gymId);
         if (gymBelt != null) {
             return gymBelt.getPosition();
         } else {
@@ -88,8 +96,8 @@ public class GymBeltServiceImpl implements GymBeltService {
         }
     }
 
-    private void moveItem(int position, boolean moveUp) {
-        GymBelt gymBelt = gymBeltRepository.findByPosition(position);
+    private void moveItem(Long gymId, int position, boolean moveUp) {
+        GymBelt gymBelt = gymBeltRepository.findByGymIdAndPosition(gymId, position);
         gymBelt.setPosition(position + (moveUp ? 1 : -1));
         gymBeltRepository.save(gymBelt);
     }

@@ -32,6 +32,7 @@ public class MainController {
     @GetMapping("/")
     @PreAuthorize("permitAll()")
     public ModelAndView mainPage(ModelAndView modelAndView) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         modelAndView.setViewName("main-page");
         String path = "src" + File.separator + "main" + File.separator + "resources" + File.separator
                 + "static" + File.separator + "imgs" + File.separator + File.separator + "mainPage";
@@ -49,6 +50,7 @@ public class MainController {
     @GetMapping("/logged")
     @PreAuthorize("isAuthenticated()")
     public ModelAndView logged(ModelAndView modelAndView) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         sessionData.setUserModel(userService.getLoggedUserModel());
         return mainPage(modelAndView);
     }
@@ -56,6 +58,7 @@ public class MainController {
     @GetMapping("/logout-close")
     @PreAuthorize("permitAll()")
     public ModelAndView logoutClose(ModelAndView modelAndView) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         sessionData.setUserModel(new UserModel());
         return mainPage(modelAndView);
     }
