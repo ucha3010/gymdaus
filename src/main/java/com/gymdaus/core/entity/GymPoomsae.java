@@ -19,6 +19,7 @@ public class GymPoomsae {
     private Long id;
     @Column(nullable = false, length = Constants.POOMSAE_NAME)
     private String name;
+    @Column(nullable = false)
     private Long gymId;
     private int position;
 

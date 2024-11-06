@@ -1,6 +1,7 @@
 package com.gymdaus.core.service.impl;
 
 import com.gymdaus.core.entity.GymPoomsae;
+import com.gymdaus.core.exception.RemoveException;
 import com.gymdaus.core.mapper.MapperGymPoomsae;
 import com.gymdaus.core.model.GymPoomsaeModel;
 import com.gymdaus.core.repository.GymPoomsaeRepository;
@@ -22,9 +23,9 @@ public class GymPoomsaeServiceImpl implements GymPoomsaeService {
     private MapperGymPoomsae mapperGymPoomsae;
 
     @Override
-    public List<GymPoomsaeModel> findAll() {
+    public List<GymPoomsaeModel> findAllByGymId(Long gymId) {
         List<GymPoomsaeModel> gymPoomsaeModelList = new ArrayList<>();
-        for (GymPoomsae gymPoomsae : gymPoomsaeRepository.findAllByOrderByPositionAsc()) {
+        for (GymPoomsae gymPoomsae : gymPoomsaeRepository.findAllByGymIdOrderByPositionAsc(gymId)) {
             gymPoomsaeModelList.add(mapperGymPoomsae.entity2Model(gymPoomsae));
         }
         return gymPoomsaeModelList;
@@ -50,28 +51,35 @@ public class GymPoomsaeServiceImpl implements GymPoomsaeService {
     }
 
     @Override
-    public void delete(Long id) {
-        gymPoomsaeRepository.deleteById(id);
-        List<GymPoomsae> gymPoomsaeList = gymPoomsaeRepository.findAllByOrderByPositionAsc();
-        for (int i = 0; i < gymPoomsaeList.size(); i++) {
-            if (gymPoomsaeList.get(i).getPosition() != i) {
-                gymPoomsaeList.get(i).setPosition(i);
-                gymPoomsaeRepository.save(gymPoomsaeList.get(i));
+    public void delete(Long id) throws RemoveException {
+        GymPoomsae gymPoomsae = gymPoomsaeRepository.findById(id).orElse(null);
+        if (gymPoomsae != null) {
+            try {
+                gymPoomsaeRepository.deleteById(id);
+                List<GymPoomsae> gymPoomsaeList = gymPoomsaeRepository.findAllByGymIdOrderByPositionAsc(gymPoomsae.getGymId());
+                for (int i = 0; i < gymPoomsaeList.size(); i++) {
+                    if (gymPoomsaeList.get(i).getPosition() != i) {
+                        gymPoomsaeList.get(i).setPosition(i);
+                        gymPoomsaeRepository.save(gymPoomsaeList.get(i));
+                    }
+                }
+            } catch (Exception e) {
+                throw new RemoveException("1000", e.getMessage());
             }
         }
     }
 
     @Override
-    public void dragOfPosition(int initialPosition, int finalPosition) {
-        GymPoomsae gymPoomsae = gymPoomsaeRepository.findByPosition(initialPosition);
+    public void dragOfPosition(Long gymId, int initialPosition, int finalPosition) {
+        GymPoomsae gymPoomsae = gymPoomsaeRepository.findByGymIdAndPosition(gymId, initialPosition);
         if (initialPosition > finalPosition) {
             for (int i = initialPosition - 1; i >= finalPosition; i--) {
-                moveItem(i, true);
+                moveItem(gymId, i, true);
             }
         }
         if (initialPosition < finalPosition) {
             for (int i = initialPosition + 1; i <= finalPosition; i++) {
-                moveItem(i, false);
+                moveItem(gymId, i, false);
             }
         }
         gymPoomsae.setPosition(finalPosition);
@@ -79,8 +87,8 @@ public class GymPoomsaeServiceImpl implements GymPoomsaeService {
     }
 
     @Override
-    public int findMaxPosition() {
-        GymPoomsae gymPoomsae = gymPoomsaeRepository.findTopByOrderByPositionDesc();
+    public int findMaxPosition(Long gymId) {
+        GymPoomsae gymPoomsae = gymPoomsaeRepository.findTopByGymIdOrderByPositionDesc(gymId);
         if (gymPoomsae != null) {
             return gymPoomsae.getPosition();
         } else {
@@ -88,8 +96,8 @@ public class GymPoomsaeServiceImpl implements GymPoomsaeService {
         }
     }
 
-    private void moveItem(int position, boolean moveUp) {
-        GymPoomsae gymPoomsae = gymPoomsaeRepository.findByPosition(position);
+    private void moveItem(Long gymId, int position, boolean moveUp) {
+        GymPoomsae gymPoomsae = gymPoomsaeRepository.findByGymIdAndPosition(gymId, position);
         gymPoomsae.setPosition(position + (moveUp ? 1 : -1));
         gymPoomsaeRepository.save(gymPoomsae);
     }

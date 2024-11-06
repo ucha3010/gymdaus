@@ -19,6 +19,7 @@ public class GymBelt {
     private Long id;
     @Column(nullable = false, length = Constants.BELT_COLOR)
     private String color;
+    @Column(nullable = false)
     private Long gymId;
     private int position;
 

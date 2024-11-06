@@ -1,54 +1,57 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
-<head>
-	<meta th:replace="~{static/headerMeta :: meta}">
-	<link th:replace="~{static/headerLink :: link}">
-	<script th:replace="~{static/headerScript :: script}"></script>
+    <head>
+        <meta th:replace="~{static/headerMeta :: meta}">
+        <link th:replace="~{static/headerLink :: link}">
+        <script th:replace="~{static/headerScript :: script}"></script>
 
-	<title th:text="#{photo.profile}"></title>
+        <title th:text="#{photo.profile}"></title>
 
-</head>
-<body>
-	<div th:replace="~{static/barraUser :: div}"></div>
-	<div th:replace="~{static/barraNav :: nav}"></div>
+    </head>
+    <body>
+        <div th:replace="~{static/barraUser :: div}"></div>
+        <div th:replace="~{static/barraNav :: nav}"></div>
 
-	<section class="marginBottom2Percentage text-center">
-		<div th:if="${uploadError != null}" class="alert alert-danger textAlignCenter" role="alert"><span th:text="#{upload.error}"></span></div>
-		<div th:if="${uploadOk != null}" class="alert alert-success textAlignCenter" role="alert"><span th:text="#{upload.ok}"></span></div>
-	</section>
-	<div class="container">
+        <section class="marginBottom2Percentage text-center">
+            <div th:if="${uploadError != null}" class="alert alert-danger textAlignCenter" role="alert"><span
+                    th:text="#{upload.error}"></span></div>
+            <div th:if="${uploadOk != null}" class="alert alert-success textAlignCenter" role="alert"><span
+                    th:text="#{upload.ok}"></span></div>
+        </section>
+        <div class="container">
 
-		<section sec:authorize="isAuthenticated()">
+            <section sec:authorize="isAuthenticated()">
 
-			<div class="row align-items-center justify-content-center marginTopBottom3Percentage">
-				<div class="d-flex justify-content-center align-items-center">
-					<img th:if="${profilePhoto != null}" src="#" th:src="@{__${profilePhoto}__}" alt="" width="200">
-				</div>
-			</div>
+                <div class="row align-items-center justify-content-center marginTopBottom3Percentage">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <img th:if="${profilePhoto != null}" src="#" th:src="@{__${profilePhoto}__}" alt="" width="200">
+                    </div>
+                </div>
 
-			<form action="#" th:action="@{/user/upload-photo}" method="post" enctype="multipart/form-data">
-				<div class="row text-center">
-					<div class="col-12">
-						<input type="file" name="file" accept=".jpg, .jpeg">
-					</div>
-				</div>
-				<div class="row text-center mb-3">
-					<div class="col-12">
-						<h3><span th:text="#{accepted.extension}"></span>: .jpg, .jpeg</h3>
-					</div>
-				</div>
-				<div class="row align-items-center justify-content-end mb-5">
-					<div class="col-3 col-md-2">
-						<a class="btn btn-info" href="#" th:href="@{/user/profile}"><span th:text="#{back}"></span></a>
-					</div>
-					<div class="col-6">
-						<button class="btn btn-success" type="submit"><span th:text="#{photo.change}"></span></button>
-					</div>
-				</div>
-			</form>
-		</section>
-	</div>
-</body>
+                <form action="#" th:action="@{/user/upload-photo}" method="post" enctype="multipart/form-data">
+                    <div class="row text-center">
+                        <div class="col-12">
+                            <input type="file" name="file" accept=".jpg, .jpeg">
+                        </div>
+                    </div>
+                    <div class="row text-center mb-3">
+                        <div class="col-12">
+                            <h3><span th:text="#{accepted.extension}"></span>: .jpg, .jpeg</h3>
+                        </div>
+                    </div>
+                    <div class="row align-items-center justify-content-end mb-5">
+                        <div class="col-3 col-md-2">
+                            <a class="btn btn-info" href="#" th:href="@{/user/profile}"><span th:text="#{back}"></span></a>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-success" type="submit"><span th:text="#{photo.change}"></span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </body>
 
-<footer th:replace="~{static/footer :: footer}"></footer>
+    <footer th:replace="~{static/footer :: footer}"></footer>
 </html>

@@ -1,55 +1,62 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta th:replace="~{static/headerMeta :: meta}">
-    <link th:replace="~{static/headerLink :: link}">
-    <script th:replace="~{static/headerScript :: script}"></script>
+    <head>
+        <meta th:replace="~{static/headerMeta :: meta}">
+        <link th:replace="~{static/headerLink :: link}">
+        <script th:replace="~{static/headerScript :: script}"></script>
 
-    <script async src='//www.google-analytics.com/analytics.js'></script>
-    <link rel="stylesheet" href="#" th:href="@{/css/login.css}" />
+        <script async src='//www.google-analytics.com/analytics.js'></script>
+        <link rel="stylesheet" href="#" th:href="@{/css/login.css}"/>
 
-    <title th:text="#{login.page}"></title>
-  </head>
+        <title th:text="#{login.page}"></title>
+    </head>
 
-  <body>
-    <div th:replace="~{static/barraNav :: nav}"></div>
+    <body>
+        <div th:replace="~{static/barraNav :: nav}"></div>
 
-    <div class="container">
-      <section class="mt-5 text-center">
-        <h1 class="alert alert-info" th:text="#{login.page}"></h1>
-      </section>
+        <div class="container">
+            <section class="mt-5 text-center">
+                <h1 class="alert alert-info" th:text="#{login.page}"></h1>
+            </section>
 
-      <section class="marginTopBottom3Percentage text-center">
-        <div th:if="${newUserOK != null}" class="alert alert-success" role="alert"><span th:text="#{new.user.ok}"></span></div>
-        <div th:if="${newUserKO != null}" class="alert alert-warning" role="alert"><span th:text="#{new.user.ko}"></span></div>
-      </section>
+            <section class="marginTopBottom3Percentage text-center">
+                <div th:if="${newUserOK != null}" class="alert alert-success" role="alert"><span
+                        th:text="#{new.user.ok}"></span></div>
+                <div th:if="${newUserKO != null}" class="alert alert-warning" role="alert"><span
+                        th:text="#{new.user.ko}"></span></div>
+            </section>
 
-      <section class="marginTopBottom3Percentage">
-        <div class="row align-items-center justify-content-end">
-          <div class="col-5">
-            <a href="#" th:href="@{/form/alta}" class="textDecoration-none">
-              <button class="btn btn-success" type="submit"><span th:text="#{add.new.user}"></span></button>
-            </a>
-          </div>
+            <section class="marginTopBottom3Percentage">
+                <div class="row align-items-center justify-content-end">
+                    <div class="col-5">
+                        <a href="#" th:href="@{/form/alta}" class="textDecoration-none">
+                            <button class="btn btn-success" type="submit"><span th:text="#{add.new.user}"></span>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="marginTopBottom3Percentage">
+                <form class="form-signin" th:action="@{/logincheck}" method="POST">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    <h2 class="form-signin-heading" th:text="#{access}"></h2>
+                    <input type="text" class="form-control" th:placeholder="#{username}" name="username" id="username"/>
+                    <input type="password" class="form-control" th:placeholder="#{password}" name="password"
+                           id="password"/>
+                    <div th:if="${error != null}" class="alert alert-danger" role="alert"><span
+                            th:text="#{invalid.user.or.password}"></span></div>
+                    <div class="d-grid gap-2 text-center mb-1">
+                        <button class="btn btn-lg btn-primary mb-4" type="submit"><i class="icofont-login"></i> <span
+                                th:text="#{access}"></span></button>
+                        <a href="#" th:href="@{/login-page/forgot-pass}" class="mt-4"><span
+                                th:text="#{forgot.your.password}"></span></a>
+                    </div>
+                </form>
+            </section>
+
         </div>
-      </section>
+    </body>
 
-      <section class="marginTopBottom3Percentage">
-        <form class="form-signin" th:action="@{/logincheck}" method="POST">
-          <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-          <h2 class="form-signin-heading" th:text="#{access}"></h2>
-          <input type="text" class="form-control" th:placeholder="#{username}" name="username" id="username"/>
-          <input type="password" class="form-control" th:placeholder="#{password}" name="password" id="password"/>
-          <div th:if="${error != null}" class="alert alert-danger" role="alert"><span th:text="#{invalid.user.or.password}"></span></div>
-          <div class="d-grid gap-2 text-center mb-1">
-            <button class="btn btn-lg btn-primary mb-4" type="submit"><i class="icofont-login"></i> <span th:text="#{access}"></span></button>
-            <a href="#" th:href="@{/login-page/forgot-pass}" class="mt-4"><span th:text="#{forgot.your.password}"></span></a>
-          </div>
-        </form>
-      </section>
-
-    </div>
-  </body>
-
-  <footer th:replace="~{static/footer :: footer}"></footer>
+    <footer th:replace="~{static/footer :: footer}"></footer>
 </html>

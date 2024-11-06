@@ -1,7 +1,5 @@
 package com.gymdaus.core.util;
 
-import com.google.common.collect.Iterators;
-
 public class Constants {
 
 	// vistas
@@ -49,7 +47,7 @@ public class Constants {
 	public static final int SWIFT = 11;
 	public static final int CATEGORY_NAME = 100;
 	public static final int BELT_NAME = 30;
-	public static final int POOMSAE_NAME = 20;
+	public static final int POOMSAE_NAME = 30;
 	public static final int GYM_ACTIVITY_SCHEDULE_NAME = 100;
 	public static final int GYM_CATEGORY_NAME = 100;
 	public static final int GYM_ACTIVITY_SCHEDULE_ROOM_NAME = 100;

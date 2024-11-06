@@ -1,68 +1,73 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
-	<head>
-		<meta th:replace="~{static/headerMeta :: meta}">
-		<link th:replace="~{static/headerLink :: link}">
-		<script th:replace="~{static/headerScript :: script}"></script>
+    <head>
+        <meta th:replace="~{static/headerMeta :: meta}">
+        <link th:replace="~{static/headerLink :: link}">
+        <script th:replace="~{static/headerScript :: script}"></script>
 
-		<title th:text="#{gym.administration}"></title>
-	</head>
-	<body>
-		<div th:replace="~{static/barraUser :: div}"></div>
-		<div th:replace="~{static/barraNav :: nav}"></div>
+        <title th:text="#{gym.administration}"></title>
+    </head>
+    <body>
+        <div th:replace="~{static/barraUser :: div}"></div>
+        <div th:replace="~{static/barraNav :: nav}"></div>
 
-		<div class="container text-center marginTopBottom3Percentage">
-			<section>
-				<div class="row align-items-center justify-content-end">
-					<div class="col-md-2">
-					</div>
-					<div class="col-6 col-md-8 colorGreen">
-						<h3><span th:text="#{administration}"></span>  <span th:text="${gymModel.name}"></span></h3>
-					</div>
-					<div class="col-3 col-md-2">
-						<a class="btn btn-info" href="#" th:href="@{__${backButton}__}"><span th:text="#{back}"></span></a>
-					</div>
-				</div>
-			</section>
-
-
-			<section sec:authorize="hasRole('ROLE_ADMIN')">
-
-				<div class="row row-cols-1 row-cols-md-3 g-4">
-					<div class="col">
-						<h5 class="text-center" th:text="#{gym}"></h5>
-						<div class="d-grid gap-2">
-							<a class="btn btn-primary" th:href="@{/gym/}"><span th:text="#{users}"></span></a>
-							<a class="btn btn-primary" th:href="@{/gym/}"><span th:text="#{administrators}"></span></a>
-							<a class="btn btn-primary" th:href="@{/gym/}"><span th:text="#{params}"></span></a>
-							<a class="btn btn-primary" th:href="@{/gymBelt/belts/__${gymModel.id}__}"><span th:text="#{belts}"></span></a>
-							<a class="btn btn-primary" th:href="@{/gym/}"><span th:text="#{poomsaes}"></span></a>
-							<a class="btn btn-primary" th:href="@{/gym/}"><span th:text="#{photos}"></span></a>
-							<a class="btn btn-primary" th:href="@{/gym/}"><span th:text="#{addresses}"></span></a>
-							<a class="btn btn-primary" th:href="@{/gym/}"><span th:text="#{documents}"></span></a>
-							<a class="btn btn-primary" th:href="@{/gym/}"><span th:text="#{participating.entities}"></span></a>
-						</div>
-					</div>
-					<div class="col">
-						<h5 class="text-center" th:text="#{menu1.activities}"></h5>
-						<div class="d-grid gap-2">
-							<a class="btn btn-secondary" th:href="@{/gym/}"><span th:text="#{associate.entity}"></span></a>
-							<a class="btn btn-secondary" th:href="@{/gym/}"><span th:text="#{user.enrollments}"></span></a>
-						</div>
-					</div>
-					<div class="col">
-						<h5 class="text-center" th:text="#{menu1.more.registrations}"></h5>
-						<div class="d-grid gap-2">
-							<a class="btn btn-success" th:href="@{/gym/}"><span th:text="#{associate.more.enrollments}"></span></a>
-							<a class="btn btn-success" th:href="@{/gym/}"><span th:text="#{user.enrollments}"></span></a>
-						</div>
-					</div>
-				</div>
-			</section>
+        <div class="container text-center marginTopBottom3Percentage">
+            <section>
+                <div class="row align-items-center justify-content-end">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-6 col-md-8 colorGreen">
+                        <h3><span th:text="#{administration}"></span> <span th:text="${gymModel.name}"></span></h3>
+                    </div>
+                    <div class="col-3 col-md-2">
+                        <a class="btn btn-info" href="#" th:href="@{__${backButton}__}"><span th:text="#{back}"></span></a>
+                    </div>
+                </div>
+            </section>
 
 
-		</div>
-	</body>
+            <section sec:authorize="hasRole('ROLE_ADMIN')">
 
-	<footer th:replace="~{static/footer :: footer}"></footer>
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <div class="col">
+                        <h5 class="text-center" th:text="#{gym}"></h5>
+                        <div class="d-grid gap-2">
+                            <a class="btn btn-primary" th:href="@{/gym/}"><span th:text="#{users}"></span></a>
+                            <a class="btn btn-primary" th:href="@{/gym/}"><span th:text="#{administrators}"></span></a>
+                            <a class="btn btn-primary" th:href="@{/gym/}"><span th:text="#{params}"></span></a>
+                            <a class="btn btn-primary" th:href="@{/gymBelt/belts/__${gymModel.id}__}"><span
+                                    th:text="#{belts}"></span></a>
+                            <a class="btn btn-primary" th:href="@{/gymPoomsae/poomsaes/__${gymModel.id}__}"><span
+                                    th:text="#{poomsaes}"></span></a>
+                            <a class="btn btn-primary" th:href="@{/gym/}"><span th:text="#{photos}"></span></a>
+                            <a class="btn btn-primary" th:href="@{/gym/}"><span th:text="#{addresses}"></span></a>
+                            <a class="btn btn-primary" th:href="@{/gym/}"><span th:text="#{documents}"></span></a>
+                            <a class="btn btn-primary" th:href="@{/gym/}"><span
+                                    th:text="#{participating.entities}"></span></a>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <h5 class="text-center" th:text="#{menu1.activities}"></h5>
+                        <div class="d-grid gap-2">
+                            <a class="btn btn-secondary" th:href="@{/gym/}"><span th:text="#{associate.entity}"></span></a>
+                            <a class="btn btn-secondary" th:href="@{/gym/}"><span th:text="#{user.enrollments}"></span></a>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <h5 class="text-center" th:text="#{menu1.more.registrations}"></h5>
+                        <div class="d-grid gap-2">
+                            <a class="btn btn-success" th:href="@{/gym/}"><span
+                                    th:text="#{associate.more.enrollments}"></span></a>
+                            <a class="btn btn-success" th:href="@{/gym/}"><span
+                                    th:text="#{user.enrollments}"></span></a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+        </div>
+    </body>
+
+    <footer th:replace="~{static/footer :: footer}"></footer>
 </html>
