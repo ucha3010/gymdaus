@@ -3,6 +3,7 @@ package com.gymdaus.core.service;
 
 import com.gymdaus.core.entity.User;
 import com.gymdaus.core.exception.SenderException;
+import com.gymdaus.core.model.EmailModel;
 import com.gymdaus.core.model.TokenModel;
 import com.gymdaus.core.model.UserModel;
 
@@ -10,6 +11,10 @@ import java.io.File;
 import java.util.List;
 
 public interface EmailService {
+
+    EmailModel getGymParameters(Long gymId);
+
+    void updateGymParameters(EmailModel emailModel, String modificationUsername);
 
     void sendChangePassword(UserModel userModel, TokenModel tokenModel) throws SenderException;
 

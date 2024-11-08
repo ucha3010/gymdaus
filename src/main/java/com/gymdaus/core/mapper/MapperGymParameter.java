@@ -9,8 +9,9 @@ import org.springframework.stereotype.Component;
 public class MapperGymParameter {
 
     public GymParameterModel entity2Model(GymParameter externObject) {
-        GymParameterModel localObject = new GymParameterModel();
+        GymParameterModel localObject = null;
         if (externObject != null) {
+            localObject = new GymParameterModel();
             localObject.setKeyData(externObject.getKeyData());
             localObject.setValue(externObject.getValue());
             localObject.setModificationDate(externObject.getModificationDate());

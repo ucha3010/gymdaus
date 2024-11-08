@@ -10,11 +10,11 @@ import lombok.*;
 public class UtilModel {
 
     private String key;
-    private String valuer;
+    private String value;
     private int gymCode;
 
-    public UtilModel(String key, String valuer) {
+    public UtilModel(String key, String value) {
         this.key = key;
-        this.valuer = valuer;
+        this.value = value;
     }
 }

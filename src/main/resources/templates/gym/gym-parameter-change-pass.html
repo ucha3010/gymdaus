@@ -57,7 +57,6 @@
 		}
 
 
-
         </script>
     </head>
     <body>
@@ -73,10 +72,18 @@
                         th:text="#{password.modified}"></span></div>
             </section>
 
-            <form sec:authorize="isAuthenticated()" action="#" th:action="@{/user/update-pass}"
+            <section>
+                <div class="row mb-1 text-center">
+                    <div class="col-12 colorGreen">
+                        <h1><span th:text="#{change.pass}"></span> - <span th:text="#{email}"></span> - <span th:text="${gymModel.name}"></span></h1>
+                    </div>
+                </div>
+            </section>
+
+            <form sec:authorize="hasRole('ROLE_ADMIN')" action="#" th:action="@{/gym/update-email-pass}"
                   th:object="${passwordModel}" method="post" onsubmit="return validate()">
 
-                <input type="hidden" name="username" th:value="${passwordModel.username}"/>
+                <input type="hidden" name="gymId" th:value="${gymModel.id}"/>
 
                 <div class="row mt-2 mb-1">
                     <div class="col-md-3">
@@ -131,7 +138,8 @@
                     <div class="col-2 col-md-3">
                     </div>
                     <div class="col-2">
-                        <a class="btn btn-info" href="#" th:href="@{/user/profile}"><span th:text="#{back}"></span></a>
+                        <a class="btn btn-info" href="#" th:href="@{/gym/parameters/__${gymModel.id}__}"><span
+                                th:text="#{back}"></span></a>
                     </div>
                     <div class="col-4 col-md-3">
                     </div>

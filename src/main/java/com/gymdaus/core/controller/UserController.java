@@ -3,8 +3,8 @@ package com.gymdaus.core.controller;
 
 import com.gymdaus.core.configuration.SessionData;
 import com.gymdaus.core.entity.UserRole;
+import com.gymdaus.core.model.PasswordModel;
 import com.gymdaus.core.model.UserModel;
-import com.gymdaus.core.model.UserPasswordModel;
 import com.gymdaus.core.service.SecurityService;
 import com.gymdaus.core.service.UserDocumentManagerService;
 import com.gymdaus.core.service.UserRoleService;
@@ -100,31 +100,31 @@ public class UserController {
 
     @GetMapping("/change-pass")
     @PreAuthorize("isAuthenticated()")
-    public ModelAndView changePass(ModelAndView modelAndView, UserPasswordModel userPasswordModel) {
+    public ModelAndView changePass(ModelAndView modelAndView, PasswordModel passwordModel) {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         securityService.userAccessValidation("/user/change-pass");
         modelAndView.setViewName("user/user-change-password");
         UserModel user = utilService.basicDataCharge(modelAndView);
-        userPasswordModel.setUsername(user.getUsername());
-        modelAndView.addObject("userPasswordModel", userPasswordModel);
+        passwordModel.setUsername(user.getUsername());
+        modelAndView.addObject("passwordModel", passwordModel);
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return modelAndView;
     }
 
     @PostMapping("/update-pass")
     @PreAuthorize("isAuthenticated()")
-    public ModelAndView updatePass(@ModelAttribute("userPasswordModel") UserPasswordModel userPasswordModel) {
+    public ModelAndView updatePass(@ModelAttribute("passwordModel") PasswordModel passwordModel) {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), null, getClass());
         securityService.userAccessValidation("/user/update-pass");
-        if (userPasswordModel == null || Utils.isNullOrEmpty(userPasswordModel.getUsername()) || sessionData.getUserModel() == null ||
+        if (passwordModel == null || Utils.isNullOrEmpty(passwordModel.getUsername()) || sessionData.getUserModel() == null ||
                 Utils.isNullOrEmpty(sessionData.getUserModel().getUsername()) ||
-                !userPasswordModel.getUsername().equalsIgnoreCase(sessionData.getUserModel().getUsername())) {
+                !passwordModel.getUsername().equalsIgnoreCase(sessionData.getUserModel().getUsername())) {
             throw new AccessDeniedException("/user/update-pass");
         }
         ModelAndView modelAndView = new ModelAndView();
-        UserModel userModel = userService.findModelByUsername(userPasswordModel.getUsername());
-        if (userService.comparePassword(userPasswordModel.getOldPassword(), userModel.getPassword())) {
-            userModel.setPassword(userService.encodePassword(userPasswordModel.getNewPassword()));
+        UserModel userModel = userService.findModelByUsername(passwordModel.getUsername());
+        if (userService.comparePassword(passwordModel.getOldPassword(), userModel.getPassword())) {
+            userModel.setPassword(userService.encodePassword(passwordModel.getNewPassword()));
             userService.updatePass(userModel);
             modelAndView.addObject("modifiedPass", "modifiedPass");
             LoggerMapper.log(Level.INFO, Utils.getMethodName(), "Password updated " + userModel.getUsername(), getClass());
@@ -133,8 +133,10 @@ public class UserController {
             LoggerMapper.log(Level.INFO, Utils.getMethodName(), "Old password different", getClass());
         }
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
-        return changePass(modelAndView, userPasswordModel);
+        return changePass(modelAndView, passwordModel);
     }
+
+    //TODO hasta acá lo nuevo
 
     @GetMapping("/users")
     @PreAuthorize("hasRole('ROLE_ROOT')")

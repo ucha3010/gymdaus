@@ -1,9 +1,9 @@
 package com.gymdaus.core.controller;
 
 import com.gymdaus.core.exception.SenderException;
+import com.gymdaus.core.model.PasswordModel;
 import com.gymdaus.core.model.TokenModel;
 import com.gymdaus.core.model.UserModel;
-import com.gymdaus.core.model.UserPasswordModel;
 import com.gymdaus.core.service.EmailService;
 import com.gymdaus.core.service.TokenService;
 import com.gymdaus.core.service.impl.UserService;
@@ -53,13 +53,15 @@ public class LoginController {
         return Constants.LOGIN;
     }
 
+    //TODO hasta acá lo nuevo
+
     @GetMapping("/forgot-pass")
     @PreAuthorize("permitAll()")
     public ModelAndView forgotPass(ModelAndView modelAndView) {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         modelAndView.setViewName("formForgotPass");
         if (modelAndView.isEmpty() || !modelAndView.getModel().containsKey("userPasswordModel")) {
-            modelAndView.addObject("userPasswordModel", new UserPasswordModel());
+            modelAndView.addObject("userPasswordModel", new PasswordModel());
         }
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return modelAndView;
@@ -67,21 +69,21 @@ public class LoginController {
 
     @PostMapping("/new-pass")
     @PreAuthorize("permitAll()")
-    public ModelAndView newPass(@ModelAttribute("userPasswordModel") UserPasswordModel userPasswordModel, ModelAndView modelAndView) {
+    public ModelAndView newPass(@ModelAttribute("passwordModel") PasswordModel passwordModel, ModelAndView modelAndView) {
         try {
-            UserModel userModel = userService.findModelByUsername(userPasswordModel.getUsername());
+            UserModel userModel = userService.findModelByUsername(passwordModel.getUsername());
             TokenModel tokenModel = new TokenModel();
             tokenModel.setId(UUID.randomUUID().toString());
-            tokenModel.setUsername(userPasswordModel.getUsername());
+            tokenModel.setUsername(passwordModel.getUsername());
             tokenModel.setExpiration(Utils.addSubtractMinutes(15));
             tokenService.add(tokenModel);
             emailService.sendChangePassword(userModel, tokenModel);
             modelAndView.addObject("emailEnvio", "Se ha enviado un correo para el cambio de " +
                     "contraseña a " + Utils.obfuscate(userModel.getEmail()));
         } catch (PersistenceException | SenderException e) {
-            mostrarExcepcion(e, userPasswordModel, modelAndView);
+            mostrarExcepcion(e, passwordModel, modelAndView);
         }
-        modelAndView.addObject("userPasswordModel", userPasswordModel);
+        modelAndView.addObject("passwordModel", passwordModel);
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return forgotPass(modelAndView);
     }
@@ -146,12 +148,12 @@ public class LoginController {
         return modelAndView;
     }
 
-    private void mostrarExcepcion(Exception e, UserPasswordModel userPasswordModel, ModelAndView modelAndView) {
+    private void mostrarExcepcion(Exception e, PasswordModel passwordModel, ModelAndView modelAndView) {
         StringWriter sw = new StringWriter();
         e.printStackTrace(new PrintWriter(sw));
         LoggerMapper.log(Level.ERROR, "nuevaClave", sw.toString(), getClass());
         modelAndView.addObject("errorEnvio", "No se ha podido enviar el cambio de contraseña " +
-                "al usuario " + userPasswordModel.getUsername() + ". Por favor contacte con el administrador.");
+                "al usuario " + passwordModel.getUsername() + ". Por favor contacte con el administrador.");
     }
 
 }

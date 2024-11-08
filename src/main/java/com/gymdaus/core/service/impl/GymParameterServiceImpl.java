@@ -5,7 +5,7 @@ import com.gymdaus.core.mapper.MapperGymParameter;
 import com.gymdaus.core.model.GymParameterModel;
 import com.gymdaus.core.repository.GymParameterRepository;
 import com.gymdaus.core.service.GymParameterService;
-import jakarta.persistence.EntityNotFoundException;
+import com.gymdaus.core.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,16 +31,29 @@ public class GymParameterServiceImpl implements GymParameterService {
     }
 
     @Override
-    public GymParameterModel get(Long gymId, String keyData) {
-        try {
-            return mapperGymParameter.entity2Model(gymParameterRepository.findByGymIdAndKeyData(gymId, keyData));
-        } catch (EntityNotFoundException e) {
-            return new GymParameterModel();
+    public List<GymParameterModel> getStartWith(Long gymId, String keyDataStart) {
+        List<GymParameterModel> gymParameterModelList = new ArrayList<>();
+        for (GymParameter gymParameter : gymParameterRepository.findAllByGymId(gymId)) {
+            if (gymParameter.getKeyData().startsWith(keyDataStart)) {
+                gymParameterModelList.add(mapperGymParameter.entity2Model(gymParameter));
+            }
         }
+        return gymParameterModelList;
+    }
+
+    @Override
+    public GymParameterModel get(Long gymId, String keyData) {
+        return mapperGymParameter.entity2Model(gymParameterRepository.findByGymIdAndKeyData(gymId, keyData));
     }
 
     @Override
     public GymParameterModel update(GymParameterModel gymParameterModel) {
         return mapperGymParameter.entity2Model(gymParameterRepository.save(mapperGymParameter.model2Entity(gymParameterModel)));
+    }
+
+    @Override
+    public boolean comparePassword(Long gymId, String oldPassword) {
+        GymParameter gymParameter = gymParameterRepository.findByGymIdAndKeyData(gymId, "email.password");
+        return gymParameter != null && !Utils.isNullOrEmpty(oldPassword) && oldPassword.equals(gymParameter.getValue());
     }
 }

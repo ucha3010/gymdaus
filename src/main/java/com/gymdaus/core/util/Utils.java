@@ -106,7 +106,7 @@ public class Utils {
     public static List<UtilModel> chargeListHostProvider() {
         List<UtilModel> listHost = new ArrayList<>();
         for (EmailEnum emailEnum : EmailEnum.values()) {
-            listHost.add(new UtilModel(emailEnum.getProveedor(), emailEnum.getHost()));
+            listHost.add(new UtilModel(emailEnum.getProvider(), emailEnum.getHost()));
         }
         return listHost;
     }

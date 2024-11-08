@@ -22,7 +22,7 @@ public class GymParameter {
     @Id
     @Column(nullable = false, length = Constants.KEY)
     private String keyData;
-    @Column(nullable = false, length = Constants.VALUE)
+    @Column(length = Constants.VALUE)
     private String value;
     @Id
     private Long gymId;

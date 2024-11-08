@@ -2,27 +2,30 @@ package com.gymdaus.core.service.impl;
 
 import com.gymdaus.core.entity.User;
 import com.gymdaus.core.exception.SenderException;
-import com.gymdaus.core.model.EmailModel;
-import com.gymdaus.core.model.TokenModel;
-import com.gymdaus.core.model.UserModel;
-import com.gymdaus.core.model.ManagerParameterModel;
+import com.gymdaus.core.model.*;
 import com.gymdaus.core.service.EmailService;
+import com.gymdaus.core.service.GymParameterService;
 import com.gymdaus.core.service.ManagerParameterService;
 import com.gymdaus.core.util.Constants;
+import com.gymdaus.core.util.EmailEnum;
 import com.gymdaus.core.util.SendMessage;
+import com.gymdaus.core.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 @Service()
 public class EmailServiceImpl implements EmailService {
     @Autowired
     private SendMessage sendMessage;
-    /*
+
     @Autowired
-    private DocumentManagerService documentManagerService;
+    private GymParameterService gymParameterService;
+
+    /*
     @Autowired
     private GimnasioService gimnasioService;
 
@@ -31,14 +34,66 @@ public class EmailServiceImpl implements EmailService {
     private ManagerParameterService managerParameterService;
 
     @Override
+    public EmailModel getGymParameters(Long gymId) {
+        List<GymParameterModel> gymParameterModelList = gymParameterService.getStartWith(gymId, "email.");
+        EmailModel emailAddress = new EmailModel();
+        emailAddress.setGymId(gymId);
+        for (GymParameterModel gymParameterModel : gymParameterModelList) {
+            if ("email.address".equals(gymParameterModel.getKeyData())) {
+                emailAddress.setFromEmailAddress(gymParameterModel.getValue());
+            }
+            if ("email.host".equals(gymParameterModel.getKeyData())) {
+                emailAddress.setHost(gymParameterModel.getValue());
+            }
+            if ("email.port".equals(gymParameterModel.getKeyData())) {
+                emailAddress.setPort(gymParameterModel.getValue());
+            }
+            if ("email.password".equals(gymParameterModel.getKeyData())) {
+                emailAddress.setPassword(gymParameterModel.getValue());
+            }
+        }
+        return emailAddress;
+    }
+
+    @Override
+    public void updateGymParameters(EmailModel emailModel, String modificationUsername) {
+        List<GymParameterModel> gymParameterModelList = gymParameterService.getStartWith(emailModel.getGymId(), "email.");
+        Date now = new Date();
+        for (GymParameterModel gymParameterModel : gymParameterModelList) {
+            if ("email.address".equals(gymParameterModel.getKeyData())
+                    && !Utils.isNullOrEmpty(gymParameterModel.getValue())
+                    && !gymParameterModel.getValue().equals(emailModel.getFromEmailAddress())) {
+                gymParameterModel.setValue(emailModel.getFromEmailAddress());
+                updateGymParameterModel(gymParameterModel, now, modificationUsername);
+            }
+            if ("email.host".equals(gymParameterModel.getKeyData())
+                    && !Utils.isNullOrEmpty(gymParameterModel.getValue())
+                    && !gymParameterModel.getValue().equals(emailModel.getHost())) {
+                gymParameterModel.setValue(emailModel.getHost());
+                updateGymParameterModel(gymParameterModel, now, modificationUsername);
+                GymParameterModel gymParameterModelHost = new GymParameterModel();
+                gymParameterModelHost.setKeyData("email.port");
+                gymParameterModelHost.setGymModel(gymParameterModel.getGymModel());
+                for (EmailEnum emailEnum : EmailEnum.values()) {
+                    if (emailEnum.getHost().equals(emailModel.getHost())) {
+                        gymParameterModelHost.setValue(emailEnum.getPort());
+                        break;
+                    }
+                }
+                updateGymParameterModel(gymParameterModelHost, now, modificationUsername);
+            }
+        }
+    }
+
+    @Override
     public void sendChangePassword(UserModel userModel, TokenModel tokenModel) throws SenderException {//envía plataforma
         try {
             ManagerParameterModel managerParameterModel = managerParameterService.get();
             sendMessage.enviarCorreo(new EmailModel(managerParameterModel.getEmail(), userModel.getEmail(),
                     "Correo para poder modificar contraseña", textMessageChangePassword(userModel, tokenModel),
-                    null, managerParameterModel.getEmailHost(), managerParameterModel.getEmailPort(), managerParameterModel.getPassword()));
+                    null, managerParameterModel.getEmailHost(), managerParameterModel.getEmailPort(), managerParameterModel.getPassword(), null));
         } catch (Exception e) {
-            throw new SenderException(Constants.AVISO_EMAIL,e.getMessage());
+            throw new SenderException(Constants.AVISO_EMAIL, e.getMessage());
         }
 
     }
@@ -49,9 +104,9 @@ public class EmailServiceImpl implements EmailService {
             ManagerParameterModel utilManagerModel = managerParameterService.get();
             sendMessage.enviarCorreo(new EmailModel(utilManagerModel.getEmail(), user.getEmail(),
                     "Código de validación", textMessageCodeValidation(user, code), files,
-                    utilManagerModel.getEmailHost(), utilManagerModel.getEmailPort(), utilManagerModel.getPassword()));
+                    utilManagerModel.getEmailHost(), utilManagerModel.getEmailPort(), utilManagerModel.getPassword(), null));
         } catch (Exception e) {
-            throw new SenderException(Constants.AVISO_EMAIL,e.getMessage());
+            throw new SenderException(Constants.AVISO_EMAIL, e.getMessage());
         }
     }
 /*
@@ -173,6 +228,13 @@ public class EmailServiceImpl implements EmailService {
     }
 
  */
+
+
+    private void updateGymParameterModel(GymParameterModel gymParameterModel, Date now, String modificationUsername) {
+        gymParameterModel.setModificationDate(now);
+        gymParameterModel.setModificationUsername(modificationUsername);
+        gymParameterService.update(gymParameterModel);
+    }
 
     private String textMessageChangePassword(UserModel userModel, TokenModel tokenModel) {
 

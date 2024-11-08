@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta th:replace="~{static/headerMeta :: meta}">
+        <link th:replace="~{static/headerLink :: link}">
+        <script th:replace="~{static/headerScript :: script}"></script>
+        <script th:replace="~{static/headerScriptJquery :: script}"></script>
+        <script th:replace="~{static/headerScriptTable :: script}"></script>
+
+        <title th:text="#{gym.administration}"></title>
+
+        <script type="text/javascript">
+
+            function confirmDelete(gymUserId){
+                let deleteAsk = $('#deleteAsk').val();
+                if(confirm(deleteAsk)){
+                    var relativeUrl = "gym/delete/gym-user/" + gymUserId;
+                    var domain = getDomain(location.href);
+                    location.href = domain + relativeUrl;
+                    return true;
+                }
+                return false;
+            }
+
+            function sendInvitation(gymId) {
+                const inviteText = document.getElementById("invite").value;
+                const language = document.getElementById("language").value;
+                var relativeUrl = "gym/send-invitation/gym-user/" + gymId + "/" + inviteText + "?language=" + language;
+                var domain = getDomain(location.href);
+                location.href = domain + relativeUrl;
+            }
+
+        </script>
+    </head>
+    <body>
+        <div th:replace="~{static/barraUser :: div}"></div>
+        <div th:replace="~{static/barraNav :: nav}"></div>
+
+        <div class="container mt-4">
+            <input type="hidden" id="deleteAsk" th:value="#{confirm.delete.user}"/>
+
+            <section class="marginTopBottom3Percentage text-center">
+                <div th:if="${invitationSentFail != null}" class="alert alert-danger" role="alert"><span
+                        th:text="#{invite.user.fail}"></span></div>
+                <div th:if="${confirmationOk != null}" class="alert alert-success" role="alert"><span
+                        th:text="#{__${confirmationOk}__}"></span></div>
+            </section>
+
+            <section>
+                <div class="row align-items-center justify-content-end">
+                    <div class="col-3 col-md-2">
+                        <a class="btn btn-info" href="#" th:href="@{/gym/gym-admin/__${gymModel.id}__}"><span
+                                th:text="#{back}"></span></a>
+                    </div>
+                </div>
+                <div class="row mb-1 text-center">
+                    <div class="col-12 colorGreen">
+                        <h1><span th:text="#{administrators}"></span> <span th:text="${gymModel.name}"></span></h1>
+                    </div>
+                </div>
+            </section>
+
+            <section sec:authorize="hasRole('ROLE_ADMIN')" class="mb-4">
+                <div class="row align-items-center">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-12 col-md-8 col-lg-6">
+                        <label for="invite" class="form-label" th:text="#{invite.user.to.manage.gym}"></label>
+                        <div class="input-group">
+                            <input type="text" id="invite" class="form-control">
+                            <button class="btn btn-success" type="button" th:attr="onclick=|sendInvitation('${gymModel.id}')|" ><span th:text="#{send}"></span></button>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-lg-4">
+                    </div>
+                </div>
+            </section>
+
+            <section sec:authorize="hasRole('ROLE_ADMIN')">
+                <h5 class="d-lg-none" th:text="#{to.see.full.table}"></h5>
+                <table class="table table-striped table-hover sortable">
+                    <thead>
+                    <tr class="align-middle">
+                        <th scope="col" class="fw-normal">
+                            <button class="btn btn-link"><span th:text="#{username}"></span><span
+                                    aria-hidden="true"></span></button>
+                        </th>
+                        <th scope="col" class="fw-normal">
+                            <button class="btn btn-link"><span th:text="#{name}"></span><span aria-hidden="true"></span>
+                            </button>
+                        </th>
+                        <th scope="col" class="fw-normal">
+                            <button class="btn btn-link"><span th:text="#{lastname}"></span><span
+                                    aria-hidden="true"></span></button>
+                        </th>
+                        <th scope="col" class="fw-normal">
+                            <button class="btn btn-link"><span th:text="#{secondLastname}"></span><span
+                                    aria-hidden="true"></span></button>
+                        </th>
+                        <th scope="col" class="d-none d-lg-table-cell">
+                            <button class="btn btn-link"><span th:text="#{role}"></span><span aria-hidden="true"></span>
+                            </button>
+                        </th>
+                        <th scope="col" class="d-none d-lg-table-cell">
+                            <button class="btn btn-link"><span th:text="#{registration.date}"></span><span
+                                    aria-hidden="true"></span></button>
+                        </th>
+                        <th scope="col" class="d-none d-lg-table-cell">
+                            <button class="btn btn-link"><span th:text="#{registration.user}"></span><span
+                                    aria-hidden="true"></span></button>
+                        </th>
+                        <th scope="col" class="d-none d-lg-table-cell"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="gymUser : ${gymUserModelList}">
+                        <td><span th:text="${gymUser.userModel.username}"></span></td>
+                        <td><span th:text="${gymUser.userModel.name}"></span></td>
+                        <td><span th:text="${gymUser.userModel.lastname}"></span></td>
+                        <td><span th:text="${gymUser.userModel.secondLastname}"></span></td>
+                        <td class="d-none d-lg-table-cell"><span th:text="${gymUser.gymRole}"></span></td>
+                        <td class="d-none d-lg-table-cell"><span
+                                th:text="${#calendars.format(gymUser.registrationDate,'dd/MM/yyyy HH:mm')}"></span>
+                        </td>
+                        <td class="d-none d-lg-table-cell"><span th:text="${gymUser.registrationUser}"></span></td>
+                        <td class="d-none d-lg-table-cell">
+                            <button class="btn btn-danger btn-sm" th:attr="onclick=|confirmDelete('${gymUser.id}')|">
+                                <span th:text="#{delete}"></span></button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </body>
+
+    <footer th:replace="~{static/footer :: footer}"></footer>
+</html>

@@ -9,10 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserPasswordModel {
+public class PasswordModel {
 
-    private int id;
     private String username;
+    private Long gymId;
     private String oldPassword;
     private String newPassword;
     private String newPasswordRepeat;

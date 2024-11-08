@@ -33,8 +33,8 @@
                         <h5 class="text-center" th:text="#{gym}"></h5>
                         <div class="d-grid gap-2">
                             <a class="btn btn-primary" th:href="@{/gym/}"><span th:text="#{users}"></span></a>
-                            <a class="btn btn-primary" th:href="@{/gym/}"><span th:text="#{administrators}"></span></a>
-                            <a class="btn btn-primary" th:href="@{/gym/}"><span th:text="#{params}"></span></a>
+                            <a class="btn btn-primary" th:href="@{/gym/gym-user/__${gymModel.id}__}"><span th:text="#{administrators}"></span></a>
+                            <a class="btn btn-primary" th:href="@{/gym/parameters/__${gymModel.id}__}"><span th:text="#{parameters}"></span></a>
                             <a class="btn btn-primary" th:href="@{/gymBelt/belts/__${gymModel.id}__}"><span
                                     th:text="#{belts}"></span></a>
                             <a class="btn btn-primary" th:href="@{/gymPoomsae/poomsaes/__${gymModel.id}__}"><span
