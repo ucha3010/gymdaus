@@ -24,5 +24,9 @@ public class Token {
     private Long gymId;
     @Column(nullable = false, length = Constants.USERNAME_OR_ID_CARD)
     private String username;
+    @Column(nullable = false)
+    private String methodToBeUse;
+    @Column(length = Constants.USERNAME_OR_ID_CARD)
+    private String usernameSendChange;
 
 }

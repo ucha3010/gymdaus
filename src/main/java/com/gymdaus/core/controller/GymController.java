@@ -4,8 +4,10 @@ import com.gymdaus.core.configuration.SessionData;
 import com.gymdaus.core.model.*;
 import com.gymdaus.core.service.*;
 import com.gymdaus.core.service.impl.UserService;
+import com.gymdaus.core.util.Constants;
 import com.gymdaus.core.util.LoggerMapper;
 import com.gymdaus.core.util.Utils;
+import jakarta.persistence.NoResultException;
 import org.apache.logging.log4j.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -36,9 +38,11 @@ public class GymController {
     @Autowired
     private SecurityService securityService;
     @Autowired
-    private UtilService utilService;
+    private UserRoleService userRoleService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private UtilService utilService;
     @Autowired
     private SessionData sessionData;
 
@@ -130,6 +134,12 @@ public class GymController {
         GymUserModel gymUserModel = gymUserService.findById(gymUserId);
         securityService.enabledAdministrationGymUser(user.getUsername(), gymUserModel.getGymModel().getId(), "/gym/delete/gym-user/");
         gymUserService.delete(gymUserId);
+        if (gymUserService.findByUsername(gymUserModel.getUserModel().getUsername()).isEmpty()) {
+            UserRoleModel userRoleModel = new UserRoleModel();
+            userRoleModel.setUsername(gymUserModel.getUserModel().getUsername());
+            userRoleModel.setRoles(List.of(Constants.ROLE_USER));
+            userRoleService.updateRoles(userRoleModel);
+        }
         modelAndView.addObject("confirmationOk", "deleted.user.ok");
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return gymUser(modelAndView, gymUserModel.getGymModel().getId());
@@ -142,15 +152,21 @@ public class GymController {
         securityService.userAccessValidation("/gym/send-invitation/gym-user/" + gymId + "/" + username);
         UserModel user = utilService.basicDataCharge(modelAndView);
         securityService.enabledAdministrationGymUser(user.getUsername(), gymId, "/gym/send-invitation/gym-user/");
-        // TODO Pendiente hacer GymParameter para poder enviar el email
+        try {
+            UserModel userInvited = userService.findModelByUsername(username);
+        } catch (NoResultException nre) {
+            modelAndView.addObject("invitationSentFail", "invitationSentFail");
+            return gymUser(modelAndView, gymId);
+        }
+        GymModel gymModel = gymService.findByIdEnabled(gymId);
         if (Boolean.TRUE) {
             //TODO verificar si necesito utilizar el locale o si es mejor enviar la llamada a emailService y que la traducción se haga ahí
             Locale locale = new Locale(language);
             LocaleContextHolder.setLocale(locale);
-            String translatedUserName = messageSource.getMessage("accepted.extension", null, locale);
+
             modelAndView.addObject("confirmationOk", "email.sent.ok");
         } else {
-            modelAndView.addObject("invitationSentFail", "invitationSentFail");
+            modelAndView.addObject("errorSendingEmail", "errorSendingEmail");
         }
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return gymUser(modelAndView, gymId);
@@ -216,7 +232,7 @@ public class GymController {
             modelAndView.addObject("oldDifferent", "oldDifferent");
         } else {
             GymParameterModel gymParameterModel = new GymParameterModel();
-            gymParameterModel.setKeyData("email.password");
+            gymParameterModel.setKeyData(Constants.EMAIL_PASSWORD);
             GymModel gymModel = new GymModel();
             gymModel.setId(passwordModel.getGymId());
             gymParameterModel.setGymModel(gymModel);

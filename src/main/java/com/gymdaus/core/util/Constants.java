@@ -9,11 +9,13 @@ public class Constants {
 	public static final String ROLE_USER = "ROLE_USER";
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
 	public static final String ROLE_ROOT = "ROLE_ROOT";
+	public static final String ROLE_MANAGER= "ROLE_MANAGER";
+	public static final String ROLE_EMPLOYEE= "ROLE_EMPLOYEE";
 
 
 	public static final String ERROR_BORRAR_MENU = "102";
 	public static final String ERROR_BORRAR_MENU_CON_SUBMENU = "103";
-    public static final String AVISO_EMAIL = "1000";
+    public static final String EMAIL_ADVICE = "1000";
 
 	// generales
 	public static final String TRUE = "true";
@@ -38,9 +40,9 @@ public class Constants {
 	public static final int TAX_ID_CODE = 50;
 	public static final int SEX = 10;
 	public static final int EMAIL = 200;
-	public static final int EMAIL_HOST = 100;
+	public static final int EMAIL_HOST_LENGTH = 100;
 	public static final int HOST_PAGE_NAME = 200;
-	public static final int EMAIL_PORT = 5;
+	public static final int EMAIL_PORT_LENGTH = 5;
 	public static final int PHONE = 20;
 	public static final int SEPA_ACCOUNT_NUMBER = 34;
 	public static final int SEPA_ACCOUNT_PERSON = 100;
@@ -72,4 +74,10 @@ public class Constants {
 	//Nuevas constantes
     public static final String GYM_ADVISE = "gymAdvise";
 	public static final String GYM_DETAIL = "/gym/detail/";
+	public static final String EMAIL_ADDRESS = "email.address";
+	public static final String EMAIL_HOST = "email.host";
+	public static final String EMAIL_PORT = "email.port";
+	public static final String EMAIL_PASSWORD = "email.password";
+	public static final String TOKEN_EXPIRED = "5000";
+	public static final String TOKEN_MAXIMUM_ATTEMPTS = "5001";
 }

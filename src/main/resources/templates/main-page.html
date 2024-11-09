@@ -11,6 +11,13 @@
         <div th:replace="~{static/barraUser :: div}"></div>
         <div th:replace="~{static/barraNav :: nav}"></div>
 
+        <section class="marginTopBottom3Percentage text-center">
+            <div th:if="${expiredCall != null}" class="alert alert-danger" role="alert"><span
+                    th:text="#{token.expired.call}"></span></div>
+            <div th:if="${gymUserAssigned != null}" class="alert alert-success" role="alert"><span
+                    th:text="#{invite.user.done}"></span>!</div>
+        </section>
+
         <section sec:authorize="hasRole('ROLE_ADMIN')" class="text-center">
             <a href="#" th:href="@{/gym/}" class="textDecoration-none">
                 <button class="btn btn-warning btn-lg minimumWidth40 marginTopBottom3Percentage" type="button"><span

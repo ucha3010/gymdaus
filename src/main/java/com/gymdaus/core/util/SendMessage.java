@@ -29,9 +29,9 @@ public class SendMessage {
      * Indicaciones www.youtube.com/watch?v=ZggjlwLzrxg
      * Indicaciones archivos adjuntos www.youtube.com/watch?v=o7v0EQgxP50
     */
-    public void enviarCorreo(EmailModel emailModel) throws MessagingException {
+    public void sendEmail (EmailModel emailModel) throws MessagingException {
 
-        LoggerMapper.methodIn(Level.INFO, "enviarCorreo", "fromEmailAddress: " + emailModel.getFromEmailAddress()
+        LoggerMapper.methodIn(Level.INFO, "sendEmail", "fromEmailAddress: " + emailModel.getFromEmailAddress()
                 + ", toEmailAddress: " + emailModel.getToEmailAddress(), getClass());
 
         Properties props = new Properties();
@@ -40,7 +40,7 @@ public class SendMessage {
         props.setProperty("mail.smtp.starttls.enable", "true");
         props.setProperty("mail.smtp.port", emailModel.getPort());//587
         props.setProperty("mail.smtp.user", emailModel.getFromEmailAddress());
-        props.setProperty("mail.smtp.ssl.protocols", "TLSv1.2");//no está
+        props.setProperty("mail.smtp.ssl.protocols", "TLSv1.2");//it isn't
         props.setProperty("mail.smtp.auth", "true");
 
         Session session = Session.getDefaultInstance(props);
@@ -63,15 +63,15 @@ public class SendMessage {
             }
             email.setContent(multipart);
         }
-        LoggerMapper.log(Level.INFO, "enviarCorreo", email, SendMessage.class);
+        LoggerMapper.log(Level.INFO, "sendEmail", email, SendMessage.class);
 
-        //Enviar el correo
+        //Send email
         Transport transport = session.getTransport("smtp");
         transport.connect(emailModel.getFromEmailAddress(), emailModel.getPassword());
         transport.sendMessage(email, email.getRecipients(jakarta.mail.Message.RecipientType.TO));
         transport.close();
 
-        LoggerMapper.methodOut(Level.INFO, "enviarCorreo", "Correo enviado", SendMessage.class);
+        LoggerMapper.methodOut(Level.INFO, "sendEmail", "Email sent", SendMessage.class);
     }
 
 }

@@ -22,11 +22,11 @@ public class GymAddress {
     private boolean enabled;
     @Column(nullable = false, length = Constants.EMAIL)
     private String email;
-    @Column(length = Constants.EMAIL_HOST)
+    @Column(length = Constants.EMAIL_HOST_LENGTH)
     private String emailHost;
     @Column(length = Constants.PASSWORD)
     private String emailPassword;
-    @Column(length = Constants.EMAIL_PORT)
+    @Column(length = Constants.EMAIL_PORT_LENGTH)
     private String emailPort;
     @Column(length = Constants.PHONE)
     private String phone;

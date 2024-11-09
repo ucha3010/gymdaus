@@ -30,6 +30,7 @@
                 location.href = domain + relativeUrl;
             }
 
+
         </script>
     </head>
     <body>
@@ -42,6 +43,8 @@
             <section class="marginTopBottom3Percentage text-center">
                 <div th:if="${invitationSentFail != null}" class="alert alert-danger" role="alert"><span
                         th:text="#{invite.user.fail}"></span></div>
+                <div th:if="${errorSendingEmail != null}" class="alert alert-danger" role="alert"><span
+                        th:text="#{error.sending.email}"></span></div>
                 <div th:if="${confirmationOk != null}" class="alert alert-success" role="alert"><span
                         th:text="#{__${confirmationOk}__}"></span></div>
             </section>
@@ -68,7 +71,9 @@
                         <label for="invite" class="form-label" th:text="#{invite.user.to.manage.gym}"></label>
                         <div class="input-group">
                             <input type="text" id="invite" class="form-control">
-                            <button class="btn btn-success" type="button" th:attr="onclick=|sendInvitation('${gymModel.id}')|" ><span th:text="#{send}"></span></button>
+                            <button class="btn btn-success" type="button"
+                                    th:attr="onclick=|sendInvitation('${gymModel.id}')|"><span th:text="#{send}"></span>
+                            </button>
                         </div>
                     </div>
                     <div class="col-md-2 col-lg-4">

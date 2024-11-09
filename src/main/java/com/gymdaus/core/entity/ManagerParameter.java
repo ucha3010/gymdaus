@@ -22,9 +22,9 @@ public class ManagerParameter {
     private Long id;
     @Column(length = Constants.EMAIL)
     private String email;
-    @Column(length = Constants.EMAIL_HOST)
+    @Column(length = Constants.EMAIL_HOST_LENGTH)
     private String emailHost;
-    @Column(length = Constants.EMAIL_PORT)
+    @Column(length = Constants.EMAIL_PORT_LENGTH)
     private String emailPort;
     @Column(length = Constants.HOST_PAGE_NAME)
     private String hostPageName;

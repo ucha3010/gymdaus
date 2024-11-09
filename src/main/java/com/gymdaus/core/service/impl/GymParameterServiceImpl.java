@@ -5,12 +5,15 @@ import com.gymdaus.core.mapper.MapperGymParameter;
 import com.gymdaus.core.model.GymParameterModel;
 import com.gymdaus.core.repository.GymParameterRepository;
 import com.gymdaus.core.service.GymParameterService;
+import com.gymdaus.core.util.Constants;
 import com.gymdaus.core.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service()
 public class GymParameterServiceImpl implements GymParameterService {
@@ -31,14 +34,14 @@ public class GymParameterServiceImpl implements GymParameterService {
     }
 
     @Override
-    public List<GymParameterModel> getStartWith(Long gymId, String keyDataStart) {
-        List<GymParameterModel> gymParameterModelList = new ArrayList<>();
+    public Map<String, String> getStartWith(Long gymId, String keyDataStart) {
+        Map<String, String> keyValueMap = new HashMap<>();
         for (GymParameter gymParameter : gymParameterRepository.findAllByGymId(gymId)) {
             if (gymParameter.getKeyData().startsWith(keyDataStart)) {
-                gymParameterModelList.add(mapperGymParameter.entity2Model(gymParameter));
+                keyValueMap.put(gymParameter.getKeyData(),gymParameter.getValue());
             }
         }
-        return gymParameterModelList;
+        return keyValueMap;
     }
 
     @Override
@@ -53,7 +56,7 @@ public class GymParameterServiceImpl implements GymParameterService {
 
     @Override
     public boolean comparePassword(Long gymId, String oldPassword) {
-        GymParameter gymParameter = gymParameterRepository.findByGymIdAndKeyData(gymId, "email.password");
+        GymParameter gymParameter = gymParameterRepository.findByGymIdAndKeyData(gymId, Constants.EMAIL_PASSWORD);
         return gymParameter != null && !Utils.isNullOrEmpty(oldPassword) && oldPassword.equals(gymParameter.getValue());
     }
 }

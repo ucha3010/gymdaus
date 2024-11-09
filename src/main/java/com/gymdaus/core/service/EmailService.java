@@ -4,17 +4,22 @@ package com.gymdaus.core.service;
 import com.gymdaus.core.entity.User;
 import com.gymdaus.core.exception.SenderException;
 import com.gymdaus.core.model.EmailModel;
+import com.gymdaus.core.model.GymModel;
 import com.gymdaus.core.model.TokenModel;
 import com.gymdaus.core.model.UserModel;
+import org.springframework.context.MessageSource;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 
 public interface EmailService {
 
     EmailModel getGymParameters(Long gymId);
 
     void updateGymParameters(EmailModel emailModel, String modificationUsername);
+
+    void sendAdminInvitation(UserModel userGymAdmin, UserModel userInvited, GymModel gymModel, MessageSource messageSource, Locale locale) throws SenderException;
 
     void sendChangePassword(UserModel userModel, TokenModel tokenModel) throws SenderException;
 

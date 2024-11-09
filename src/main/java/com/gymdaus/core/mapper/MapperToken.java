@@ -8,13 +8,16 @@ import org.springframework.stereotype.Component;
 public class MapperToken {
 
     public TokenModel entity2Model(Token externObject) {
-        TokenModel localObject = new TokenModel();
+        TokenModel localObject = null;
         if (externObject != null) {
+            localObject = new TokenModel();
             localObject.setId(externObject.getId());
             localObject.setUsername(externObject.getUsername());
             localObject.setExpiration(externObject.getExpiration());
             localObject.setAttempts(externObject.getAttempts());
             localObject.getGymModel().setId(externObject.getGymId());
+            localObject.setMethodToBeUse(externObject.getMethodToBeUse());
+            localObject.setUsernameSendChange(externObject.getUsernameSendChange());
         }
         return localObject;
     }
@@ -26,6 +29,8 @@ public class MapperToken {
             localObject.setUsername(externObject.getUsername());
             localObject.setExpiration(externObject.getExpiration());
             localObject.setAttempts(externObject.getAttempts());
+            localObject.setMethodToBeUse(externObject.getMethodToBeUse());
+            localObject.setUsernameSendChange(externObject.getUsernameSendChange());
             if (externObject.getGymModel() != null) {
                 localObject.setGymId(externObject.getGymModel().getId());
             }

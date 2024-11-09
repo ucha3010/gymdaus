@@ -108,7 +108,7 @@ public class LoginController {
             LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
             return modelAndView;
         }
-        modelAndView.addObject("tokenModel", tokenService.fillTokenToSend(tokenModel, userModel));
+        modelAndView.addObject("tokenModel", tokenModel);
         modelAndView.setViewName("formularioNuevaClave");
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return modelAndView;

@@ -19,5 +19,7 @@ public class TokenModel {
     private String password;
     private GymModel gymModel;
     private String username;
+    private String methodToBeUse;
+    private String usernameSendChange;
 
 }
