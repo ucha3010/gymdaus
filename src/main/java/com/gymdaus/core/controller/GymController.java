@@ -1,6 +1,7 @@
 package com.gymdaus.core.controller;
 
 import com.gymdaus.core.configuration.SessionData;
+import com.gymdaus.core.exception.SenderException;
 import com.gymdaus.core.model.*;
 import com.gymdaus.core.service.*;
 import com.gymdaus.core.service.impl.UserService;
@@ -147,25 +148,21 @@ public class GymController {
 
     @GetMapping("/send-invitation/gym-user/{gymId}/{username}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ModelAndView deleteGymUser(ModelAndView modelAndView, @PathVariable Long gymId, @PathVariable String username, @RequestParam String language) {
+    public ModelAndView sendInvitationGymUser(ModelAndView modelAndView, @PathVariable Long gymId, @PathVariable String username, @RequestParam String language) {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), "gymId=" + gymId + ", username=" + username, getClass());
         securityService.userAccessValidation("/gym/send-invitation/gym-user/" + gymId + "/" + username);
         UserModel user = utilService.basicDataCharge(modelAndView);
         securityService.enabledAdministrationGymUser(user.getUsername(), gymId, "/gym/send-invitation/gym-user/");
         try {
             UserModel userInvited = userService.findModelByUsername(username);
+            GymModel gymModel = gymService.findByIdEnabled(gymId);
+            Locale locale = Locale.of(language);
+            LocaleContextHolder.setLocale(locale);
+            emailService.sendAdminInvitation(user, userInvited, gymModel, messageSource, locale);
+            modelAndView.addObject("confirmationOk", "email.sent.ok");
         } catch (NoResultException nre) {
             modelAndView.addObject("invitationSentFail", "invitationSentFail");
-            return gymUser(modelAndView, gymId);
-        }
-        GymModel gymModel = gymService.findByIdEnabled(gymId);
-        if (Boolean.TRUE) {
-            //TODO verificar si necesito utilizar el locale o si es mejor enviar la llamada a emailService y que la traducción se haga ahí
-            Locale locale = new Locale(language);
-            LocaleContextHolder.setLocale(locale);
-
-            modelAndView.addObject("confirmationOk", "email.sent.ok");
-        } else {
+        } catch (SenderException e) {
             modelAndView.addObject("errorSendingEmail", "errorSendingEmail");
         }
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());

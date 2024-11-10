@@ -2,10 +2,8 @@ package com.gymdaus.core.controller;
 
 import com.gymdaus.core.configuration.SessionData;
 import com.gymdaus.core.exception.ValidationException;
-import com.gymdaus.core.model.GymUserModel;
 import com.gymdaus.core.model.TokenModel;
 import com.gymdaus.core.model.UserModel;
-import com.gymdaus.core.model.UserRoleModel;
 import com.gymdaus.core.service.GymUserService;
 import com.gymdaus.core.service.TokenService;
 import com.gymdaus.core.service.UserRoleService;
@@ -26,7 +24,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -95,19 +92,9 @@ public class MainController {
         utilService.basicDataCharge(modelAndView);
         try {
             TokenModel tokenModel = tokenService.verifyToken(token, Utils.getMethodName());
-            GymUserModel gymUserModel = new GymUserModel();
-            gymUserModel.setRegistrationUser(tokenModel.getUsernameSendChange());
-            gymUserModel.setRegistrationDate(new Date());
-            UserModel userModel = new UserModel();
-            userModel.setUsername(tokenModel.getUsername());
-            gymUserModel.setUserModel(userModel);
-            gymUserModel.setGymModel(tokenModel.getGymModel());
-            gymUserModel.setGymRole(Constants.ROLE_EMPLOYEE);
-            gymUserService.add(gymUserModel);
-            UserRoleModel userRoleModel = new UserRoleModel();
-            userRoleModel.setUsername(tokenModel.getUsername());
-            userRoleModel.setRoles(List.of(Constants.ROLE_ADMIN));
-            userRoleService.updateRoles(userRoleModel);
+            gymUserService.addNewManager(tokenModel);
+            userRoleService.assignOneRole(tokenModel.getUsername(), Constants.ROLE_ADMIN);
+            tokenService.tokenUsedOk(tokenModel);
             modelAndView.addObject("gymUserAssigned", "gymUserAssigned");
         } catch (ValidationException ve) {
             modelAndView.addObject("expiredCall", "expiredCall");

@@ -35,7 +35,7 @@ public class TokenServiceImpl implements TokenService {
         List<Token> tokenList = tokenRepository.findAllByOrderByExpirationAsc();
         if (tokenList != null) {
             for (Token token : tokenList) {
-                if (isExpired(token.getExpiration())) {
+                if (Utils.isBeforeNow(token.getExpiration())) {
                     tokenRepository.delete(token);
                 }
             }
@@ -58,11 +58,6 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public boolean isExpired(Date expired) {
-        return expired.before(new Date());
-    }
-
-    @Override
     public TokenModel getNewToken(int minutes, String password, GymModel gymModel, String username,
                                   String methodToBeUse, String usernameSendChange) {
 
@@ -75,6 +70,7 @@ public class TokenServiceImpl implements TokenService {
         tokenModel.setUsername(username);
         tokenModel.setMethodToBeUse(methodToBeUse);
         tokenModel.setUsernameSendChange(usernameSendChange);
+        tokenModel.setDateUsedOk(null);
         add(tokenModel);
         return tokenModel;
     }
@@ -86,16 +82,25 @@ public class TokenServiceImpl implements TokenService {
         if (tokenModel == null) {
             throw new AccessDeniedException("Token id not found: " + tokenId);
         } else {
-            if (isExpired(tokenModel.getExpiration())) {
-                throw new ValidationException(Constants.TOKEN_EXPIRED, "Token expired on " + tokenModel.getExpiration());
+            if (Utils.isBeforeNow(tokenModel.getExpiration()) || tokenModel.getDateUsedOk() != null) {
+                throw new ValidationException(Constants.TOKEN_EXPIRED, "Token expired on "
+                        + tokenModel.getExpiration() + " or has been used on " + tokenModel.getDateUsedOk());
             } else if (tokenModel.getAttempts() > 2) {
                 throw new ValidationException(Constants.TOKEN_MAXIMUM_ATTEMPTS,
                         "Token used more than maximum attempts: " + tokenModel.getAttempts());
             } else if (!tokenModel.getMethodToBeUse().equals(methodInvoked)) {
-                throw new AccessDeniedException("Token used in different method. Must be used in  " + tokenModel.getMethodToBeUse() + " and " +
-                        "has been used in " + methodInvoked);
+                throw new AccessDeniedException("Token used in different method. Must be used in  "
+                        + tokenModel.getMethodToBeUse() + " and has been used in " + methodInvoked);
             }
+            tokenModel.setAttempts(tokenModel.getAttempts() + 1);
+            update(tokenModel);
             return tokenModel;
         }
+    }
+
+    @Override
+    public void tokenUsedOk(TokenModel tokenModel) {
+        tokenModel.setDateUsedOk(new Date());
+        update(tokenModel);
     }
 }

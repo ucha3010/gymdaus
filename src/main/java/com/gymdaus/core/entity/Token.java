@@ -28,5 +28,6 @@ public class Token {
     private String methodToBeUse;
     @Column(length = Constants.USERNAME_OR_ID_CARD)
     private String usernameSendChange;
+    private Date dateUsedOk;
 
 }

@@ -100,7 +100,7 @@ public class LoginController {
         tokenService.deleteExpired();
         TokenModel tokenModel = tokenService.findById(token);
         UserModel userModel = userService.findModelByUsername(username);
-        if (tokenModel.getId() == null || tokenService.isExpired(tokenModel.getExpiration())
+        if (tokenModel.getId() == null || Utils.isBeforeNow(tokenModel.getExpiration())
                 || userModel.getUsername() == null || !userModel.getUsername().equals(tokenModel.getUsername())
             /*|| userModel.getCodigoGimnasio() != tokenModel.getCodigoGimnasio()*/) {
             modelAndView.addObject("avisoKO", "El intento de cambio de contraseña expiró o superó su límite");
@@ -127,7 +127,7 @@ public class LoginController {
         tokenService.deleteExpired();
         TokenModel tokenModelBBDD = tokenService.findById(tokenModel.getId());
         UserModel userModel = userService.findModelByUsername(tokenModel.getUsername());
-        if (tokenModelBBDD.getId() == null || tokenService.isExpired(tokenModelBBDD.getExpiration())
+        if (tokenModelBBDD.getId() == null || Utils.isBeforeNow(tokenModelBBDD.getExpiration())
                 || userModel.getUsername() == null || !userModel.getUsername().equals(tokenModelBBDD.getUsername())
             /*|| userModel.getCodigoGimnasio() != tokenModelBBDD.getCodigoGimnasio()*/) {
             modelAndView.addObject("avisoKO", "El intento de cambio de contraseña expiró o superó su límite");

@@ -135,12 +135,12 @@ public class Utils {
         try {
             File f = new File("program.txt");
             absolute = f.getAbsolutePath().split(f.getName());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LoggerMapper.log(Level.ERROR, Utils.getMethodName(), e.getMessage(), Utils.class);
         }
         return absolute[0];
     }
+
     public static String getFileExtension(MultipartFile file) {
         String fileName = file.getOriginalFilename();
         if (fileName != null) {
@@ -151,6 +151,7 @@ public class Utils {
         }
         return "";
     }
+
     public static boolean uploadFile(MultipartFile file, String relativePath) {
         boolean answer = false;
         if (!file.isEmpty()) {
@@ -164,7 +165,11 @@ public class Utils {
         return answer;
     }
 
-    public static String getClearFilename (MultipartFile file) {
+    public static String getClearFilename(MultipartFile file) {
         return file.getOriginalFilename().replaceAll("[^a-zA-Z0-9.]", "");
+    }
+
+    public static boolean isBeforeNow(Date evaluateDate) {
+        return evaluateDate.before(new Date());
     }
 }

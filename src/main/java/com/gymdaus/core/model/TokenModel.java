@@ -21,5 +21,7 @@ public class TokenModel {
     private String username;
     private String methodToBeUse;
     private String usernameSendChange;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date dateUsedOk;
 
 }

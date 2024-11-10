@@ -32,7 +32,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         com.gymdaus.core.entity.User user = findUserByUsername(username);
         Set<UserRole> userRoleList = userRoleRepository.findByUser(user);
         List<String> roles = new ArrayList<>();
-        for (UserRole userRole: userRoleList) {
+        for (UserRole userRole : userRoleList) {
             roles.add(userRole.getRole());
         }
         return roles;
@@ -77,22 +77,31 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Override
     public void updateRoles(UserRoleModel userRoleModel) {
         int deleteRole = 0;
-        int keepRole = 0;
         int insertRole = 0;
         User user = findUserByUsername(userRoleModel.getUsername());
-        Set<UserRole> oldRoles = findRolesByUser(user);
+        Set<UserRole> oldUserRoles = findRolesByUser(user);
         List<String> newRoles = userRoleModel.getRoles();
-        for (UserRole oldRol : oldRoles) {
-            if (!newRoles.contains(oldRol.getRole())) {
-                userRoleRepository.delete(oldRol);
-                deleteRole++;
-            } else {
-                newRoles.remove(oldRol.getRole());
-                keepRole++;
+        List<String> oldRoles = new ArrayList<>();
+        for (UserRole oldRol : oldUserRoles) {
+            oldRoles.add(oldRol.getRole());
+        }
+
+        List<String> rolesToRemove = new ArrayList<>(oldRoles);
+        rolesToRemove.removeAll(newRoles);
+        for (String rolToRemove : rolesToRemove) {
+            for (UserRole oldRol : oldUserRoles) {
+                if (oldRol.getRole().equals(rolToRemove)) {
+                    userRoleRepository.delete(oldRol);
+                    deleteRole++;
+                }
             }
         }
+        int keepRole = oldRoles.size() + deleteRole;
+
+        List<String> rolesToAdd = new ArrayList<>(newRoles);
+        rolesToAdd.removeAll(oldRoles);
         UserRole userRole;
-        for (String newRol : newRoles) {
+        for (String newRol : rolesToAdd) {
             userRole = new UserRole();
             userRole.setRole(newRol);
             userRole.setUser(user);
@@ -104,10 +113,19 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public List<UserRole> adminAvailableRoles() {
-         return Arrays.asList(new UserRole(null, Constants.ROLE_USER), new UserRole(null, Constants.ROLE_ADMIN));
+        return Arrays.asList(new UserRole(null, Constants.ROLE_USER), new UserRole(null, Constants.ROLE_ADMIN));
     }
 
     private User findUserByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public void assignOneRole(String username, String role) {
+        UserRoleModel userRoleModel = new UserRoleModel();
+        userRoleModel.setUsername(username);
+        userRoleModel.setRoles(List.of(role));
+        updateRoles(userRoleModel);
+
     }
 }

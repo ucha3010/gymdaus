@@ -26,4 +26,6 @@ public interface UserRoleService {
 
     List<UserRole> adminAvailableRoles();
 
+    void assignOneRole(String username, String role);
+
 }

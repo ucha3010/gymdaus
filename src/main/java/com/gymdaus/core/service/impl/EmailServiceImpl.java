@@ -16,7 +16,10 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @Service()
 public class EmailServiceImpl implements EmailService {
@@ -75,7 +78,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendAdminInvitation(UserModel userGymAdmin, UserModel userInvited, GymModel gymModel
-        , MessageSource messageSource, Locale locale) throws SenderException {
+            , MessageSource messageSource, Locale locale) throws SenderException {
 
         try {
             TokenModel tokenModel = tokenService.getNewToken(10080, null, gymModel
@@ -235,7 +238,7 @@ public class EmailServiceImpl implements EmailService {
 
 
     private void updateGymParameterModel(GymParameterModel gymParameterModel, GymModel gymModel,
-         Date now, String modificationUsername) {
+                                         Date now, String modificationUsername) {
 
         gymParameterModel.setGymModel(gymModel);
         gymParameterModel.setModificationDate(now);
@@ -244,7 +247,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     private String textMessageInviteGymAdmin(UserModel userGymAdmin, UserModel userInvited,
-         GymModel gymModel, MessageSource messageSource, Locale locale, TokenModel tokenModel) {
+                                             GymModel gymModel, MessageSource messageSource, Locale locale, TokenModel tokenModel) {
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<!DOCTYPE html>");
@@ -252,12 +255,12 @@ public class EmailServiceImpl implements EmailService {
         stringBuilder.append("<table style=\"width:100%; text-align:center;\">");
         stringBuilder.append("<tr><td>");
         stringBuilder.append("<h1><b>")
-                .append(messageSource.getMessage("Hello", null, locale))
+                .append(messageSource.getMessage("Hello", null, locale)).append(" ")
                 .append(userInvited.getName()).append("</b>!</h1><br>");
         stringBuilder.append("<p>").append(userGymAdmin.getName()).append(" ")
                 .append(userGymAdmin.getLastname()).append(" ")
                 .append(messageSource.getMessage("text.message.invite.gym.admin.1", null, locale))
-                .append(gymModel.getName()).append(".</p>");
+                .append(" ").append(gymModel.getName()).append(".</p>");
         stringBuilder.append("<p>")
                 .append(messageSource.getMessage("text.message.invite.gym.admin.2", null, locale))
                 .append(":</p>");
