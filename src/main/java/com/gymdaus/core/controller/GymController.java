@@ -67,14 +67,17 @@ public class GymController {
         } else if (gymUserModelList.size() == 1) {
             modelAndView.setViewName("gym/gym-admin");
             modelAndView.addObject("backButton", "/");
+            modelAndView.addObject("gymUserModel", gymUserModelList.get(0));
             modelAndView.addObject("gymModel", gymService.findByIdEnabled(gymUserModelList.get(0).getGymModel().getId()));
         } else {
             List<GymModel> gymModelList = new ArrayList<>();
             GymModel gymModel;
+            GymUserModel gymUserModelUnique = new GymUserModel();
             for (GymUserModel gymUserModel : gymUserModelList) {
                 gymModel = gymService.findByIdEnabled(gymUserModel.getGymModel().getId());
                 if (gymModel != null) {
                     gymModelList.add(gymModel);
+                    gymUserModelUnique = gymUserModel;
                 }
             }
             if (gymModelList.isEmpty()) {
@@ -84,6 +87,7 @@ public class GymController {
             } else if (gymModelList.size() == 1) {
                 modelAndView.setViewName("gym/gym-admin");
                 modelAndView.addObject("backButton", "/");
+                modelAndView.addObject("gymUserModel", gymUserModelUnique);
                 modelAndView.addObject("gymModel", gymModelList.get(0));
             } else {
                 modelAndView.setViewName("gym/select-gym");
@@ -100,9 +104,10 @@ public class GymController {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymId, getClass());
         securityService.userAccessValidation("/gym/gym-admin/" + gymId);
         UserModel user = utilService.basicDataCharge(modelAndView);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, "/gym/gym-admin/");
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, false, "/gym/gym-admin/");
         modelAndView.setViewName("gym/gym-admin");
         modelAndView.addObject("backButton", "/gym/");
+        modelAndView.addObject("gymUserModel", gymUserService.findByUsernameAndGymId(user.getUsername(), gymId));
         modelAndView.addObject("gymModel", gymService.findByIdEnabled(gymId));
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return modelAndView;
@@ -114,7 +119,7 @@ public class GymController {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymId, getClass());
         securityService.userAccessValidation("/gym/gym-user/" + gymId);
         UserModel user = utilService.basicDataCharge(modelAndView);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, "/gym/gym-user/");
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, true, "/gym/gym-user/");
         modelAndView.setViewName("gym/gym-user");
         List<GymUserModel> gymUserModelList = gymUserService.findByGymId(gymId);
         for (GymUserModel gymUserModel : gymUserModelList) {
@@ -122,8 +127,23 @@ public class GymController {
         }
         modelAndView.addObject("gymUserModelList", gymUserModelList);
         modelAndView.addObject("gymModel", gymService.findByIdEnabled(gymId));
+        modelAndView.addObject("gymUserRoles", Utils.getGymUserRoles());
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return modelAndView;
+    }
+
+    @GetMapping("/role/gym-user/{username}/{gymId}/{role}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView roleGymUser(ModelAndView modelAndView, @PathVariable String username, @PathVariable Long gymId, @PathVariable String role) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymId, getClass());
+        securityService.userAccessValidation("/role/gym-user/" + username + "/" + gymId + "/" + role);
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, true, "/role/gym-user/");
+        GymUserModel gymUserModel = gymUserService.findByUsernameAndGymId(username, gymId);
+        gymUserModel.setGymRole(role);
+        gymUserService.update(gymUserModel);
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return gymUser(modelAndView, gymId);
     }
 
     @GetMapping("/delete/gym-user/{gymUserId}")
@@ -133,7 +153,7 @@ public class GymController {
         securityService.userAccessValidation("/gym/delete/gym-user/" + gymUserId);
         UserModel user = utilService.basicDataCharge(modelAndView);
         GymUserModel gymUserModel = gymUserService.findById(gymUserId);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymUserModel.getGymModel().getId(), "/gym/delete/gym-user/");
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymUserModel.getGymModel().getId(), true, "/gym/delete/gym-user/");
         gymUserService.delete(gymUserId);
         if (gymUserService.findByUsername(gymUserModel.getUserModel().getUsername()).isEmpty()) {
             UserRoleModel userRoleModel = new UserRoleModel();
@@ -152,7 +172,7 @@ public class GymController {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), "gymId=" + gymId + ", username=" + username, getClass());
         securityService.userAccessValidation("/gym/send-invitation/gym-user/" + gymId + "/" + username);
         UserModel user = utilService.basicDataCharge(modelAndView);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, "/gym/send-invitation/gym-user/");
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, true, "/gym/send-invitation/gym-user/");
         try {
             UserModel userInvited = userService.findModelByUsername(username);
             GymModel gymModel = gymService.findByIdEnabled(gymId);
@@ -175,7 +195,7 @@ public class GymController {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymId, getClass());
         securityService.userAccessValidation("/gym/parameters/" + gymId);
         UserModel user = utilService.basicDataCharge(modelAndView);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, "/gym/parameters/");
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, true, "/gym/parameters/");
         modelAndView.setViewName("gym/gym-parameter");
         EmailModel emailModel = emailService.getGymParameters(gymId);
         if (Utils.isNullOrEmpty(emailModel.getPassword())) {
@@ -197,7 +217,7 @@ public class GymController {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), emailModel, getClass());
         securityService.userAccessValidation("/gym/update-parameters");
         UserModel user = utilService.basicDataCharge(modelAndView);
-        securityService.enabledAdministrationGymUser(user.getUsername(), emailModel.getGymId(), "/gym/update-parameters");
+        securityService.enabledAdministrationGymUser(user.getUsername(), emailModel.getGymId(), true, "/gym/update-parameters");
         emailService.updateGymParameters(emailModel, user.getUsername());
         modelAndView.addObject("updateOK", "updateOK");
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
@@ -210,7 +230,7 @@ public class GymController {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymId, getClass());
         securityService.userAccessValidation("/gym/email-pass/" + gymId);
         UserModel user = utilService.basicDataCharge(modelAndView);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, "/gym/email-pass/");
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, true, "/gym/email-pass/");
         modelAndView.setViewName("gym/gym-parameter-change-pass");
         modelAndView.addObject("passwordModel", new PasswordModel());
         modelAndView.addObject("gymModel", gymService.findByIdEnabled(gymId));
@@ -224,7 +244,7 @@ public class GymController {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), passwordModel.getGymId(), getClass());
         securityService.userAccessValidation("/gym/update-email-pass");
         UserModel user = utilService.basicDataCharge(modelAndView);
-        securityService.enabledAdministrationGymUser(user.getUsername(), passwordModel.getGymId(), "/gym/update-email-pass");
+        securityService.enabledAdministrationGymUser(user.getUsername(), passwordModel.getGymId(), true, "/gym/update-email-pass");
         if (!gymParameterService.comparePassword(passwordModel.getGymId(), passwordModel.getOldPassword())) {
             modelAndView.addObject("oldDifferent", "oldDifferent");
         } else {

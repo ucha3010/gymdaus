@@ -8,6 +8,7 @@ import com.gymdaus.core.model.SignatureCodeModel;
 import com.gymdaus.core.model.SignatureModel;
 import com.gymdaus.core.model.UserModel;
 import com.gymdaus.core.service.*;
+import com.gymdaus.core.util.Constants;
 import com.gymdaus.core.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -113,14 +114,19 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     @Override
-    public void enabledAdministrationGymUser(String username, Long gymId, String uri) throws AccessDeniedException {
+    public void enabledAdministrationGymUser(String username, Long gymId, boolean managerRequired, String uri) throws AccessDeniedException {
 
         List<GymUserModel> gymUserModelList = gymUserService.findByGymId(gymId);
         boolean validAccess = false;
         for (GymUserModel gymUserModel : gymUserModelList) {
             if (gymUserModel.getGymModel().getId().equals(gymId)) {
-                validAccess = true;
-                break;
+                if (managerRequired && Constants.ROLE_MANAGER.equals(gymUserModel.getGymRole())) {
+                    validAccess = true;
+                    break;
+                } else if (!managerRequired) {
+                    validAccess = true;
+                    break;
+                }
             }
         }
         if (!validAccess || gymService.findByIdEnabled(gymId) == null) {

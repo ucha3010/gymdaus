@@ -172,4 +172,8 @@ public class Utils {
     public static boolean isBeforeNow(Date evaluateDate) {
         return evaluateDate.before(new Date());
     }
+
+    public static List<String> getGymUserRoles() {
+        return List.of(Constants.ROLE_MANAGER, Constants.ROLE_EMPLOYEE);
+    }
 }

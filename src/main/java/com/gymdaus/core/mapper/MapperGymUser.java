@@ -10,8 +10,9 @@ import org.springframework.stereotype.Component;
 public class MapperGymUser {
 
     public GymUserModel entity2Model(GymUser externObject) {
-        GymUserModel localObject = new GymUserModel();
+        GymUserModel localObject = null;
         if (externObject != null) {
+            localObject = new GymUserModel();
             localObject.setId(externObject.getId());
             localObject.setRegistrationDate(externObject.getRegistrationDate());
             localObject.setRegistrationUser(externObject.getRegistrationUser());

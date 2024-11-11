@@ -235,7 +235,7 @@ public class UserController {
     public ModelAndView gymUsers(ModelAndView modelAndView) {
         UserModel user = utilService.basicDataCharge(modelAndView);
 //        securityService.enabledAdministrationGym(sessionData.getGymModel().getId(), "/usuario/gymUsers");
-        securityService.enabledAdministrationGymUser(user.getUsername(), sessionData.getGymModel().getId(), "/usuario/gymUsers");
+        securityService.enabledAdministrationGymUser(user.getUsername(), sessionData.getGymModel().getId(), false,"/usuario/gymUsers");
         modelAndView.setViewName("gimnasio/adminUsers");
 //		modelAndView.addObject("activities", userRegistrationService.getActivities());
 //		modelAndView.addObject("userRegistrationList", userRegistrationService.findByGymSigned(sessionData.getGimnasioModel().getId()));
@@ -248,7 +248,7 @@ public class UserController {
     public ModelAndView gymUsersActivity(ModelAndView modelAndView, @PathVariable String activity) {
         UserModel user = utilService.basicDataCharge(modelAndView);
 //        securityService.enabledAdministrationGym(sessionData.getGymModel().getId(), "/usuario/gymUsers/activity/" + activity);
-        securityService.enabledAdministrationGymUser(user.getUsername(), sessionData.getGymModel().getId(), "/usuario/gymUsers/activity/" + activity);
+        securityService.enabledAdministrationGymUser(user.getUsername(), sessionData.getGymModel().getId(), false,"/usuario/gymUsers/activity/" + activity);
         modelAndView.setViewName("gimnasio/adminUsers");
 //		modelAndView.addObject("activities", userRegistrationService.getActivities());
         if (!Utils.isNullOrEmpty(activity)) {
@@ -266,7 +266,7 @@ public class UserController {
     public ModelAndView gymUserDetail(ModelAndView modelAndView, @PathVariable String username) {
         UserModel user = utilService.basicDataCharge(modelAndView);
 //        securityService.enabledAdministrationGym(sessionData.getGymModel().getId(), "/usuario/gymUsers/" + username);
-        securityService.enabledAdministrationGymUser(user.getUsername(), sessionData.getGymModel().getId(), "/usuario/gymUsers/" + username);
+        securityService.enabledAdministrationGymUser(user.getUsername(), sessionData.getGymModel().getId(), false,"/usuario/gymUsers/" + username);
         modelAndView.setViewName("gimnasio/userAdmin");
         modelAndView.addObject("user", userService.findModelByUsername(username));
 //		modelAndView.addObject("documentManagerModel", new DocumentManagerModel());

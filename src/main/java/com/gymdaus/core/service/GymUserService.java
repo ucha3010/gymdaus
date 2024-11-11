@@ -22,7 +22,7 @@ public interface GymUserService {
 
     List<GymUserModel> findByGymId(Long id);
 
-    List<GymUserModel> findByUsernameAndGymId(String username, Long id);
+    GymUserModel findByUsernameAndGymId(String username, Long id);
 
     void addNewManager(TokenModel tokenModel);
 }

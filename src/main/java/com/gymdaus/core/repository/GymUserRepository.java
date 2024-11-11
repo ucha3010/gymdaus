@@ -10,6 +10,8 @@ import java.util.List;
 public interface GymUserRepository extends JpaRepository<GymUser, Long> {
 
     List<GymUser> findByUsername(String username);
+
     List<GymUser> findByGymId(Long id);
-    List<GymUser> findByUsernameAndGymId(String username, Long id);
+
+    GymUser findByUsernameAndGymId(String username, Long id);
 }

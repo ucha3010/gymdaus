@@ -8,7 +8,6 @@ import com.gymdaus.core.model.UserModel;
 import com.gymdaus.core.repository.GymUserRepository;
 import com.gymdaus.core.service.GymUserService;
 import com.gymdaus.core.util.Constants;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,11 +35,7 @@ public class GymUserServiceImpl implements GymUserService {
 
     @Override
     public GymUserModel findById(Long id) {
-        try {
-            return mapperGymUser.entity2Model(gymUserRepository.findById(id).orElse(null));
-        } catch (EntityNotFoundException e) {
-            return new GymUserModel();
-        }
+        return mapperGymUser.entity2Model(gymUserRepository.findById(id).orElse(null));
     }
 
     @Override
@@ -77,17 +72,13 @@ public class GymUserServiceImpl implements GymUserService {
     }
 
     @Override
-    public List<GymUserModel> findByUsernameAndGymId(String username, Long id) {
-        List<GymUserModel> gymUserModelList = new ArrayList<>();
-        for (GymUser gymUser : gymUserRepository.findByUsernameAndGymId(username, id)) {
-            gymUserModelList.add(mapperGymUser.entity2Model(gymUser));
-        }
-        return gymUserModelList;
+    public GymUserModel findByUsernameAndGymId(String username, Long id) {
+        return mapperGymUser.entity2Model(gymUserRepository.findByUsernameAndGymId(username, id));
     }
 
     @Override
     public void addNewManager(TokenModel tokenModel) {
-        if (findByUsernameAndGymId(tokenModel.getUsername(), tokenModel.getGymModel().getId()).isEmpty()) {
+        if (findByUsernameAndGymId(tokenModel.getUsername(), tokenModel.getGymModel().getId()) == null) {
             GymUserModel gymUserModel = new GymUserModel();
             gymUserModel.setRegistrationUser(tokenModel.getUsernameSendChange());
             gymUserModel.setRegistrationDate(new Date());

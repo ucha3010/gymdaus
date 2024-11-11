@@ -39,7 +39,7 @@ public class GymBeltController {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymId, getClass());
         securityService.userAccessValidation("/gymBelt/belts/" + gymId);
         UserModel user = utilService.basicDataCharge(modelAndView);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, "/gymBelt/belts/");
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, false, "/gymBelt/belts/");
         modelAndView.setViewName("gym/admin-belt");
         modelAndView.addObject("gymBeltModel", new GymBeltModel());
         modelAndView.addObject("gymBeltModelList", gymBeltService.findAllByGymId(gymId));
@@ -54,7 +54,7 @@ public class GymBeltController {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymId, getClass());
         securityService.userAccessValidation("/gymBelt/changeBelt/" + gymId);
         UserModel user = utilService.basicDataCharge(modelAndView);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, "/gymBelt/changeBelt/");
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, false, "/gymBelt/changeBelt/");
         gymBeltService.dragOfPosition(gymId, oldIndex, newIndex);
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return belts(modelAndView, gymId);
@@ -66,7 +66,7 @@ public class GymBeltController {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymId, getClass());
         securityService.userAccessValidation("/gymBelt/addBelt/" + gymId);
         UserModel user = utilService.basicDataCharge(modelAndView);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, "/gymBelt/addBelt/");
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, false, "/gymBelt/addBelt/");
         GymModel gymModel = new GymModel();
         gymModel.setId(gymId);
         gymBeltModel.setGymModel(gymModel);
@@ -83,7 +83,7 @@ public class GymBeltController {
         securityService.userAccessValidation("/gymBelt/removeBelt/" + id);
         UserModel user = utilService.basicDataCharge(modelAndView);
         GymBeltModel gymBeltModel = gymBeltService.findById(id);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymBeltModel.getGymModel().getId(), "/gymBelt/removeBelt/");
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymBeltModel.getGymModel().getId(), false, "/gymBelt/removeBelt/");
         try {
             gymBeltService.delete(id);
         } catch (RemoveException re) {

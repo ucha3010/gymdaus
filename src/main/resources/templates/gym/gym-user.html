@@ -30,6 +30,12 @@
                 location.href = domain + relativeUrl;
             }
 
+            function changeRole(username, gymId){
+                var relativeUrl = "gym/role/gym-user/" + username + "/" + gymId + "/" + document.getElementById("rolSelect" + username).value;
+                var domain = getDomain(location.href);
+                location.href = domain + relativeUrl;
+            }
+
 
         </script>
     </head>
@@ -123,13 +129,23 @@
                         <td><span th:text="${gymUser.userModel.name}"></span></td>
                         <td><span th:text="${gymUser.userModel.lastname}"></span></td>
                         <td><span th:text="${gymUser.userModel.secondLastname}"></span></td>
-                        <td class="d-none d-lg-table-cell"><span th:text="${gymUser.gymRole}"></span></td>
+                        <td class="d-none d-lg-table-cell">
+                            <select th:if="${gymUser.userModel.username != user.username}"
+                                    th:attr="id=|rolSelect${gymUser.userModel.username}|, onchange=|changeRole('${gymUser.userModel.username}','${gymModel.id}')|"
+                                    class="form-select">
+                                <option th:each="p : ${gymUserRoles}" th:value="${p}" th:text="${p}"
+                                        th:selected="${p==gymUser.gymRole}"></option>
+                            </select>
+                            <span th:if="${gymUser.userModel.username == user.username}"
+                                  th:text="${gymUser.gymRole}"></span>
+                        </td>
                         <td class="d-none d-lg-table-cell"><span
                                 th:text="${#calendars.format(gymUser.registrationDate,'dd/MM/yyyy HH:mm')}"></span>
                         </td>
                         <td class="d-none d-lg-table-cell"><span th:text="${gymUser.registrationUser}"></span></td>
                         <td class="d-none d-lg-table-cell">
-                            <button class="btn btn-danger btn-sm" th:attr="onclick=|confirmDelete('${gymUser.id}')|">
+                            <button th:if="${gymUser.userModel.username != user.username}" class="btn btn-danger btn-sm"
+                                    th:attr="onclick=|confirmDelete('${gymUser.id}')|">
                                 <span th:text="#{delete}"></span></button>
                         </td>
                     </tr>

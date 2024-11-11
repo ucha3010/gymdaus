@@ -2,8 +2,8 @@ package com.gymdaus.core.controller;
 
 import com.gymdaus.core.configuration.SessionData;
 import com.gymdaus.core.exception.RemoveException;
-import com.gymdaus.core.model.GymPoomsaeModel;
 import com.gymdaus.core.model.GymModel;
+import com.gymdaus.core.model.GymPoomsaeModel;
 import com.gymdaus.core.model.UserModel;
 import com.gymdaus.core.service.GymPoomsaeService;
 import com.gymdaus.core.service.GymService;
@@ -39,7 +39,7 @@ public class GymPoomsaeController {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymId, getClass());
         securityService.userAccessValidation("/gymPoomsae/poomsaes/" + gymId);
         UserModel user = utilService.basicDataCharge(modelAndView);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, "/gymPoomsae/poomsaes/");
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, false, "/gymPoomsae/poomsaes/");
         modelAndView.setViewName("gym/admin-poomsae");
         modelAndView.addObject("gymPoomsaeModel", new GymPoomsaeModel());
         modelAndView.addObject("gymPoomsaeModelList", gymPoomsaeService.findAllByGymId(gymId));
@@ -54,7 +54,7 @@ public class GymPoomsaeController {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymId, getClass());
         securityService.userAccessValidation("/gymPoomsae/changePoomsae/" + gymId);
         UserModel user = utilService.basicDataCharge(modelAndView);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, "/gymPoomsae/changePoomsae/");
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, false, "/gymPoomsae/changePoomsae/");
         gymPoomsaeService.dragOfPosition(gymId, oldIndex, newIndex);
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return poomsaes(modelAndView, gymId);
@@ -66,7 +66,7 @@ public class GymPoomsaeController {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymId, getClass());
         securityService.userAccessValidation("/gymPoomsae/addPoomsae/" + gymId);
         UserModel user = utilService.basicDataCharge(modelAndView);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, "/gymPoomsae/addPoomsae/");
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, false, "/gymPoomsae/addPoomsae/");
         GymModel gymModel = new GymModel();
         gymModel.setId(gymId);
         gymPoomsaeModel.setGymModel(gymModel);
@@ -83,7 +83,7 @@ public class GymPoomsaeController {
         securityService.userAccessValidation("/gymPoomsae/removePoomsae/" + id);
         UserModel user = utilService.basicDataCharge(modelAndView);
         GymPoomsaeModel gymPoomsaeModel = gymPoomsaeService.findById(id);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymPoomsaeModel.getGymModel().getId(), "/gymPoomsae/removePoomsae/");
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymPoomsaeModel.getGymModel().getId(), false, "/gymPoomsae/removePoomsae/");
         try {
             gymPoomsaeService.delete(id);
         } catch (RemoveException re) {
