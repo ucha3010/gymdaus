@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta th:replace="~{static/headerMeta :: meta}">
+        <link th:replace="~{static/headerLink :: link}">
+        <script th:replace="~{static/headerScript :: script}"></script>
+        <script th:replace="~{static/headerScriptJquery :: script}"></script>
+
+        <title th:text="#{countries}"></title>
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $("#sortable").sortable({
+                    start: function(e,ui) {
+                        // creates a temporary attribute on the element with the old index
+                        $(this).attr('data-previndex', ui.item.index());
+                        //console.log("oldIndex: " + $(this).attr('data-previndex'));
+                    },
+                    update: function(e, ui) {
+                        // gets the new and old index then removes the temporary attribute
+                        var newIndex = ui.item.index();
+                        //console.log("newIndex: " + newIndex);
+                        var oldIndex = $(this).attr('data-previndex');
+                        var relativeUrl = "root/change-enrollment-as/" + oldIndex + "/" + newIndex;
+                        var domain = getDomain(location.href);
+                        $(this).removeAttr('data-previndex');
+                        //console.log(location.href + " - " + domain + relativeUrl);
+                        location.href = domain + relativeUrl;
+                    }
+                });
+            });
+
+            function confirmDelete(){
+                var enrollmentAs = document.getElementById('enrollmentAsId').selectedOptions[0];
+                let deleteAsk = $('#deleteAsk').val();
+                if(confirm(deleteAsk + " " + enrollmentAs.text + "?")){
+                    var relativeUrl = "root/remove-enrollment-as/" + enrollmentAs.value;
+                    var domain = getDomain(location.href);
+                    location.href = domain + relativeUrl;
+                    return true;
+                }
+                return false;
+            }
+
+
+        </script>
+
+    </head>
+    <body>
+        <div th:replace="~{static/barraUser :: div}"></div>
+        <div th:replace="~{static/barraNav :: nav}"></div>
+
+        <div class="container">
+            <input type="hidden" id="deleteAsk" th:value="#{confirm.delete}"/>
+
+            <section class="marginTopBottom3Percentage text-center">
+                <div th:if="${removeProblem != null}" class="alert alert-danger" role="alert"><span
+                        th:text="#{error.deleting.item}"></span></div>
+            </section>
+
+            <section>
+                <div class="row align-items-center justify-content-end">
+                    <div class="col-3 col-md-2">
+                        <a class="btn btn-info" href="#" th:href="@{/}"><span
+                                th:text="#{back}"></span></a>
+                    </div>
+                </div>
+                <div class="row mb-1 text-center">
+                    <div class="col-12 colorGreen">
+                        <h1 th:text="#{enrollment.as}"></h1>
+                    </div>
+                </div>
+                <div class="row mb-1 text-center">
+                    <div class="col-12">
+                        <p th:text="#{to.insert.new.data}"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section sec:authorize="hasRole('ROLE_ROOT')">
+                <div class="row mb-3">
+                    <div class="col-2 col-md-8">
+                    </div>
+                    <div class="col-7 col-md-3">
+                        <select id="enrollmentAsId" class="form-select">
+                            <option th:each="unit : ${enrollmentAsModelList}" th:value="${unit.id}"
+                                    th:text="#{__${unit.name}__}"></option>
+                        </select>
+                    </div>
+                    <div class="col-3 col-md-1">
+                        <a class="btn btn-danger" onclick="confirmDelete()"><span th:text="#{delete}"></span></a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-1 col-lg-4">
+                    </div>
+                    <div class="col-10 col-lg-4 text-center">
+                        <ul id="sortable" class="list-group mb-1">
+                            <li th:each="unit : ${enrollmentAsModelList}" th:value="${unit.id}" th:text="#{__${unit.name}__}"
+                                class="list-group-item move">
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-1 col-lg-4">
+                    </div>
+                </div>
+            </section>
+
+            <div class="row align-items-center justify-content-end">
+                <div class="col-3 col-md-2">
+                    <a class="btn btn-info" href="#" th:href="@{/}"><span
+                            th:text="#{back}"></span></a>
+                </div>
+            </div>
+        </div>
+
+    </body>
+
+    <footer th:replace="~{static/footer :: footer}"></footer>
+</html>

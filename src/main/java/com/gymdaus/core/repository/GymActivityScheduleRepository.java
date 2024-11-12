@@ -14,4 +14,10 @@ public interface GymActivityScheduleRepository extends JpaRepository<GymActivity
 
     GymActivitySchedule findTopByOrderByPositionDesc();
 
+    List<GymActivitySchedule> findAllByGymActivityIdAndAdultTrue(Long gymActivityId);
+
+    List<GymActivitySchedule> findAllByGymActivityIdAndMinorTrue(Long gymActivityId);
+
+    List<GymActivitySchedule> findAllByGymActivityIdAndInclusiveTrue(Long gymActivityId);
+
 }

@@ -30,6 +30,11 @@ public class MapperGymActivitySchedule {
             localObject.setEndTime(externObject.getEndTime());
             localObject.setName(externObject.getName());
             localObject.setRoomName(externObject.getRoomName());
+            localObject.setAdult(externObject.isAdult());
+            localObject.setMinor(externObject.isMinor());
+            localObject.setInclusive(externObject.isInclusive());
+            localObject.setPrice(externObject.getPrice());
+            localObject.setCapacity(externObject.getCapacity());
             localObject.setPosition(externObject.getPosition());
         }
         return localObject;
@@ -57,6 +62,11 @@ public class MapperGymActivitySchedule {
             localObject.setEndTime(externObject.getEndTime());
             localObject.setName(externObject.getName());
             localObject.setRoomName(externObject.getRoomName());
+            localObject.setAdult(externObject.isAdult());
+            localObject.setMinor(externObject.isMinor());
+            localObject.setInclusive(externObject.isInclusive());
+            localObject.setPrice(externObject.getPrice());
+            localObject.setCapacity(externObject.getCapacity());
             localObject.setPosition(externObject.getPosition());
         }
         return localObject;

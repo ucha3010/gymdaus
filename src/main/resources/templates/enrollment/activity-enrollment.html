@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Formulario Completo</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+        function toggleAdditionalOptions() {
+            const additionalSection = document.getElementById("additionalSection");
+            const option2Selected = document.getElementById("radioOption2").checked;
+            additionalSection.style.display = option2Selected ? "block" : "none";
+        }
+
+        function toggleTextFields() {
+            const switchState = document.getElementById("primerSwitch").checked;
+            const textFields = document.querySelectorAll(".toggle-text-field");
+            textFields.forEach(field => field.disabled = !switchState);
+        }
+    </script>
+    </head>
+    <body>
+        <div class="container mt-5">
+            <h1 class="text-center mb-4">Inscripción a Crossfit en Gimnasio Cobeña</h1>
+
+            <div class="mb-3">
+                <label for="primerDesplegable" class="form-label">
+                    Dirección del gimnasio donde desea realizar la inscripción
+                </label>
+                <select class="form-select" id="primerDesplegable">
+                    <option value="1.1">Dirección 1</option>
+                    <option value="1.2">Dirección 2</option>
+                    <option value="1.3">Dirección 3</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <div>
+                    <input type="radio" class="btn-check" name="options" id="radioOption1" onclick="toggleAdditionalOptions()" autocomplete="off" checked>
+                    <label class="btn btn-outline-primary" for="radioOption1">Inscripción propia</label>
+                    <input type="radio" class="btn-check" name="options" id="radioOption2" onclick="toggleAdditionalOptions()" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="radioOption2">Autorización</label>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="primerTexto" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="primerTexto">
+            </div>
+            <div class="mb-3">
+                <label for="segundoTexto" class="form-label">Primer apellido</label>
+                <input type="text" class="form-control" id="segundoTexto">
+            </div>
+            <div class="mb-3">
+                <label for="tercerTexto" class="form-label">Segundo apellido</label>
+                <input type="text" class="form-control" id="tercerTexto">
+            </div>
+
+            <p>Al darse de alta transmitiremos sus datos a Gimnasio Cobeña.</p>
+
+            <div class="mb-3">
+                <label for="segundoDesplegable" class="form-label">Opciones de horario e importe</label>
+                <select class="form-select" id="segundoDesplegable">
+                    <option value="2.1">L, X, V de 12hs a 13hs - 50€</option>
+                    <option value="2.2">L, X, V de 13hs a 14hs - 50€</option>
+                    <option value="2.3">L, X, V de 14hs a 15hs - 50€</option>
+                </select>
+            </div>
+
+            <div id="additionalSection" style="display: none;">
+                <div class="mb-3">
+                    <div>
+                        <input type="radio" class="btn-check" name="additionalOptions" id="radioOptionA" autocomplete="off" checked>
+                        <label class="btn btn-outline-success" for="radioOptionA">Autorización menor de edad</label>
+                        <input type="radio" class="btn-check" name="additionalOptions" id="radioOptionB" autocomplete="off">
+                        <label class="btn btn-outline-success" for="radioOptionB">Autorización inclusiva</label>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="tercerDesplegable" class="form-label">
+                        La autorización la realizo en calidad de
+                    </label>
+                    <select class="form-select" id="tercerDesplegable">
+                        <option value="3.1">Madre</option>
+                        <option value="3.2">Padre</option>
+                        <option value="3.3">Tutor</option>
+                    </select>
+                </div>
+
+                <h2 class="mt-4">Datos de la persona autorizada</h2>
+
+                <div class="mb-3">
+                    <label for="cuartoTexto" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="cuartoTexto">
+                </div>
+                <div class="mb-3">
+                    <label for="quintoTexto" class="form-label">Primer apellido</label>
+                    <input type="text" class="form-control" id="quintoTexto">
+                </div>
+                <div class="mb-3">
+                    <label for="sextoTexto" class="form-label">Segundo apellido</label>
+                    <input type="text" class="form-control" id="sextoTexto">
+                </div>
+                <div class="mb-3">
+                    <label for="septimoTexto" class="form-label">Fecha de nacimiento</label>
+                    <input type="date" class="form-control" id="septimoTexto">
+                </div>
+                <div class="mb-3">
+                    <label for="octavoTexto" class="form-label">DNI</label>
+                    <input type="text" class="form-control" id="octavoTexto">
+                </div>
+            </div>
+
+            <div class="form-check form-switch mb-3">
+                <input class="form-check-input" type="checkbox" role="switch" id="primerSwitch" onclick="toggleTextFields()">
+                <label class="form-check-label" for="primerSwitch">Débito automático</label>
+            </div>
+
+            <div class="mb-3">
+                <label for="novenoTexto" class="form-label">Nombre y apellidos</label>
+                <input type="text" class="form-control toggle-text-field" id="novenoTexto" disabled>
+            </div>
+            <div class="mb-3">
+                <label for="decimoTexto" class="form-label">IBAN</label>
+                <input type="text" class="form-control toggle-text-field" id="decimoTexto" disabled>
+            </div>
+            <div class="mb-3">
+                <label for="decimoprimerTexto" class="form-label">SWIFT</label>
+                <input type="text" class="form-control toggle-text-field" id="decimoprimerTexto" disabled>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-secondary">Volver</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+        </div>
+    </body>
+</html>

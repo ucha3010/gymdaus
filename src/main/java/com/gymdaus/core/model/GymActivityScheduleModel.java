@@ -32,6 +32,11 @@ public class GymActivityScheduleModel {
     private OffsetTime endTime;
     private String name;
     private String roomName;
+    private boolean adult;
+    private boolean minor;
+    private boolean inclusive;
+    private Double price;
+    private int capacity;
     private GymActivityModel gymActivityModel;
     private int position;
 
