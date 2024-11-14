@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="es">
+    <head>
+        <meta th:replace="~{static/headerMeta :: meta}">
+        <link th:replace="~{static/headerLink :: link}">
+        <script th:replace="~{static/headerScript :: script}"></script>
+
+        <title th:text="#{user}"></title>
+
+        <script type="text/javascript">
+        function changeRole(username){
+            var relativeUrl = "root/user/role/" + username + "/" + document.getElementById("rolSelect" + username).value;
+            var domain = getDomain(location.href);
+            location.href = domain + relativeUrl;
+        }
+
+        </script>
+    </head>
+    <body>
+        <div th:replace="~{static/barraUser :: div}"></div>
+        <div th:replace="~{static/barraNav :: nav}"></div>
+
+        <div class="container">
+            <section class="marginTopBottom3Percentage text-center">
+                <div th:if="${updateOK != null}" class="alert alert-success" role="alert"><span
+                        th:text="#{update.ok}"></span></div>
+            </section>
+
+            <section>
+                <div class="row align-items-center justify-content-end">
+                    <div class="col-3 col-md-2">
+                        <a class="btn btn-info" href="#" th:href="@{/root/users}"><span th:text="#{back}"></span></a>
+                    </div>
+                </div>
+                <div class="row mb-1 text-center">
+                    <div class="col-12 colorGreen">
+                        <h1 th:text="#{user.details}"></h1>
+                        <h1><span th:text="${userModel.name}"></span> <span th:text="${userModel.lastname}"></span>
+                            <span th:text="${userModel.secondLastname}"></span></h1>
+                    </div>
+                </div>
+            </section>
+
+            <section sec:authorize="hasRole('ROLE_ROOT')">
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label for="username" th:text="#{username}"></label>
+                    </div>
+                    <div class="col-4 col-md-3">
+                        <input type="text" th:value="${userModel.username}" id="username" class="form-control" size="50"
+                               disabled/>
+                    </div>
+
+                    <div class="col-5 col-md-7">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-3 col-md-2 text-center">
+                        <label for="registrationDate" th:text="#{registration.date}"></label>
+                    </div>
+                    <div class="col-4 col-md-3">
+                        <input type="text" th:value="${#calendars.format(userModel.registrationDate,'dd/MM/yyyy')}"
+                               id="registrationDate" class="form-control" size="20" disabled/>
+                    </div>
+                    <div class="col-5 col-md-7">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label for="name" th:text="#{name}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${userModel.name}" id="name" class="form-control" size="100"
+                               disabled/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label for="lastname" th:text="#{lastname}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${userModel.lastname}" id="lastname" class="form-control"
+                               size="100" disabled/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label for="secondLastname" th:text="#{secondLastname}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${userModel.secondLastname}" id="secondLastname"
+                               class="form-control" size="100" disabled/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label for="secondLastname" th:text="#{enable}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <label th:if="${userModel.username != user.username}" class="containercheckbox">
+                            <a href="#" th:href="@{/root/enabled/__${userModel.username}__}">
+                                <input type="checkbox" th:checked="${userModel.enabled}">
+                                <span class="checkmark"></span>
+                            </a>
+                        </label>
+                        <span th:if="${userModel.username == user.username}" th:text="#{__${userModel.enabled}__}"></span>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label for="phone" th:text="#{phone}"></label>
+                    </div>
+                    <div class="col-4 col-md-3">
+                        <input type="text" th:value="${userModel.phone}" id="phone" class="form-control" size="20"
+                               disabled/>
+                    </div>
+                    <div class="col-5 col-md-7">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label for="sex" th:text="#{sex}"></label>
+                    </div>
+                    <div class="col-4 col-md-3">
+                        <input type="text" th:value="${userModel.sex}" id="sex" class="form-control" size="10"
+                               disabled/>
+                    </div>
+                    <div class="col-5 col-md-7">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label for="birthdate" th:text="#{birthdate}"></label>
+                    </div>
+                    <div class="col-4 col-md-3">
+                        <input type="text" th:value="${#calendars.format(userModel.birthdate,'dd/MM/yyyy')}"
+                               id="birthdate" class="form-control" size="20" disabled/>
+                    </div>
+                    <div class="col-5 col-md-7">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:attr="for=|rolSelect${userModel.username}|" th:text="#{role}"></label>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <select th:if="${userModel.username != user.username}" th:attr="id=|rolSelect${userModel.username}|" class="form-select">
+                            <option th:each="unit : ${userRoleList}" th:value="${unit.role}" th:text="${unit.role}"
+                                    th:selected="${unit.role==userModel.userRoles[0]}"></option>
+                        </select>
+                        <span th:if="${userModel.username == user.username}" th:text="${userModel.userRoles[0]}"></span>
+                    </div>
+                    <div class="col-3 col-md-7">
+                        <button th:if="${userModel.username != user.username}" class="btn btn-success"
+                                th:attr="onclick=|changeRole('${userModel.username}')|">
+                            <span th:text="#{save}"></span> <span th:text="#{role}"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label for="email" th:text="#{email}"></label>
+                    </div>
+                    <div class="col-4 col-md-3">
+                        <input type="text" th:value="${userModel.email}" id="email" class="form-control" size="200"
+                               disabled/>
+                    </div>
+                    <div class="col-5 col-md-7">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <span th:text="#{address}"></span>
+                    </div>
+                    <div class="col-3 col-md-2 text-center">
+                        <label for="addressStreet" th:text="#{address.street}"></label>
+                    </div>
+                    <div class="col-6 col-md-8">
+                        <input type="text" th:value="${userModel.addressStreet}" id="addressStreet" class="form-control"
+                               size="100" disabled/>
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                    </div>
+                    <div class="col-3 col-md-2 text-center">
+                        <label for="addressNumber" th:text="#{address.number}"></label>
+                    </div>
+                    <div class="col-6 col-md-8">
+                        <input type="text" th:value="${userModel.addressNumber}" id="addressNumber" class="form-control"
+                               size="30" disabled/>
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                    </div>
+                    <div class="col-3 col-md-2 text-center">
+                        <label for="addressOther" th:text="#{address.other}"></label>
+                    </div>
+                    <div class="col-6 col-md-8">
+                        <input type="text" th:value="${userModel.addressOther}" id="addressOther" class="form-control"
+                               size="50" disabled/>
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                    </div>
+                    <div class="col-3 col-md-2 text-center">
+                        <label for="addressCity" th:text="#{address.city}"></label>
+                    </div>
+                    <div class="col-6 col-md-8">
+                        <input type="text" th:value="${userModel.addressCity}" id="addressCity" class="form-control"
+                               size="50" disabled/>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-3 col-md-2 text-center">
+                    </div>
+                    <div class="col-3 col-md-2 text-center">
+                        <label for="addressZip" th:text="#{address.zip}"></label>
+                    </div>
+                    <div class="col-6 col-md-8">
+                        <input type="text" th:value="${userModel.addressZip}" id="addressZip" class="form-control"
+                               size="10" disabled/>
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label for="country" th:text="#{country}"></label>
+                    </div>
+                    <div class="col-4 col-md-3">
+                        <input type="text" th:value="#{__${userModel.countryModel.name}__}" id="country" class="form-control"
+                               size="50" disabled/>
+                    </div>
+                    <div class="col-5 col-md-7">
+                    </div>
+                </div>
+
+                <div class="row align-items-center justify-content-end">
+                    <div class="col-5">
+                    </div>
+                    <div class="col-3">
+                    </div>
+                    <div class="col-3 col-md-2">
+                        <a class="btn btn-info" href="#" th:href="@{/root/users}"><span th:text="#{back}"></span></a>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </body>
+
+    <footer th:replace="~{static/footer :: footer}"></footer>
+</html>

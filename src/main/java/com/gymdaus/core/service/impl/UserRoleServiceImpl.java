@@ -112,8 +112,8 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public List<UserRole> adminAvailableRoles() {
-        return Arrays.asList(new UserRole(null, Constants.ROLE_USER), new UserRole(null, Constants.ROLE_ADMIN));
+    public List<UserRole> rootAvailableRoles() {
+        return Arrays.asList(new UserRole(null, Constants.ROLE_USER), new UserRole(null, Constants.ROLE_ADMIN), new UserRole(null, Constants.ROLE_ROOT));
     }
 
     private User findUserByUsername(String username) {

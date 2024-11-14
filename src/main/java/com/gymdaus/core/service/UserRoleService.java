@@ -24,7 +24,7 @@ public interface UserRoleService {
 
     void updateRoles(UserRoleModel userRoleModel);
 
-    List<UserRole> adminAvailableRoles();
+    List<UserRole> rootAvailableRoles();
 
     void assignOneRole(String username, String role);
 

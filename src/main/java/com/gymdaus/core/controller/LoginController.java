@@ -36,13 +36,6 @@ public class LoginController {
 
     @GetMapping("/")
     @PreAuthorize("permitAll()")
-    public String loginMainPage() {
-        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), null, getClass());
-        return Constants.LOGIN;
-    }
-
-    @GetMapping("/login-page")
-    @PreAuthorize("permitAll()")
     public String loginPage(Model model,
                             @RequestParam(name = "error", required = false) String error,
                             @RequestParam(name = "logout", required = false) String logout) {

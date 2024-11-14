@@ -39,6 +39,7 @@ public class SecurityConfiguration {
 								.loginProcessingUrl("/logincheck")
 								.usernameParameter("username")
 								.passwordParameter("password")
+								.failureHandler(new CustomAuthenticationFailureHandler())
 								.defaultSuccessUrl("/logged")
 								.permitAll()
 				)

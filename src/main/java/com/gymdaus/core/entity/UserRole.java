@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Table(name = "user_role", uniqueConstraints = @UniqueConstraint(
@@ -36,8 +35,8 @@ public class UserRole {
     public String toString() {
         return "UserRole{" +
                 "userRoleId=" + userRoleId +
-                ", username=" + user.getUsername() +
-                ", role='" + role + '\'' +
+                ", username=" + (user != null ? user.getUsername() : "") +
+                ", role='" + role +
                 '}';
     }
 }

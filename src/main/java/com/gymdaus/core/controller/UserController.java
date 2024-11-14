@@ -145,7 +145,7 @@ public class UserController {
         securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/usuario/users");
         modelAndView.setViewName("management/users");
 //		modelAndView.addObject("userList", userService.findAll());
-        modelAndView.addObject("userRoleList", userRoleService.adminAvailableRoles());
+        modelAndView.addObject("userRoleList", userRoleService.rootAvailableRoles());
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return modelAndView;
     }
@@ -159,7 +159,7 @@ public class UserController {
         modelAndView.setViewName("management/user");
         UserModel userModel = userService.findModelByUsername(username);
         modelAndView.addObject("user", userModel);
-        modelAndView.addObject("userRoleList", userRoleService.adminAvailableRoles());
+        modelAndView.addObject("userRoleList", userRoleService.rootAvailableRoles());
 //		modelAndView.addObject("loggedUser", userService.isLoggedUser(user.getUsername(), userModel.getUsername()));
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return modelAndView;
@@ -167,7 +167,7 @@ public class UserController {
 
     @GetMapping("/enabled/{username}")
     @PreAuthorize("hasRole('ROLE_ROOT')")
-    public ModelAndView updatePay(ModelAndView modelAndView, @PathVariable String username) {
+    public ModelAndView updateEnabled(ModelAndView modelAndView, @PathVariable String username) {
         UserModel user = utilService.basicDataCharge(modelAndView);
         securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/usuario/enabled/" + username);
         UserModel usuario = userService.findModelByUsername(username);

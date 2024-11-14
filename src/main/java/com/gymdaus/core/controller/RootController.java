@@ -2,10 +2,9 @@ package com.gymdaus.core.controller;
 
 import com.gymdaus.core.configuration.SessionData;
 import com.gymdaus.core.model.UserModel;
-import com.gymdaus.core.service.CountryService;
-import com.gymdaus.core.service.EnrollmentAsService;
-import com.gymdaus.core.service.SecurityService;
-import com.gymdaus.core.service.UtilService;
+import com.gymdaus.core.model.UserRoleModel;
+import com.gymdaus.core.service.*;
+import com.gymdaus.core.service.impl.UserService;
 import com.gymdaus.core.util.Constants;
 import com.gymdaus.core.util.LoggerMapper;
 import com.gymdaus.core.util.Utils;
@@ -18,6 +17,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/root")
 public class RootController {
@@ -28,6 +29,10 @@ public class RootController {
     private EnrollmentAsService enrollmentAsService;
     @Autowired
     private SecurityService securityService;
+    @Autowired
+    private UserRoleService userRoleService;
+    @Autowired
+    private UserService userService;
     @Autowired
     private UtilService utilService;
     @Autowired
@@ -105,6 +110,64 @@ public class RootController {
         enrollmentAsService.delete(id);
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return enrollmentAs(modelAndView);
+    }
+
+    @GetMapping("/users")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
+    public ModelAndView users(ModelAndView modelAndView) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        securityService.userAccessValidation("/root/users");
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/users");
+        modelAndView.setViewName("root/users");
+        modelAndView.addObject("userModelList", userService.findAll());
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return modelAndView;
+    }
+
+    @GetMapping("/user/{username}")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
+    public ModelAndView userDetail(ModelAndView modelAndView, @PathVariable String username) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        securityService.userAccessValidation("/root/user/" + username);
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/user/");
+        modelAndView.setViewName("root/user-detail");
+        modelAndView.addObject("userModel", userService.findModelByUsername(username));
+        modelAndView.addObject("userRoleList", userRoleService.rootAvailableRoles());
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return modelAndView;
+    }
+
+    @GetMapping("/user/role/{username}/{role}")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
+    public ModelAndView userRole(ModelAndView modelAndView, @PathVariable String username, @PathVariable String role) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), "username=" + username + ", role=" + role, getClass());
+        securityService.userAccessValidation("/root/user/role/" + username + "/" + role);
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/user/role/");
+        UserRoleModel userRoleModel = new UserRoleModel();
+        userRoleModel.setUsername(username);
+        userRoleModel.setRoles(List.of(role));
+        userRoleService.updateRoles(userRoleModel);
+        modelAndView.addObject("updateOK", "updateOK");
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return userDetail(modelAndView, username);
+    }
+
+    @GetMapping("/enabled/{username}")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
+    public ModelAndView updateEnabled(ModelAndView modelAndView, @PathVariable String username) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), "username=" + username, getClass());
+        securityService.userAccessValidation("/root/enabled/" + username);
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/enabled/");
+        UserModel userModel = userService.findModelByUsername(username);
+        userModel.setEnabled(!userModel.isEnabled());
+        userService.addOrUpdate(userModel);
+        modelAndView.addObject("updateOK", "updateOK");
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return userDetail(modelAndView, username);
     }
 
 }
