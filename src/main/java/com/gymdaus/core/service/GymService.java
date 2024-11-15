@@ -8,6 +8,7 @@ import java.util.List;
 public interface GymService {
 
     List<GymModel> findAll();
+
     List<GymModel> findAllEnabled();
 
     GymModel findById(Long id);
@@ -18,7 +19,7 @@ public interface GymService {
 
     void delete(Long id);
 
-    void enableDisable(Long gymIdModel, boolean enableDisable);
+    void enableDisable(Long gymIdModel);
 
     GymModel findByIdEnabled(Long id);
 }

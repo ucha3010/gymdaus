@@ -7,15 +7,14 @@
         <script th:replace="~{static/headerScriptJquery :: script}"></script>
         <script th:replace="~{static/headerScriptTable :: script}"></script>
 
-        <title th:text="#{users}"></title>
+        <title th:text="#{gyms}"></title>
 
         <script>
-        function viewDetail(username){
-            var relativeUrl = "root/user/" + username;
-            var domain = getDomain(location.href);
-            location.href = domain + relativeUrl;
-        }
-
+            function viewDetail(gymId){
+                var relativeUrl = "root/gym/" + gymId;
+                var domain = getDomain(location.href);
+                location.href = domain + relativeUrl;
+            }
         </script>
 
     </head>
@@ -41,7 +40,7 @@
                 </div>
                 <div class="row mb-1 text-center">
                     <div class="col-12 colorGreen">
-                        <h1 th:text="#{users}"></h1>
+                        <h1 th:text="#{gyms}"></h1>
                     </div>
                 </div>
             </section>
@@ -53,45 +52,44 @@
                 <thead>
                 <tr class="text-center">
                     <th scope="col" class="fw-normal">
-                        <button class="btn"><span th:text="#{username}"></span></button>
+                        <button class="btn">
+                            <span>ID</span>
+                        </button>
                     </th>
                     <th scope="col" class="fw-normal">
                         <button class="btn"><span th:text="#{name}"></span></button>
                     </th>
                     <th scope="col" class="fw-normal">
-                        <button class="btn"><span th:text="#{lastname}"></span></button>
-                    </th>
-                    <th scope="col" class="fw-normal">
-                        <button class="btn"><span th:text="#{secondLastname}"></span></button>
+                        <button class="btn"><span th:text="#{tax.id}"></span></button>
                     </th>
                     <th scope="col" class="fw-normal">
                         <button class="btn"><span th:text="#{enable}"></span></button>
                     </th>
                     <th scope="col" class="d-none d-lg-table-cell">
-                        <button class="btn"><span th:text="#{email}"></span></button>
+                        <button class="btn"><span th:text="#{contracted.visibility}"></span></button>
+                    </th>
+                    <th scope="col" class="d-none d-lg-table-cell">
+                        <button class="btn"><span th:text="#{contracted.records}"></span></button>
                     </th>
                     <th scope="col" class="d-none d-lg-table-cell">
                         <button class="btn"><span th:text="#{registration.date}"></span></button>
                     </th>
-                    <th scope="col" class="d-none d-lg-table-cell">
-                        <button class="btn"><span th:text="#{role}"></span></button>
-                    </th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="user : ${userModelList}" th:attr="onclick=|viewDetail('${user.username}')|">
-                    <td class="text-center"><span th:text="${user.username}"></span></td>
-                    <td><span th:text="${user.name}"></span></td>
-                    <td><span th:text="${user.lastname}"></span></td>
-                    <td><span th:text="${user.secondLastname}"></span></td>
+                <tr th:each="gym : ${gymModelList}" th:attr="onclick=|viewDetail('${gym.id}')|">
+                    <td class="text-center"><span th:text="${gym.id}"></span></td>
+                    <td><span th:text="${gym.name}"></span></td>
+                    <td class="text-center"><span th:text="${gym.taxIdCode}"></span></td>
                     <td class="text-center">
-                        <img th:if="${user.enabled}" class="check-img" src="#" th:src="@{/imgs/ok.png}" alt="Enabled">
-                        <img th:if="${!user.enabled}" class="check-img" src="#" th:src="@{/imgs/ko.png}" alt="Disabled">
+                        <img th:if="${gym.enabled}" class="check-img" src="#" th:src="@{/imgs/ok.png}" alt="Enabled">
+                        <img th:if="${!gym.enabled}" class="check-img" src="#" th:src="@{/imgs/ko.png}" alt="Disabled">
                     </td>
-                    <td class="d-none d-lg-table-cell text-center"><span th:text="${user.email}"></span></td>
+                    <td class="d-none d-lg-table-cell text-center"><span th:text="${gym.contractedVisibility}"></span>
+                    </td>
+                    <td class="d-none d-lg-table-cell text-center"><span th:text="${gym.contractedRecords}"></span></td>
                     <td class="d-none d-lg-table-cell text-center"><span
-                            th:text="${#calendars.format(user.registrationDate,'dd/MM/yyyy')}"></span></td>
-                    <td class="d-none d-lg-table-cell text-center"><span th:text="${user.userRoles[0]}"></span></td>
+                            th:text="${#calendars.format(gym.registrationDate,'dd/MM/yyyy')}"></span></td>
                 </tr>
                 </tbody>
             </table>

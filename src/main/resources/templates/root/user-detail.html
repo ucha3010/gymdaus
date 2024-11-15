@@ -46,12 +46,12 @@
                     <div class="col-3 col-md-2 text-center">
                         <label for="username" th:text="#{username}"></label>
                     </div>
-                    <div class="col-4 col-md-3">
+                    <div class="col-9 col-md-3">
                         <input type="text" th:value="${userModel.username}" id="username" class="form-control" size="50"
                                disabled/>
                     </div>
 
-                    <div class="col-5 col-md-7">
+                    <div class="col-md-7">
                     </div>
                 </div>
 
@@ -59,11 +59,11 @@
                     <div class="col-3 col-md-2 text-center">
                         <label for="registrationDate" th:text="#{registration.date}"></label>
                     </div>
-                    <div class="col-4 col-md-3">
-                        <input type="text" th:value="${#calendars.format(userModel.registrationDate,'dd/MM/yyyy')}"
+                    <div class="col-9 col-md-3">
+                        <input type="text" th:value="${#calendars.format(userModel.registrationDate,'dd/MM/yyyy HH:mm:ss')}"
                                id="registrationDate" class="form-control" size="20" disabled/>
                     </div>
-                    <div class="col-5 col-md-7">
+                    <div class="col-md-7">
                     </div>
                 </div>
 
@@ -109,7 +109,7 @@
                     </div>
                     <div class="col-9 col-md-8">
                         <label th:if="${userModel.username != user.username}" class="containercheckbox">
-                            <a href="#" th:href="@{/root/enabled/__${userModel.username}__}">
+                            <a href="#" th:href="@{/root/user/enabled/__${userModel.username}__}">
                                 <input type="checkbox" th:checked="${userModel.enabled}">
                                 <span class="checkmark"></span>
                             </a>
@@ -124,11 +124,11 @@
                     <div class="col-3 col-md-2 text-center">
                         <label for="phone" th:text="#{phone}"></label>
                     </div>
-                    <div class="col-4 col-md-3">
+                    <div class="col-9 col-md-3">
                         <input type="text" th:value="${userModel.phone}" id="phone" class="form-control" size="20"
                                disabled/>
                     </div>
-                    <div class="col-5 col-md-7">
+                    <div class="col-md-7">
                     </div>
                 </div>
 
@@ -136,11 +136,11 @@
                     <div class="col-3 col-md-2 text-center">
                         <label for="sex" th:text="#{sex}"></label>
                     </div>
-                    <div class="col-4 col-md-3">
-                        <input type="text" th:value="${userModel.sex}" id="sex" class="form-control" size="10"
+                    <div class="col-9 col-md-3">
+                        <input type="text" th:value="#{__${userModel.sex}__}" id="sex" class="form-control" size="10"
                                disabled/>
                     </div>
-                    <div class="col-5 col-md-7">
+                    <div class="col-md-7">
                     </div>
                 </div>
 
@@ -148,11 +148,11 @@
                     <div class="col-3 col-md-2 text-center">
                         <label for="birthdate" th:text="#{birthdate}"></label>
                     </div>
-                    <div class="col-4 col-md-3">
+                    <div class="col-9 col-md-3">
                         <input type="text" th:value="${#calendars.format(userModel.birthdate,'dd/MM/yyyy')}"
                                id="birthdate" class="form-control" size="20" disabled/>
                     </div>
-                    <div class="col-5 col-md-7">
+                    <div class="col-md-7">
                     </div>
                 </div>
 
@@ -179,11 +179,11 @@
                     <div class="col-3 col-md-2 text-center">
                         <label for="email" th:text="#{email}"></label>
                     </div>
-                    <div class="col-4 col-md-3">
+                    <div class="col-9 col-md-3">
                         <input type="text" th:value="${userModel.email}" id="email" class="form-control" size="200"
                                disabled/>
                     </div>
-                    <div class="col-5 col-md-7">
+                    <div class="col-md-7">
                     </div>
                 </div>
 
@@ -252,11 +252,35 @@
                     <div class="col-3 col-md-2 text-center">
                         <label for="country" th:text="#{country}"></label>
                     </div>
-                    <div class="col-4 col-md-3">
+                    <div class="col-9 col-md-3">
                         <input type="text" th:value="#{__${userModel.countryModel.name}__}" id="country" class="form-control"
                                size="50" disabled/>
                     </div>
-                    <div class="col-5 col-md-7">
+                    <div class="col-md-7">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label for="modificationDate" th:text="#{modification.date}"></label>
+                    </div>
+                    <div class="col-9 col-md-3">
+                        <input type="text" th:value="${#calendars.format(userModel.modificationDate,'dd/MM/yyyy HH:mm:ss')}"
+                               id="modificationDate" class="form-control" disabled/>
+                    </div>
+                    <div class="col-md-7">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-3 col-md-2 text-center">
+                        <label for="modificationUsername" th:text="#{modification.username}"></label>
+                    </div>
+                    <div class="col-9 col-md-3">
+                        <input type="text" th:value="${userModel.modificationUsername}" id="modificationUsername"
+                               class="form-control" size="50" disabled />
+                    </div>
+                    <div class="col-md-7">
                     </div>
                 </div>
 

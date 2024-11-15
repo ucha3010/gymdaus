@@ -24,7 +24,9 @@ public class UserModel {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date birthdate;
 	private CountryModel countryModel;
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
 	private Date registrationDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
 	private Date modificationDate;
 	private String modificationUsername;
 	private String email;

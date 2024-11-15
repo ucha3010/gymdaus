@@ -5,8 +5,10 @@ import com.gymdaus.core.entity.UserRole;
 import com.gymdaus.core.mapper.MapperUser;
 import com.gymdaus.core.model.UserModel;
 import com.gymdaus.core.repository.UserRepository;
+import com.gymdaus.core.util.LoggerMapper;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceException;
+import org.apache.logging.log4j.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -109,6 +111,16 @@ public class UserService implements UserDetailsService {
             return mapperUser.entity2Model(userRepository.save(mapperUser.model2Entity(userModel)));
         } catch (Exception exception) {
             throw new PersistenceException();
+        }
+    }
+
+    public void enableDisable(String username) {
+        UserModel userModel = findModelByUsername(username);
+        userModel.setEnabled(!userModel.isEnabled());
+        try {
+            addOrUpdate(userModel);
+        } catch (Exception e) {
+            LoggerMapper.log(Level.ERROR, "enableDisable", e.getMessage(), this.getClass());
         }
     }
 }

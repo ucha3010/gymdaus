@@ -1,6 +1,7 @@
 package com.gymdaus.core.controller;
 
 import com.gymdaus.core.configuration.SessionData;
+import com.gymdaus.core.model.GymModel;
 import com.gymdaus.core.model.UserModel;
 import com.gymdaus.core.model.UserRoleModel;
 import com.gymdaus.core.service.*;
@@ -27,6 +28,8 @@ public class RootController {
     private CountryService countryService;
     @Autowired
     private EnrollmentAsService enrollmentAsService;
+    @Autowired
+    private GymService gymService;
     @Autowired
     private SecurityService securityService;
     @Autowired
@@ -155,19 +158,56 @@ public class RootController {
         return userDetail(modelAndView, username);
     }
 
-    @GetMapping("/enabled/{username}")
+    @GetMapping("/user/enabled/{username}")
     @PreAuthorize("hasRole('ROLE_ROOT')")
     public ModelAndView updateEnabled(ModelAndView modelAndView, @PathVariable String username) {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), "username=" + username, getClass());
-        securityService.userAccessValidation("/root/enabled/" + username);
+        securityService.userAccessValidation("/root/user/enabled/" + username);
         UserModel user = utilService.basicDataCharge(modelAndView);
-        securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/enabled/");
-        UserModel userModel = userService.findModelByUsername(username);
-        userModel.setEnabled(!userModel.isEnabled());
-        userService.addOrUpdate(userModel);
+        securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/user/enabled/");
+        userService.enableDisable(username);
         modelAndView.addObject("updateOK", "updateOK");
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return userDetail(modelAndView, username);
+    }
+
+    @GetMapping("/gyms")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
+    public ModelAndView gyms(ModelAndView modelAndView) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        securityService.userAccessValidation("/root/gyms");
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/gyms");
+        modelAndView.setViewName("root/gyms");
+        modelAndView.addObject("gymModelList", gymService.findAll());
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return modelAndView;
+    }
+
+    @GetMapping("/gym/{gymId}")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
+    public ModelAndView gymDetail(ModelAndView modelAndView, @PathVariable Long gymId) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        securityService.userAccessValidation("/root/gym/" + gymId);
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/gym/user/");
+        modelAndView.setViewName("root/gym-detail");
+        modelAndView.addObject("gymModel", gymService.findById(gymId));
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return modelAndView;
+    }
+
+    @GetMapping("/gym/enabled/{gymId}")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
+    public ModelAndView updateEnabled(ModelAndView modelAndView, @PathVariable Long gymId) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), "gymId=" + gymId, getClass());
+        securityService.userAccessValidation("/root/gym/enabled/" + gymId);
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/gym/enabled/");
+        gymService.enableDisable(gymId);
+        modelAndView.addObject("updateOK", "updateOK");
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return gymDetail(modelAndView, gymId);
     }
 
 }

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service()
@@ -19,9 +20,10 @@ public class GymServiceImpl implements GymService {
 
     @Autowired
     private GymRepository gymRepository;
-
     @Autowired
     private MapperGym mapperGym;
+    @Autowired
+    private UserService userService;
 
     @Override
     public List<GymModel> findAll() {
@@ -57,6 +59,8 @@ public class GymServiceImpl implements GymService {
 
     @Override
     public void update(GymModel gymModel) {
+        gymModel.setModificationDate(new Date());
+        gymModel.setModificationUsername(userService.getLoggedUser().getUsername());
         gymRepository.save(mapperGym.model2Entity(gymModel));
     }
 
@@ -66,9 +70,9 @@ public class GymServiceImpl implements GymService {
     }
 
     @Override
-    public void enableDisable(Long gymIdModel, boolean enableDisable) {
+    public void enableDisable(Long gymIdModel) {
         GymModel gymModel = findById(gymIdModel);
-        gymModel.setEnabled(enableDisable);
+        gymModel.setEnabled(!gymModel.isEnabled());
         try {
             update(gymModel);
         } catch (Exception e) {
