@@ -4,10 +4,7 @@ import com.gymdaus.core.configuration.SessionData;
 import com.gymdaus.core.exception.ValidationException;
 import com.gymdaus.core.model.TokenModel;
 import com.gymdaus.core.model.UserModel;
-import com.gymdaus.core.service.GymUserService;
-import com.gymdaus.core.service.TokenService;
-import com.gymdaus.core.service.UserRoleService;
-import com.gymdaus.core.service.UtilService;
+import com.gymdaus.core.service.*;
 import com.gymdaus.core.service.impl.UserService;
 import com.gymdaus.core.util.Constants;
 import com.gymdaus.core.util.LoggerMapper;
@@ -32,6 +29,8 @@ public class MainController {
 
     @Autowired
     private GymUserService gymUserService;
+    @Autowired
+    private SecurityService securityService;
     @Autowired
     private TokenService tokenService;
     @Autowired
@@ -65,7 +64,7 @@ public class MainController {
     @PreAuthorize("isAuthenticated()")
     public ModelAndView logged(ModelAndView modelAndView) {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
-        sessionData.setUserModel(userService.getLoggedUserModel());
+        securityService.assignUserLoggedToSession();
         return mainPage(modelAndView);
     }
 

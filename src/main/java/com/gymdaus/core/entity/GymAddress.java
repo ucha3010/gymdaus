@@ -17,6 +17,8 @@ public class GymAddress {
     @SequenceGenerator(name = "gymAddressGenerator", sequenceName = "CHANGE_LOW_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gymAddressGenerator")
     private Long id;
+    @Column(nullable = false)
+    private Long gymId;
     @Column(nullable = false, length = Constants.GYM_NAME)
     private String name;
     private boolean enabled;

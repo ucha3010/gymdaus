@@ -2,6 +2,7 @@ package com.gymdaus.core.mapper;
 
 import com.gymdaus.core.entity.GymAddress;
 import com.gymdaus.core.model.GymAddressModel;
+import com.gymdaus.core.model.GymModel;
 import com.gymdaus.core.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,9 @@ public class MapperGymAddress {
         GymAddressModel localObject = new GymAddressModel();
         if (externObject != null) {
             localObject.setId(externObject.getId());
+            GymModel gymModel = new GymModel();
+            gymModel.setId(externObject.getGymId());
+            localObject.setGymModel(gymModel);
             localObject.setName(externObject.getName());
             localObject.setEnabled(externObject.isEnabled());
             localObject.setEmail(externObject.getEmail());
@@ -53,6 +57,11 @@ public class MapperGymAddress {
                 localObject.setCountryId(externObject.getCountryModel().getId());
             } else {
                 localObject.setCountryId(0L);
+            }
+            if (externObject.getGymModel() != null) {
+                localObject.setGymId(externObject.getGymModel().getId());
+            } else {
+                localObject.setGymId(0L);
             }
         }
         return localObject;

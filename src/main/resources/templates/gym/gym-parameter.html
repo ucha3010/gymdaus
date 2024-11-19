@@ -58,19 +58,14 @@
 <body>
 	<div th:replace="~{static/barraUser :: div}"></div>
 	<div th:replace="~{static/barraNav :: nav}"></div>
+	<div th:replace="~{static/barraAdminRootButtons :: section}"></div>
 
-	<div class="container">
-		<section class="marginTopBottom3Percentage text-center">
+	<div class="container marginBottom2Percentage">
+		<section class="marginTopBottom1Percentage text-center">
 			<div th:if="${updateOK != null}" class="alert alert-success" role="alert"><span th:text="#{update.ok}"></span></div>
 		</section>
 
 		<section>
-			<div class="row align-items-center justify-content-end">
-				<div class="col-3 col-md-2">
-					<a class="btn btn-info" href="#" th:href="@{/gym/gym-admin/__${gymModel.id}__}"><span
-							th:text="#{back}"></span></a>
-				</div>
-			</div>
 			<div class="row mb-1 text-center">
 				<div class="col-12 colorGreen">
 					<h1><span th:text="#{parameters}"></span> <span th:text="${gymModel.name}"></span></h1>

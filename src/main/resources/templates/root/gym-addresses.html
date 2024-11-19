@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="es">
+    <head>
+        <meta th:replace="~{static/headerMeta :: meta}">
+        <link th:replace="~{static/headerLink :: link}">
+        <script th:replace="~{static/headerScript :: script}"></script>
+
+        <title th:text="#{addresses}"></title>
+    </head>
+    <body>
+        <div th:replace="~{static/barraUser :: div}"></div>
+        <div th:replace="~{static/barraNav :: nav}"></div>
+        <div th:replace="~{static/barraAdminRootButtons :: section}"></div>
+
+        <div class="container">
+            <section class="marginTopBottom1Percentage text-center">
+                <div th:if="${updateOK != null}" class="alert alert-success" role="alert"><span
+                        th:text="#{update.ok}"></span></div>
+            </section>
+
+            <section>
+                <div class="row mb-1 text-center">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-9 col-md-8 colorGreen">
+                        <h1><span th:text="#{gym}"></span> <span th:value="${gymModel.name}"></span> - <span
+                                th:text="#{addresses}"></span></h1>
+                    </div>
+                    <div class="col-3 col-md-2">
+                        <a class="btn btn-success" href="#" th:href="@{/root/gym/__${gymModel.id}__/new-address}"><span
+                                th:text="#{new.address}"></span></a>
+                    </div>
+                </div>
+            </section>
+
+            <section sec:authorize="hasRole('ROLE_ROOT')">
+                <div th:each="unit, iStat : ${gymModel.gymAddressModelList}" th:class="${iStat.odd} ? 'backgroundColorLightViolet' : ''">
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label>ID</label>
+                        </div>
+                        <div class="col-3 col-md-3 mb-1">
+                            <input type="number" th:value="${unit.id}" class="form-control" readonly/>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <a class="btn btn-info" href="#"
+                               th:href="@{/root/gym/__${gymModel.id}__/address/__${unit.id}__}"><span
+                                    th:text="#{edit}"></span> <span th:text="#{address}"></span> <span
+                                    th:text="${unit.id}"></span></a>
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{name}"></label>
+                        </div>
+                        <div class="col-9 col-md-8">
+                            <input type="text" th:value="${unit.name}" class="form-control" readonly/>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{enable}"></label>
+                        </div>
+                        <div class="col-9 col-md-8">
+                            <label class="containercheckbox">
+                                <a href="#" th:href="@{/root/gym/enabled/address/__${unit.id}__}">
+                                    <input type="checkbox" th:checked="${unit.enabled}">
+                                    <span class="checkmark"></span>
+                                </a>
+                            </label>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{email}"></label>
+                        </div>
+                        <div class="col-9 col-md-3">
+                            <input type="text" th:value="${unit.email}" class="form-control" readonly/>
+                        </div>
+                        <div class="col-md-7">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{host.provider}"></label>
+                        </div>
+                        <div class="col-9 col-md-3">
+                            <input type="text" th:value="${unit.emailHost+':'+unit.emailPort}" class="form-control"
+                                   readonly/>
+                        </div>
+                        <div class="col-md-7">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{phone}"></label>
+                        </div>
+                        <div class="col-9 col-md-8">
+                            <input type="text" th:value="${unit.phone}" class="form-control" readonly/>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{address.street}"></label>
+                        </div>
+                        <div class="col-9 col-md-8">
+                            <input type="text" th:value="${unit.addressStreet}" class="form-control" readonly/>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{address.number}"></label>
+                        </div>
+                        <div class="col-9 col-md-8">
+                            <input type="text" th:value="${unit.addressNumber}" class="form-control" readonly/>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{address.other}"></label>
+                        </div>
+                        <div class="col-9 col-md-8">
+                            <input type="text" th:value="${unit.addressOther}" class="form-control" readonly/>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{address.city}"></label>
+                        </div>
+                        <div class="col-9 col-md-8">
+                            <input type="text" th:value="${unit.addressCity}" class="form-control" readonly/>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{address.zip}"></label>
+                        </div>
+                        <div class="col-9 col-md-8">
+                            <input type="text" th:value="${unit.addressZip}" class="form-control" readonly/>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{country}"></label>
+                        </div>
+                        <div class="col-9 col-md-8">
+                            <input type="text" th:value="#{__${unit.countryModel.name}__}" class="form-control"
+                                   readonly/>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row align-items-center justify-content-end mb-3">
+                    <div class="col-1 p-0">
+                    </div>
+                    <div class="col-2 p-0">
+                    </div>
+                    <div class="col-6 p-0">
+                    </div>
+                    <div class="col-2 p-0">
+                        <a class="btn btn-info" href="#" th:href="@{/root/gym/__${gymModel.id}__}"><span
+                                th:text="#{back}"></span></a>
+                    </div>
+                    <div class="col-1 p-0">
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </body>
+
+    <footer th:replace="~{static/footer :: footer}"></footer>
+</html>

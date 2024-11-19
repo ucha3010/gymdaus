@@ -137,11 +137,19 @@ public class SecurityServiceImpl implements SecurityService {
     @Override
     public void userAccessValidation(String uri) throws AccessDeniedException {
         User user = userService.getLoggedUser();
-        if (user == null || Utils.isNullOrEmpty(user.getUsername()) || sessionData.getUserModel() == null ||
+        if (sessionData.getUserModel() == null) {
+            assignUserLoggedToSession();
+        }
+        if (user == null || Utils.isNullOrEmpty(user.getUsername()) ||
                 Utils.isNullOrEmpty(sessionData.getUserModel().getUsername()) ||
                 !user.getUsername().equalsIgnoreCase(sessionData.getUserModel().getUsername())) {
             throw new AccessDeniedException(uri);
         }
+    }
+
+    @Override
+    public void assignUserLoggedToSession() {
+        sessionData.setUserModel(userService.getLoggedUserModel());
     }
 
     @Override

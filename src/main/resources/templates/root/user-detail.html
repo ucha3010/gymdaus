@@ -19,19 +19,15 @@
     <body>
         <div th:replace="~{static/barraUser :: div}"></div>
         <div th:replace="~{static/barraNav :: nav}"></div>
+        <div th:replace="~{static/barraAdminRootButtons :: section}"></div>
 
         <div class="container">
-            <section class="marginTopBottom3Percentage text-center">
+            <section class="marginTopBottom1Percentage text-center">
                 <div th:if="${updateOK != null}" class="alert alert-success" role="alert"><span
                         th:text="#{update.ok}"></span></div>
             </section>
 
             <section>
-                <div class="row align-items-center justify-content-end">
-                    <div class="col-3 col-md-2">
-                        <a class="btn btn-info" href="#" th:href="@{/root/users}"><span th:text="#{back}"></span></a>
-                    </div>
-                </div>
                 <div class="row mb-1 text-center">
                     <div class="col-12 colorGreen">
                         <h1 th:text="#{user.details}"></h1>
@@ -137,8 +133,9 @@
                         <label for="sex" th:text="#{sex}"></label>
                     </div>
                     <div class="col-9 col-md-3">
-                        <input type="text" th:value="#{__${userModel.sex}__}" id="sex" class="form-control" size="10"
+                        <input th:if="${userModel.sex != null}" type="text" th:value="#{__${userModel.sex}__}" id="sex" class="form-control" size="10"
                                disabled/>
+                        <input th:if="${userModel.sex == null}" type="text" class="form-control" disabled/>
                     </div>
                     <div class="col-md-7">
                     </div>

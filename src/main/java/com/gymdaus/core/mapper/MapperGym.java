@@ -2,10 +2,15 @@ package com.gymdaus.core.mapper;
 
 import com.gymdaus.core.entity.Gym;
 import com.gymdaus.core.model.GymModel;
+import com.gymdaus.core.service.GymAddressService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MapperGym {
+
+    @Autowired
+    private GymAddressService gymAddressService;
 
     public GymModel entity2Model(Gym externObject) {
         GymModel localObject = null;
@@ -21,6 +26,7 @@ public class MapperGym {
             localObject.setContractedRecords(externObject.getContractedRecords());
             localObject.setContractedVisibility(externObject.getContractedVisibility());
             localObject.setPosition(externObject.getPosition());
+            localObject.setGymAddressModelList(gymAddressService.findByGymId(externObject.getId()));
         }
         return localObject;
     }

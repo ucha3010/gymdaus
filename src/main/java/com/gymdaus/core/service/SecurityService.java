@@ -24,6 +24,7 @@ public interface SecurityService {
     void enabledAdministrationGymUser(String username, Long gymId, boolean managerRequired, String uri) throws AccessDeniedException;
 
     void userAccessValidation(String uri) throws AccessDeniedException;
+    void assignUserLoggedToSession();
 
     void roleValidation(String username, String role, String uri) throws AccessDeniedException;
 }

@@ -1,0 +1,35 @@
+
+
+<section sec:authorize="hasRole('ROLE_ADMIN')" class="text-center">
+    <a href="#" th:href="@{/gym/}" class="textDecoration-none">
+        <button class="btn btn-warning btn-lg minimumWidth40 marginTopBottom1Percentage" type="button"><span
+                th:text="#{administration}"></span> <i class="icofont-web"></i></button>
+    </a>
+</section>
+
+<section sec:authorize="hasRole('ROLE_ROOT')" class="text-center">
+    <a href="#" th:href="@{/root/users}" class="textDecoration-none">
+        <button class="btn btn-danger btn-lg marginTopBottom1Percentage" type="button"><span
+                th:text="#{users}"></span></button>
+    </a>
+    <a href="#" th:href="@{/root/gyms}" class="textDecoration-none">
+        <button class="btn btn-primary btn-lg" type="button"><span th:text="#{companies}"></span></button>
+    </a>
+    <a href="#" th:href="@{/user/registrations}" class="textDecoration-none">
+        <button class="btn btn-primary btn-lg" type="button"><span th:text="#{registrations}"></span></button>
+    </a>
+    <a href="#" th:href="@{/root/enrollment-as}" class="textDecoration-none">
+        <button class="btn btn-danger btn-lg marginTopBottom1Percentage" type="button"><span
+                th:text="#{enrollment.as}"></span></button>
+    </a>
+    <a href="#" th:href="@{/root/countries}" class="textDecoration-none">
+        <button class="btn btn-primary btn-lg" type="button"><span th:text="#{country}"></span></button>
+    </a>
+    <a href="#" th:href="@{/adminUtil/root-util}" class="textDecoration-none">
+        <button class="btn btn-danger btn-lg marginTopBottom1Percentage" type="button"><span
+                th:text="#{configuration}"></span></button>
+    </a>
+    <a href="#" th:href="@{/adminMenu/menuList}" class="textDecoration-none">
+        <button class="btn btn-primary btn-lg" type="button"><span th:text="#{menu.bar}"></span></button>
+    </a>
+</section>

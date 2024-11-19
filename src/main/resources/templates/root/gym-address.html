@@ -5,18 +5,13 @@
         <link th:replace="~{static/headerLink :: link}">
         <script th:replace="~{static/headerScript :: script}"></script>
 
-        <title th:text="#{gym}"></title>
+        <title th:text="#{address}"></title>
 
         <script type="text/javascript">
-        function changeRole(username){
-            var relativeUrl = "root/user/role/" + username + "/" + document.getElementById("rolSelect" + username).value;
-            var domain = getDomain(location.href);
-            location.href = domain + relativeUrl;
-        }
 
 		function validate(){
 
-			var field = ['name','taxIdCode','contractedVisibility','contractedRecords'];
+			var field = ['name','email','addressStreet','addressCity','addressZip'];
 			restore();
 			var validated = true;
 			for(var i=0; i < field.length; i++){
@@ -49,6 +44,7 @@
 			}
 		}
 
+
         </script>
     </head>
     <body>
@@ -65,60 +61,25 @@
             <section>
                 <div class="row mb-1 text-center">
                     <div class="col-12 colorGreen">
-                        <h1><span th:text="#{gym}"></span> <span th:text="${gymModel.name}"></span></h1>
+                        <h1 th:text="${gymAddressModel.name}"></h1>
                     </div>
                 </div>
             </section>
 
             <section sec:authorize="hasRole('ROLE_ROOT')">
-                <form action="#" th:action="@{/root/gym}" th:object="${gymModel}" method="post"
+                <form action="#" th:action="@{/root/gym/address}" th:object="${gymAddressModel}" method="post"
                       onsubmit="return validate()">
 
-                    <input type="hidden" th:field="*{position}"/>
+                    <input type="hidden" name="id" th:value="${gymAddressModel.id}"/>
+                    <input type="hidden" name="enabled" th:value="${gymAddressModel.enabled}"/>
+                    <input type="hidden" name="gymModel.id" th:value="${gymAddressModel.gymModel.id}"/>
 
                     <div class="row mb-1">
                         <div class="col-3 col-md-2 text-center">
-                            <label for="id">ID</label>
-                        </div>
-                        <div class="col-9 col-md-3 mb-1">
-                            <input type="text" th:field="*{id}" class="form-control" readonly/>
-                        </div>
-                        <div class="col-3">
-                        </div>
-                        <div class="col-9 col-md-4">
-                            <a class="btn btn-info" href="#" th:href="@{/root/gym/__${gymModel.id}__/addresses}"><span
-                                    th:text="#{addresses}"></span></a>
-                        </div>
-                    </div>
-
-                    <div class="row mb-1">
-                        <div class="col-3 col-md-2 text-center">
-                            <label for="name" th:text="#{name}"></label>
+                            <label th:text="#{name}"></label>
                         </div>
                         <div class="col-9 col-md-8">
-                            <input type="text" th:field="*{name}" id="name" class="form-control" size="100"/>
-                        </div>
-                        <div class="col-md-2">
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-3 col-md-2 text-center">
-                            <label th:text="#{registration.date}"></label>
-                        </div>
-                        <div class="col-9 col-md-3">
-                            <input type="datetime-local" th:field="*{registrationDate}" class="form-control" readonly/>
-                        </div>
-                        <div class="col-md-7">
-                        </div>
-                    </div>
-
-                    <div class="row mb-1">
-                        <div class="col-3 col-md-2 text-center">
-                            <label for="taxIdCode" th:text="#{tax.id}"></label>
-                        </div>
-                        <div class="col-9 col-md-8">
-                            <input type="text" th:field="*{taxIdCode}" id="taxIdCode" class="form-control" size="50"/>
+                            <input type="text" th:field="*{name}" id="name" class="form-control" />
                         </div>
                         <div class="col-md-2">
                         </div>
@@ -126,15 +87,34 @@
 
                     <div class="row mb-1">
                         <div class="col-3 col-md-2 text-center">
-                            <label th:text="#{enable}"></label>
+                            <label th:text="#{email}"></label>
+                        </div>
+                        <div class="col-9 col-md-3">
+                            <input type="text" th:field="*{email}" id="email" class="form-control" />
+                        </div>
+                        <div class="col-md-7">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{host.provider}"></label>
+                        </div>
+                        <div class="col-9 col-md-3">
+                            <select th:field="*{emailHost}" id="emailHost" class="form-select">
+                                <option th:each="unitHost : ${utilListHost}" th:value="${unitHost.value}" th:text="${unitHost.key}" th:selected="${unitHost.value == gymAddressModel.emailHost}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-7">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{phone}"></label>
                         </div>
                         <div class="col-9 col-md-8">
-                            <label class="containercheckbox">
-                                <a href="#" th:href="@{/root/gym/enabled/__${gymModel.id}__}">
-                                    <input type="checkbox" th:field="*{enabled}" th:checked="${gymModel.enabled}">
-                                    <span class="checkmark"></span>
-                                </a>
-                            </label>
+                            <input type="text" th:field="*{phone}" id="phone" class="form-control" />
                         </div>
                         <div class="col-md-2">
                         </div>
@@ -142,49 +122,69 @@
 
                     <div class="row mb-1">
                         <div class="col-3 col-md-2 text-center">
-                            <label for="contractedVisibility" th:text="#{contracted.visibility}"></label>
+                            <label th:text="#{address.street}"></label>
                         </div>
-                        <div class="col-9 col-md-3">
-                            <input type="number" th:field="*{contractedVisibility}" id="contractedVisibility"
-                                   class="form-control" min="0"/>
+                        <div class="col-9 col-md-8">
+                            <input type="text" th:field="*{addressStreet}" id="addressStreet" class="form-control" />
                         </div>
-                        <div class="col-md-7">
-                        </div>
-                    </div>
-
-                    <div class="row mb-1">
-                        <div class="col-3 col-md-2 text-center">
-                            <label for="contractedRecords" th:text="#{contracted.records}"></label>
-                        </div>
-                        <div class="col-9 col-md-3">
-                            <input type="number" th:field="*{contractedRecords}" id="contractedRecords"
-                                   class="form-control" min="0"/>
-                        </div>
-                        <div class="col-md-7">
+                        <div class="col-md-2">
                         </div>
                     </div>
 
                     <div class="row mb-1">
                         <div class="col-3 col-md-2 text-center">
-                            <label for="modificationUsername" th:text="#{modification.username}"></label>
+                            <label th:text="#{address.number}"></label>
                         </div>
-                        <div class="col-9 col-md-3">
-                            <input type="text" th:value="${gymModel.modificationUsername}" id="modificationUsername"
-                                   class="form-control" size="50" readonly/>
+                        <div class="col-9 col-md-8">
+                            <input type="text" th:field="*{addressNumber}" id="addressNumber" class="form-control" />
                         </div>
-                        <div class="col-md-7">
+                        <div class="col-md-2">
                         </div>
                     </div>
 
-                    <div class="row mb-3">
+                    <div class="row mb-1">
                         <div class="col-3 col-md-2 text-center">
-                            <label for="modificationDate" th:text="#{modification.date}"></label>
+                            <label th:text="#{address.other}"></label>
                         </div>
-                        <div class="col-9 col-md-3">
-                            <input type="datetime-local" th:value="${gymModel.modificationDate}" id="modificationDate"
-                                   class="form-control" readonly/>
+                        <div class="col-9 col-md-8">
+                            <input type="text" th:field="*{addressOther}" id="addressOther" class="form-control" />
                         </div>
-                        <div class="col-md-7">
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{address.city}"></label>
+                        </div>
+                        <div class="col-9 col-md-8">
+                            <input type="text" th:field="*{addressCity}" id="addressCity" class="form-control" />
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{address.zip}"></label>
+                        </div>
+                        <div class="col-9 col-md-8">
+                            <input type="text" th:field="*{addressZip}" id="addressZip" class="form-control" />
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2">
+                            <label for="country" th:text="#{country}"></label>
+                        </div>
+                        <div class="col-9 col-md-8">
+                            <select th:field="*{countryModel.id}" id="country" class="form-select">
+                                <option th:each="p : ${countryList}" th:value="${p.id}" th:text="#{__${p.name}__}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
                         </div>
                     </div>
 
@@ -192,7 +192,8 @@
                         <div class="col-1 p-0">
                         </div>
                         <div class="col-2 p-0">
-                            <a class="btn btn-info" href="#" th:href="@{/root/gyms}"><span th:text="#{back}"></span></a>
+                            <a class="btn btn-info" href="#" th:href="@{/root/gym/__${gymAddressModel.gymModel.id}__/addresses}">
+                                <span th:text="#{back}"></span></a>
                         </div>
                         <div class="col-6 p-0">
                         </div>
@@ -213,7 +214,7 @@
                 </form>
             </section>
 
-        </div>
+            </div>
     </body>
 
     <footer th:replace="~{static/footer :: footer}"></footer>
