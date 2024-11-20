@@ -4,8 +4,22 @@
         <meta th:replace="~{static/headerMeta :: meta}">
         <link th:replace="~{static/headerLink :: link}">
         <script th:replace="~{static/headerScript :: script}"></script>
+        <script th:replace="~{static/headerScriptJquery :: script}"></script>
 
         <title th:text="#{addresses}"></title>
+
+        <script type="text/javascript">
+            function confirmDelete(gymAddressId, name){
+                let deleteAsk = $('#deleteAsk').val();
+                if(confirm(deleteAsk + " " + name + "?")){
+                    var relativeUrl = "root/remove-gym-address/" + gymAddressId;
+                    var domain = getDomain(location.href);
+                    location.href = domain + relativeUrl;
+                    return true;
+                }
+                return false;
+            }
+        </script>
     </head>
     <body>
         <div th:replace="~{static/barraUser :: div}"></div>
@@ -13,6 +27,9 @@
         <div th:replace="~{static/barraAdminRootButtons :: section}"></div>
 
         <div class="container">
+
+            <input type="hidden" id="deleteAsk" th:value="#{confirm.delete}"/>
+
             <section class="marginTopBottom1Percentage text-center">
                 <div th:if="${updateOK != null}" class="alert alert-success" role="alert"><span
                         th:text="#{update.ok}"></span></div>
@@ -34,7 +51,8 @@
             </section>
 
             <section sec:authorize="hasRole('ROLE_ROOT')">
-                <div th:each="unit, iStat : ${gymModel.gymAddressModelList}" th:class="${iStat.odd} ? 'backgroundColorLightViolet' : ''">
+                <div th:each="unit, iStat : ${gymModel.gymAddressModelList}"
+                     th:class="${iStat.odd} ? 'backgroundColorLightViolet' : ''">
                     <div class="row mb-1">
                         <div class="col-3 col-md-2 text-center">
                             <label>ID</label>
@@ -42,11 +60,18 @@
                         <div class="col-3 col-md-3 mb-1">
                             <input type="number" th:value="${unit.id}" class="form-control" readonly/>
                         </div>
-                        <div class="col-6 col-md-4">
+                        <div class="col-3 col-md-4">
                             <a class="btn btn-info" href="#"
                                th:href="@{/root/gym/__${gymModel.id}__/address/__${unit.id}__}"><span
                                     th:text="#{edit}"></span> <span th:text="#{address}"></span> <span
                                     th:text="${unit.id}"></span></a>
+                        </div>
+                        <div class="col-3 col-md-3">
+                            <button class="btn btn-danger"
+                                    th:attr="onclick=|confirmDelete('${unit.id}','${unit.name}')|">
+                                <span th:text="#{delete}"> </span> <span th:text="#{address}"></span> <span
+                                    th:text="${unit.id}"></span>
+                            </button>
                         </div>
                     </div>
 

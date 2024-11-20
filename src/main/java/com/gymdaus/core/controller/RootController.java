@@ -298,6 +298,7 @@ public class RootController {
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return modelAndView;
     }
+
     @PostMapping("/gym/address/new")
     @PreAuthorize("hasRole('ROLE_ROOT')")
     public ModelAndView addGymAddress(ModelAndView modelAndView, @ModelAttribute("gymAddressModel") GymAddressModel gymAddressModel) {
@@ -306,6 +307,19 @@ public class RootController {
         UserModel user = utilService.basicDataCharge(modelAndView);
         securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/gym/address/new");
         gymAddressService.add(gymAddressModel);
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return gymAddresses(modelAndView, gymAddressModel.getGymModel().getId());
+    }
+
+    @GetMapping("/remove-gym-address/{id}")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
+    public ModelAndView removeGymAddress(ModelAndView modelAndView, @PathVariable Long id) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), id, getClass());
+        securityService.userAccessValidation("/root/remove-gym-address/" + id);
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/remove-gym-address/" + id);
+        GymAddressModel gymAddressModel = gymAddressService.findById(id);
+        gymAddressService.delete(id);
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return gymAddresses(modelAndView, gymAddressModel.getGymModel().getId());
     }

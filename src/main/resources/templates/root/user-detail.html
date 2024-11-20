@@ -56,7 +56,8 @@
                         <label for="registrationDate" th:text="#{registration.date}"></label>
                     </div>
                     <div class="col-9 col-md-3">
-                        <input type="text" th:value="${#calendars.format(userModel.registrationDate,'dd/MM/yyyy HH:mm:ss')}"
+                        <input type="text"
+                               th:value="${#calendars.format(userModel.registrationDate,'dd/MM/yyyy HH:mm:ss')}"
                                id="registrationDate" class="form-control" size="20" disabled/>
                     </div>
                     <div class="col-md-7">
@@ -110,7 +111,8 @@
                                 <span class="checkmark"></span>
                             </a>
                         </label>
-                        <span th:if="${userModel.username == user.username}" th:text="#{__${userModel.enabled}__}"></span>
+                        <span th:if="${userModel.username == user.username}"
+                              th:text="#{__${userModel.enabled}__}"></span>
                     </div>
                     <div class="col-md-2">
                     </div>
@@ -133,7 +135,8 @@
                         <label for="sex" th:text="#{sex}"></label>
                     </div>
                     <div class="col-9 col-md-3">
-                        <input th:if="${userModel.sex != null}" type="text" th:value="#{__${userModel.sex}__}" id="sex" class="form-control" size="10"
+                        <input th:if="${userModel.sex != null}" type="text" th:value="#{__${userModel.sex}__}" id="sex"
+                               class="form-control" size="10"
                                disabled/>
                         <input th:if="${userModel.sex == null}" type="text" class="form-control" disabled/>
                     </div>
@@ -158,7 +161,8 @@
                         <label th:attr="for=|rolSelect${userModel.username}|" th:text="#{role}"></label>
                     </div>
                     <div class="col-6 col-md-3">
-                        <select th:if="${userModel.username != user.username}" th:attr="id=|rolSelect${userModel.username}|" class="form-select">
+                        <select th:if="${userModel.username != user.username}"
+                                th:attr="id=|rolSelect${userModel.username}|" class="form-select">
                             <option th:each="unit : ${userRoleList}" th:value="${unit.role}" th:text="${unit.role}"
                                     th:selected="${unit.role==userModel.userRoles[0]}"></option>
                         </select>
@@ -250,7 +254,8 @@
                         <label for="country" th:text="#{country}"></label>
                     </div>
                     <div class="col-9 col-md-3">
-                        <input type="text" th:value="#{__${userModel.countryModel.name}__}" id="country" class="form-control"
+                        <input type="text" th:value="#{__${userModel.countryModel.name}__}" id="country"
+                               class="form-control"
                                size="50" disabled/>
                     </div>
                     <div class="col-md-7">
@@ -262,7 +267,8 @@
                         <label for="modificationDate" th:text="#{modification.date}"></label>
                     </div>
                     <div class="col-9 col-md-3">
-                        <input type="text" th:value="${#calendars.format(userModel.modificationDate,'dd/MM/yyyy HH:mm:ss')}"
+                        <input type="text"
+                               th:value="${#calendars.format(userModel.modificationDate,'dd/MM/yyyy HH:mm:ss')}"
                                id="modificationDate" class="form-control" disabled/>
                     </div>
                     <div class="col-md-7">
@@ -275,7 +281,7 @@
                     </div>
                     <div class="col-9 col-md-3">
                         <input type="text" th:value="${userModel.modificationUsername}" id="modificationUsername"
-                               class="form-control" size="50" disabled />
+                               class="form-control" size="50" disabled/>
                     </div>
                     <div class="col-md-7">
                     </div>

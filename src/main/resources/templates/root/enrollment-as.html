@@ -92,7 +92,8 @@
                     </div>
                     <div class="col-10 col-lg-4 text-center">
                         <ul id="sortable" class="list-group mb-1">
-                            <li th:each="unit : ${enrollmentAsModelList}" th:value="${unit.id}" th:text="#{__${unit.name}__}"
+                            <li th:each="unit : ${enrollmentAsModelList}" th:value="${unit.id}"
+                                th:text="#{__${unit.name}__}"
                                 class="list-group-item move">
                             </li>
                         </ul>
