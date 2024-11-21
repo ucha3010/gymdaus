@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="es">
+    <head>
+        <meta th:replace="~{static/headerMeta :: meta}">
+        <link th:replace="~{static/headerLink :: link}">
+        <script th:replace="~{static/headerScript :: script}"></script>
+
+        <title th:text="#{enrollment}"></title>
+    </head>
+    <body>
+        <div th:replace="~{static/barraUser :: div}"></div>
+        <div th:replace="~{static/barraNav :: nav}"></div>
+        <div th:replace="~{static/barraAdminRootButtons :: section}"></div>
+
+        <div class="container">
+
+            <section>
+                <div class="row mb-1 text-center">
+                    <div class="col-12 colorGreen">
+                        <h1 th:text="#{enrollment}"></h1>
+                    </div>
+                </div>
+            </section>
+
+            <section sec:authorize="hasRole('ROLE_ROOT')">
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label>ID</label>
+                    </div>
+                    <div class="col-9 col-md-3">
+                        <input type="text" th:value="${enrollment.id}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-7">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{username}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input th:if="${enrollment.userModel != null}" type="text"
+                               th:value="${enrollment.userModel.username}" class="form-control"
+                               readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{activity}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input th:if="${enrollment.gymActivityModel != null}" type="text"
+                               th:value="${enrollment.gymActivityModel.activityModel.name}" class="form-control"
+                               readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{more.registration}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input th:if="${enrollment.gymMoreRegistrationModel != null}" type="text"
+                               th:value="${enrollment.gymMoreRegistrationModel.moreRegistrationModel.name}" class="form-control"
+                               readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{enrollmentKind}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.enrollmentKind}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-4 col-md-3">
+                        <label th:text="#{own}"></label>
+                        <input type="checkbox" th:checked="${enrollment.own}">
+                    </div>
+                    <div class="col-4 col-md-3">
+                        <label th:text="#{minor}"></label>
+                        <input type="checkbox" th:checked="${enrollment.minor}">
+                    </div>
+                    <div class="col-4 col-md-3">
+                        <label th:text="#{inclusive}"></label>
+                        <input type="checkbox" th:checked="${enrollment.inclusive}">
+                    </div>
+                    <div class="col-md-3">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{registration.date}"></label>
+                    </div>
+                    <div class="col-9 col-md-3">
+                        <input type="text"
+                               th:value="${#calendars.format(enrollment.enrollmentDate,'dd/MM/yyyy HH:mm:ss')}"
+                               class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-7">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{enrollment}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.name}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{tournamentDate}"></label>
+                    </div>
+                    <div class="col-9 col-md-3">
+                        <input type="text"
+                               th:value="${#calendars.format(enrollment.tournamentDate,'dd/MM/yyyy HH:mm:ss')}"
+                               class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-7">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{gym}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input th:if="${enrollment.gymModel != null}" type="text"
+                               th:value="${enrollment.gymModel.name}"
+                               class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{addressStreet}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.addressStreet}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{addressNumber}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.addressNumber}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{addressOther}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.addressOther}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{addressCity}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.addressCity}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{addressZip}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.addressZip}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{addressCountry}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.addressCountry}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{userEnrollmentName}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.userEnrollmentName}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{userEnrollmentLastname}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.userEnrollmentLastname}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{userEnrollmentSecondLastname}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.userEnrollmentSecondLastname}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{userEnrollmentIdCard}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.userEnrollmentIdCard}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{userEnrollmentBirthdate}"></label>
+                    </div>
+                    <div class="col-9 col-md-3">
+                        <input type="text"
+                               th:value="${#calendars.format(enrollment.userEnrollmentBirthdate,'dd/MM/yyyy')}"
+                               class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-7">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{userEnrollmentSex}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.userEnrollmentSex}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{authorizerEnrollmentAddressStreet}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.authorizerEnrollmentAddressStreet}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{authorizerEnrollmentAddressNumber}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.authorizerEnrollmentAddressNumber}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{authorizerEnrollmentAddressOther}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.authorizerEnrollmentAddressOther}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{authorizerEnrollmentAddressCity}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.authorizerEnrollmentAddressCity}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{authorizerEnrollmentAddressZip}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.authorizerEnrollmentAddressZip}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{authorizerEnrollmentAddressCountry}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.authorizerEnrollmentAddressCountry}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{authorizerEnrollmentName}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.authorizerEnrollmentName}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{authorizerEnrollmentLastname}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.authorizerEnrollmentLastname}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{authorizerEnrollmentSecondLastname}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.authorizerEnrollmentSecondLastname}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{authorizerEnrollmentIdCard}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.authorizerEnrollmentIdCard}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{authorizerEnrollmentBirthdate}"></label>
+                    </div>
+                    <div class="col-9 col-md-3">
+                        <input type="text"
+                               th:value="${#calendars.format(enrollment.authorizerEnrollmentBirthdate,'dd/MM/yyyy')}"
+                               class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-7">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{authorizerEnrollmentAs}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.authorizerEnrollmentAs}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{email}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.email}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{phone}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.phone}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{paid}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="checkbox" th:checked="${enrollment.paid}">
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{paidDate}"></label>
+                    </div>
+                    <div class="col-9 col-md-3">
+                        <input type="text"
+                               th:value="${#calendars.format(enrollment.paidDate,'dd/MM/yyyy HH:mm:ss')}"
+                               class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-7">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{sepaDirectDebit}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="checkbox" th:checked="${enrollment.sepaDirectDebit}">
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{sepaAccountNumber}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.sepaAccountNumber}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{sepaAccountPerson}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.sepaAccountPerson}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{swift}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="text" th:value="${enrollment.swift}" class="form-control" readonly/>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-3 col-md-2 text-center">
+                        <label th:text="#{signed}"></label>
+                    </div>
+                    <div class="col-9 col-md-8">
+                        <input type="checkbox" th:checked="${enrollment.signed}">
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+
+                <div class="row align-items-center justify-content-end">
+                    <div class="col-5">
+                    </div>
+                    <div class="col-3">
+                    </div>
+                    <div class="col-3 col-md-2">
+                        <a class="btn btn-info" href="#" th:href="@{/root/enrollments}"><span th:text="#{back}"></span></a>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </body>
+
+    <footer th:replace="~{static/footer :: footer}"></footer>
+</html>

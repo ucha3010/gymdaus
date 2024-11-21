@@ -33,17 +33,20 @@ public class UtilServiceImpl implements UtilService {
 
     @Override
     public UserModel basicDataCharge(ModelAndView modelAndView) {
+        UserModel user = null;
         try {
-            UserModel user = userService.getLoggedUserModel();
+            user = userService.getLoggedUserModel();
             user.setPassword(null);
             modelAndView.addObject("user", user);
             modelAndView.addObject("profilePhoto", userDocumentManagerService.getProfilePhotoPath(user.getUsername()));
-            modelAndView.addObject("menu1List", menu1Service.findAllEnabled());
-            modelAndView.addObject("menu1GymList", menu1Service.findMenu1GymList());
-            return user;
+            //modelAndView.addObject("menu1List", menu1Service.findAllEnabled());
         } catch (ClassCastException e) {
-            return null;
+            modelAndView.addObject("notLogged", "notLogged");
         }
+        modelAndView.addObject("menu1GymList", menu1Service.findMenu1GymList());
+        modelAndView.addObject("menu1ActivityList", menu1Service.findMenu1ActivityList());
+        modelAndView.addObject("menu1MoreRegistrationList", menu1Service.findMenu1MoreRegistrationList());
+        return user;
     }
 
     private List<String> chargeListYesNo() {

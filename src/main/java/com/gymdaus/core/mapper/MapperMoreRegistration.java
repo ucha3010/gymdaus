@@ -13,6 +13,8 @@ public class MapperMoreRegistration {
             localObject.setId(externObject.getId());
             localObject.setName(externObject.getName());
             localObject.setEnabled(externObject.isEnabled());
+            localObject.setPosition(externObject.getPosition());
+            localObject.setUrl(externObject.getUrl());
         }
         return localObject;
     }
@@ -23,6 +25,8 @@ public class MapperMoreRegistration {
             localObject.setId(externObject.getId());
             localObject.setName(externObject.getName());
             localObject.setEnabled(externObject.isEnabled());
+            localObject.setPosition(externObject.getPosition());
+            localObject.setUrl(externObject.getUrl());
         }
         return localObject;
     }

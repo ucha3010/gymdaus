@@ -14,6 +14,8 @@ public class MoreRegistrationModel {
     private Long id;
     private String name;
     private boolean enabled;
+    private int position;
+    private String url;
     private List<GymMoreRegistrationModel> gymMoreRegistrationModelList;
 
 }

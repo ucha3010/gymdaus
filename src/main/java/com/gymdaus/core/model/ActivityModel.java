@@ -15,6 +15,7 @@ public class ActivityModel {
     private String name;
     private boolean enabled;
     private int position;
+    private String url;
     private List<GymActivityModel> gymActivityModelList;
 
 }

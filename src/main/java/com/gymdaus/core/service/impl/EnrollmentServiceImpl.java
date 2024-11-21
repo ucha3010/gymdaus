@@ -22,6 +22,15 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     private MapperEnrollment mapperEnrollment;
 
     @Override
+    public List<EnrollmentModel> findAll() {
+        List<EnrollmentModel> enrollmentModelList = new ArrayList<>();
+        for (Enrollment enrollment : enrollmentRepository.findAll()) {
+            enrollmentModelList.add(mapperEnrollment.entity2Model(enrollment));
+        }
+        return enrollmentModelList;
+    }
+
+    @Override
     public List<EnrollmentModel> findByUsername(String username) {
         List<EnrollmentModel> enrollmentModelList = new ArrayList<>();
         for (Enrollment enrollment : enrollmentRepository.findByUsername(username)) {

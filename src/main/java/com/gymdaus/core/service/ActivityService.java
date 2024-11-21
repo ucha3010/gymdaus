@@ -21,4 +21,5 @@ public interface ActivityService {
 
     int findMaxPosition();
 
+    List<ActivityModel> findAllEnabled();
 }

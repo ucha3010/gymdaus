@@ -53,4 +53,46 @@ public class MoreRegistrationServiceImpl implements MoreRegistrationService {
     public void delete(Long id) {
         moreRegistrationRepository.deleteById(id);
     }
+
+    @Override
+    public void dragOfPosition(int initialPosition, int finalPosition) {
+        MoreRegistration moreRegistration = moreRegistrationRepository.findByPosition(initialPosition);
+        if (initialPosition > finalPosition) {
+            for (int i = initialPosition - 1; i >= finalPosition; i--) {
+                moveItem(i, true);
+            }
+        }
+        if (initialPosition < finalPosition) {
+            for (int i = initialPosition + 1; i <= finalPosition; i++) {
+                moveItem(i, false);
+            }
+        }
+        moreRegistration.setPosition(finalPosition);
+        moreRegistrationRepository.save(moreRegistration);
+    }
+
+    @Override
+    public int findMaxPosition() {
+        MoreRegistration moreRegistration = moreRegistrationRepository.findTopByOrderByPositionDesc();
+        if (moreRegistration != null) {
+            return moreRegistration.getPosition();
+        } else {
+            return -1;
+        }
+    }
+
+    @Override
+    public List<MoreRegistrationModel> findAllEnabled() {
+        List<MoreRegistrationModel> moreRegistrationModelList = new ArrayList<>();
+        for (MoreRegistration moreRegistration : moreRegistrationRepository.findAllByEnabledTrueOrderByPositionAsc()) {
+            moreRegistrationModelList.add(mapperMoreRegistration.entity2Model(moreRegistration));
+        }
+        return moreRegistrationModelList;
+    }
+
+    private void moveItem(int position, boolean moveUp) {
+        MoreRegistration moreRegistration = moreRegistrationRepository.findByPosition(position);
+        moreRegistration.setPosition(position + (moveUp ? 1 : -1));
+        moreRegistrationRepository.save(moreRegistration);
+    }
 }

@@ -8,7 +8,10 @@ import java.util.List;
 
 @Repository()
 public interface ActivityRepository extends JpaRepository<Activity, Long> {
+
     List<Activity> findAllByOrderByPositionAsc();
+
+    List<Activity> findAllByEnabledTrueOrderByPositionAsc();
 
     Activity findByPosition(int position);
 

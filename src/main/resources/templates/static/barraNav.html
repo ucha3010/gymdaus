@@ -1,51 +1,96 @@
-        <nav class="navbar navbar-expand-lg bg-light bsb-navbar bsb-navbar-hover bsb-navbar-caret">
-            <div class="container">
-                <a class="navbar-brand" href="#" th:href="@{/}">
-                    <img src="#" th:src="@{/imgs/MiLogo.jpg}" alt="" width="100">
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
-                    </svg>
-                </button>
-                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="offcanvasNavbarLabel"><span th:text="#{Menu}"></span></h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                    <div class="offcanvas-body flex-grow-0 d-lg-inline">
-                        <ul class="navbar-nav justify-content-end">
-                            <li sec:authorize="isAuthenticated()" th:each="menu1, iStat : ${menu1List}" class="nav-item dropdown pe-2">
-                                <a class="nav-link dropdown-toggle" href="#!" th:id="'dropdown' + ${iStat.index}" role="button" data-bs-toggle="dropdown" aria-expanded="false"><span th:text="#{__${menu1.name}__}"></span></a>
-                                <ul class="dropdown-menu border-0 shadow bsb-zoomIn" th:attr="aria-labelledby='dropdown' + ${iStat.index}">
-                                    <li th:if="${menu1.menu2ModelList != null}" th:each="menu2 : ${menu1.menu2ModelList}"><a class="dropdown-item" href="#" th:href="@{__${menu2.url}__}"><span th:text="#{__${menu2.name}__}"></span> <span th:if="${menu2.advise != null}" class="badge" th:text="${menu2.advise}"></span></a></li>
-                                </ul>
-                            </li>
-                            <li sec:authorize="isAuthenticated()" class="nav-item dropdown pe-2">
-                                <a class="nav-link dropdown-toggle" href="#!" th:id="'dropdownMenu1GymList'" role="button" data-bs-toggle="dropdown" aria-expanded="false"><span th:text="#{__${menu1GymList.name}__}"></span></a>
-                                <ul class="dropdown-menu border-0 shadow bsb-zoomIn" th:attr="aria-labelledby='dropdownMenu1GymList'">
-                                    <li th:if="${menu1GymList.menu2ModelList != null}" th:each="menu2 : ${menu1GymList.menu2ModelList}"><a class="dropdown-item" href="#" th:href="@{__${menu2.url}__}"><span th:text="${menu2.name}"></span> <span th:if="${menu2.advise != null}" class="badge" th:text="${menu2.advise}"></span></a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#"><span th:text="#{Help}"></span></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#"><span th:text="#{Contact}"></span></a>
-                            </li>
-                            <li sec:authorize="isAuthenticated()" class="nav-item">
-                                <a class="nav-link px-0" href="#" th:attr="onclick=|logout()|"><i class="icofont-logout" aria-hidden="true"></i> <span th:text="#{Exit}"></span></a>
-                            </li>
-                            <li>
-                                <form action="#" method="get" class="form-group nav-link">
-                                    <select name="language" id="language" class="form-select w-auto" onchange="this.form.submit()">
-                                        <option value="en" th:selected="${#locale.language == 'en'}">English</option>
-                                        <option value="es" th:selected="${#locale.language == 'es'}">Español</option>
-                                    </select>
-                                </form>
+<nav class="navbar navbar-expand-lg bg-light bsb-navbar bsb-navbar-hover bsb-navbar-caret">
+    <div class="container">
+        <a class="navbar-brand" href="#" th:href="@{/}">
+            <img src="#" th:src="@{/imgs/MiLogo.jpg}" alt="" width="100">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+                aria-controls="offcanvasNavbar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-list"
+                 viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                      d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+            </svg>
+        </button>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasNavbarLabel"><span th:text="#{Menu}"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body flex-grow-0 d-lg-inline">
+                <ul class="navbar-nav justify-content-end">
+                    <li class="nav-item dropdown pe-2">
+                        <a class="nav-link dropdown-toggle" href="#!" th:id="'dropdownMenu1ActivityList'" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <span th:text="#{__${menu1ActivityList.name}__}"></span>
+                        </a>
+                        <ul class="dropdown-menu border-0 shadow bsb-zoomIn"
+                            th:attr="aria-labelledby='dropdownMenu1ActivityList'">
+                            <li th:if="${menu1ActivityList.menu2ModelList != null}"
+                                th:each="menu2 : ${menu1ActivityList.menu2ModelList}">
+                                <a class="dropdown-item" href="#" th:href="@{__${menu2.url}__}">
+                                    <span th:text="#{__${menu2.name}__}"></span> <span th:if="${menu2.advise != null}"
+                                                                                       class="badge"
+                                                                                       th:text="${menu2.advise}"></span>
+                                </a>
                             </li>
                         </ul>
-                    </div>
-                </div>
+                    </li>
+                    <li class="nav-item dropdown pe-2">
+                        <a class="nav-link dropdown-toggle" href="#!" th:id="'dropdownMenu1MoreRegistrationList'"
+                           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span th:text="#{__${menu1MoreRegistrationList.name}__}"></span>
+                        </a>
+                        <ul class="dropdown-menu border-0 shadow bsb-zoomIn"
+                            th:attr="aria-labelledby='dropdownMenu1MoreRegistrationList'">
+                            <li th:if="${menu1MoreRegistrationList.menu2ModelList != null}"
+                                th:each="menu2 : ${menu1MoreRegistrationList.menu2ModelList}">
+                                <a class="dropdown-item" href="#" th:href="@{__${menu2.url}__}">
+                                    <span th:text="#{__${menu2.name}__}"></span> <span th:if="${menu2.advise != null}"
+                                                                                       class="badge"
+                                                                                       th:text="${menu2.advise}"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown pe-2">
+                        <a class="nav-link dropdown-toggle" href="#!" th:id="'dropdownMenu1GymList'" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <span th:text="#{__${menu1GymList.name}__}"></span>
+                        </a>
+                        <ul class="dropdown-menu border-0 shadow bsb-zoomIn"
+                            th:attr="aria-labelledby='dropdownMenu1GymList'">
+                            <li th:if="${menu1GymList.menu2ModelList != null}"
+                                th:each="menu2 : ${menu1GymList.menu2ModelList}">
+                                <a class="dropdown-item" href="#" th:href="@{__${menu2.url}__}">
+                                    <span th:text="${menu2.name}"></span> <span th:if="${menu2.advise != null}"
+                                                                                class="badge"
+                                                                                th:text="${menu2.advise}"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><span th:text="#{Help}"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><span th:text="#{Contact}"></span></a>
+                    </li>
+                    <li sec:authorize="isAuthenticated()" class="nav-item">
+                        <a class="nav-link px-0" href="#" th:attr="onclick=|logout()|">
+                            <i class="icofont-logout" aria-hidden="true"></i> <span th:text="#{Exit}"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <form action="#" method="get" class="form-group nav-link">
+                            <select name="language" id="language" class="form-select w-auto"
+                                    onchange="this.form.submit()">
+                                <option value="en" th:selected="${#locale.language == 'en'}">English</option>
+                                <option value="es" th:selected="${#locale.language == 'es'}">Español</option>
+                            </select>
+                        </form>
+                    </li>
+                </ul>
             </div>
-        </nav>
+        </div>
+    </div>
+</nav>

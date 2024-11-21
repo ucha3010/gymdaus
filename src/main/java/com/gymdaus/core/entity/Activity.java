@@ -21,5 +21,7 @@ public class Activity {
     private String name;
     private boolean enabled;
     private int position;
+    @Column(length = Constants.URL, nullable = false)
+    private String url;
 
 }

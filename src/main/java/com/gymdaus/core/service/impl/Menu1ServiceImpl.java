@@ -32,7 +32,7 @@ public class Menu1ServiceImpl implements Menu1Service {
     public List<Menu1Model> findAll() {
         List<Menu1Model> menu1ModelList = new ArrayList<>();
         Menu1Model menu1Model;
-        for (Menu1 menu1: menu1Repository.findAllByOrderByPositionAsc()) {
+        for (Menu1 menu1 : menu1Repository.findAllByOrderByPositionAsc()) {
             menu1Model = mapperMenu1.entity2Model(menu1);
             menu1Model.setMenu2ModelList(menu2Service.findAll(menu1.getId()));
             menu1ModelList.add(menu1Model);
@@ -44,7 +44,7 @@ public class Menu1ServiceImpl implements Menu1Service {
     public List<Menu1Model> findAllEnabled() {
         List<Menu1Model> menu1ModelList = new ArrayList<>();
         Menu1Model menu1Model;
-        for (Menu1 menu1: menu1Repository.findAllByEnabledTrueOrderByPositionAsc()) {
+        for (Menu1 menu1 : menu1Repository.findAllByEnabledTrueOrderByPositionAsc()) {
             menu1Model = mapperMenu1.entity2Model(menu1);
             menu1Model.setMenu2ModelList(menu2Service.findAllEnabled(menu1.getId()));
             menu1ModelList.add(menu1Model);
@@ -121,6 +121,22 @@ public class Menu1ServiceImpl implements Menu1Service {
         Menu1Model menu1Model = new Menu1Model();
         menu1Model.setName("menu1.gyms");
         menu1Model.setMenu2ModelList(menu2Service.findAllGymList());
+        return menu1Model;
+    }
+
+    @Override
+    public Menu1Model findMenu1ActivityList() {
+        Menu1Model menu1Model = new Menu1Model();
+        menu1Model.setName("menu1.activities");
+        menu1Model.setMenu2ModelList(menu2Service.findAllActivityList());
+        return menu1Model;
+    }
+
+    @Override
+    public Menu1Model findMenu1MoreRegistrationList() {
+        Menu1Model menu1Model = new Menu1Model();
+        menu1Model.setName("menu1.more.registrations");
+        menu1Model.setMenu2ModelList(menu2Service.findAllMoreRegistrationList());
         return menu1Model;
     }
 

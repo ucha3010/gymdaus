@@ -17,4 +17,9 @@ public interface MoreRegistrationService {
 
     void delete(Long id);
 
+    void dragOfPosition(int initialPosition, int finalPosition);
+
+    int findMaxPosition();
+
+    List<MoreRegistrationModel> findAllEnabled();
 }

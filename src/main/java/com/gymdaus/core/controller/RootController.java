@@ -24,13 +24,19 @@ import java.util.List;
 public class RootController {
 
     @Autowired
+    private ActivityService activityService;
+    @Autowired
     private CountryService countryService;
     @Autowired
     private EnrollmentAsService enrollmentAsService;
     @Autowired
+    private EnrollmentService enrollmentService;
+    @Autowired
     private GymAddressService gymAddressService;
     @Autowired
     private GymService gymService;
+    @Autowired
+    private MoreRegistrationService moreRegistrationService;
     @Autowired
     private SecurityService securityService;
     @Autowired
@@ -322,6 +328,46 @@ public class RootController {
         gymAddressService.delete(id);
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return gymAddresses(modelAndView, gymAddressModel.getGymModel().getId());
+    }
+
+    @GetMapping("/enrollments")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
+    public ModelAndView enrollments(ModelAndView modelAndView) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        securityService.userAccessValidation("/root/enrollments");
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/enrollments");
+        modelAndView.setViewName("root/enrollments");
+        modelAndView.addObject("enrollmentModelList", enrollmentService.findAll());
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return modelAndView;
+    }
+
+    @GetMapping("/enrollment/{enrollmentId}")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
+    public ModelAndView enrollmentDetail(ModelAndView modelAndView, @PathVariable Long enrollmentId) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        securityService.userAccessValidation("/root/enrollment/" + enrollmentId);
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/enrollment/" + enrollmentId);
+        modelAndView.setViewName("root/enrollment-detail");
+        modelAndView.addObject("enrollment", enrollmentService.findById(enrollmentId));
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return modelAndView;
+    }
+
+    @GetMapping("/menu-bar")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
+    public ModelAndView menuBar(ModelAndView modelAndView) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        securityService.userAccessValidation("/root/menu-bar");
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/menu-bar");
+        modelAndView.setViewName("root/menu-bar");
+        modelAndView.addObject("activityModelList", activityService.findAll());
+        modelAndView.addObject("moreRegistrationModelList", moreRegistrationService.findAll());
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return modelAndView;
     }
 
 }

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="es">
+    <head>
+        <meta th:replace="~{static/headerMeta :: meta}">
+        <link th:replace="~{static/headerLink :: link}">
+        <script th:replace="~{static/headerScript :: script}"></script>
+        <script th:replace="~{static/headerScriptJquery :: script}"></script>
+        <script th:replace="~{static/headerScriptTable :: script}"></script>
+
+        <title th:text="#{menu.bar}"></title>
+
+    </head>
+    <body>
+        <div th:replace="~{static/barraUser :: div}"></div>
+        <div th:replace="~{static/barraNav :: nav}"></div>
+        <div th:replace="~{static/barraAdminRootButtons :: section}"></div>
+
+        <div class="container">
+
+            <section>
+                <div class="row mb-1 text-center">
+                    <div class="col-12 colorGreen">
+                        <h1 th:text="#{menu.bar}"></h1>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <h6 th:text="#{add.menu.bar}" class="text-center text-primary"></h6>
+
+        <section sec:authorize="hasRole('ROLE_ROOT')" class="marginTopBottom3Percentage">
+            <h5 class="text-center" th:text="#{menu1.activities}"></h5>
+            <div class="d-flex justify-content-center">
+                <table class="table table-striped table-hover sortable w-auto">
+                    <thead>
+                    <tr class="text-center">
+                        <th scope="col" class="fw-normal">
+                            <button class="btn">ID</button>
+                        </th>
+                        <th scope="col" class="fw-normal">
+                            <button class="btn"></button>
+                        </th>
+                        <th scope="col" class="fw-normal">
+                            <button class="btn"><span th:text="#{name}"></span></button>
+                        </th>
+                        <th scope="col" class="fw-normal">
+                            <button class="btn"><span th:text="#{translation}"></span></button>
+                        </th>
+                        <th scope="col" class="fw-normal">
+                            <button class="btn"><span th:text="#{position}"></span></button>
+                        </th>
+                        <th scope="col" class="fw-normal">
+                            <button class="btn"><span th:text="#{url}"></span></button>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="unit : ${activityModelList}">
+                        <td class="text-center"><span th:text="${unit.id}"></span></td>
+                        <td>
+                            <img th:if="${unit.enabled}" class="check-img" src="#" th:src="@{/imgs/ok.png}"
+                                 alt="Enabled">
+                            <img th:if="${!unit.enabled}" class="check-img" src="#" th:src="@{/imgs/ko.png}"
+                                 alt="Disabled">
+                        </td>
+                        <td><span th:text="${unit.name}"></span></td>
+                        <td><span th:text="#{__${unit.name}__}"></span></td>
+                        <td class="text-center"><span th:text="${unit.position}"></span></td>
+                        <td><span th:text="${unit.url}"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section sec:authorize="hasRole('ROLE_ROOT')">
+            <h5 class="text-center" th:text="#{menu1.more.registrations}"></h5>
+            <div class="d-flex justify-content-center">
+                <table class="table table-striped table-hover sortable w-auto">
+                    <thead>
+                    <tr class="text-center">
+                        <th scope="col" class="fw-normal">
+                            <button class="btn">ID</button>
+                        </th>
+                        <th scope="col" class="fw-normal">
+                            <button class="btn"></button>
+                        </th>
+                        <th scope="col" class="fw-normal">
+                            <button class="btn"><span th:text="#{name}"></span></button>
+                        </th>
+                        <th scope="col" class="fw-normal">
+                            <button class="btn"><span th:text="#{translation}"></span></button>
+                        </th>
+                        <th scope="col" class="fw-normal">
+                            <button class="btn"><span th:text="#{position}"></span></button>
+                        </th>
+                        <th scope="col" class="fw-normal">
+                            <button class="btn"><span th:text="#{url}"></span></button>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="unit : ${moreRegistrationModelList}">
+                        <td class="text-center"><span th:text="${unit.id}"></span></td>
+                        <td>
+                            <img th:if="${unit.enabled}" class="check-img" src="#" th:src="@{/imgs/ok.png}"
+                                 alt="Enabled">
+                            <img th:if="${!unit.enabled}" class="check-img" src="#" th:src="@{/imgs/ko.png}"
+                                 alt="Disabled">
+                        </td>
+                        <td><span th:text="${unit.name}"></span></td>
+                        <td><span th:text="#{__${unit.name}__}"></span></td>
+                        <td class="text-center"><span th:text="${unit.position}"></span></td>
+                        <td><span th:text="${unit.url}"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="row align-items-center justify-content-end">
+            <div class="col-3 col-md-2">
+                <a class="btn btn-info" href="#" th:href="@{/}"><span th:text="#{back}"></span></a>
+            </div>
+        </div>
+
+    </body>
+
+    <footer th:replace="~{static/footer :: footer}"></footer>
+</html>

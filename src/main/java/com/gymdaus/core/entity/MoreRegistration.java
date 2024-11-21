@@ -20,5 +20,8 @@ public class MoreRegistration {
     @Column(nullable = false, length = Constants.MORE_REGISTRATION_NAME)
     private String name;
     private boolean enabled;
+    private int position;
+    @Column(length = Constants.URL, nullable = false)
+    private String url;
 
 }

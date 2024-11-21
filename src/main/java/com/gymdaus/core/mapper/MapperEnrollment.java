@@ -1,11 +1,23 @@
 package com.gymdaus.core.mapper;
 
 import com.gymdaus.core.entity.Enrollment;
-import com.gymdaus.core.model.*;
+import com.gymdaus.core.model.EnrollmentModel;
+import com.gymdaus.core.model.UserModel;
+import com.gymdaus.core.service.GymActivityService;
+import com.gymdaus.core.service.GymMoreRegistrationService;
+import com.gymdaus.core.service.GymService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MapperEnrollment {
+
+    @Autowired
+    private GymService gymService;
+    @Autowired
+    private GymActivityService gymActivityService;
+    @Autowired
+    private GymMoreRegistrationService gymMoreRegistrationService;
 
     public EnrollmentModel entity2Model(Enrollment externObject) {
         EnrollmentModel localObject = new EnrollmentModel();
@@ -53,9 +65,7 @@ public class MapperEnrollment {
             localObject.setSwift(externObject.getSwift());
             localObject.setSigned(externObject.isSigned());
             if (externObject.getGymId() != 0) {
-                GymModel gymModel = new GymModel();
-                gymModel.setId(externObject.getGymId());
-                localObject.setGymModel(gymModel);
+                localObject.setGymModel(gymService.findById(externObject.getId()));
             }
             if (externObject.getUsername() != null) {
                 UserModel userModel = new UserModel();
@@ -63,14 +73,10 @@ public class MapperEnrollment {
                 localObject.setUserModel(userModel);
             }
             if (externObject.getGymActivityId() != 0) {
-                GymActivityModel gymActivityModel = new GymActivityModel();
-                gymActivityModel.setId(externObject.getGymActivityId());
-                localObject.setGymActivityModel(gymActivityModel);
+                localObject.setGymActivityModel(gymActivityService.findById(externObject.getGymActivityId()));
             }
             if (externObject.getGymMoreRegistrationId() != 0) {
-                GymMoreRegistrationModel gymMoreRegistrationModel = new GymMoreRegistrationModel();
-                gymMoreRegistrationModel.setId(externObject.getGymMoreRegistrationId());
-                localObject.setGymMoreRegistrationModel(gymMoreRegistrationModel);
+                localObject.setGymMoreRegistrationModel(gymMoreRegistrationService.findById(externObject.getGymMoreRegistrationId()));
             }
         }
         return localObject;

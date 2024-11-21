@@ -88,6 +88,15 @@ public class ActivityServiceImpl implements ActivityService {
         }
     }
 
+    @Override
+    public List<ActivityModel> findAllEnabled() {
+        List<ActivityModel> activityModelList = new ArrayList<>();
+        for (Activity activity : activityRepository.findAllByEnabledTrueOrderByPositionAsc()) {
+            activityModelList.add(mapperActivity.entity2Model(activity));
+        }
+        return activityModelList;
+    }
+
     private void moveItem(int position, boolean moveUp) {
         Activity activity = activityRepository.findByPosition(position);
         activity.setPosition(position + (moveUp ? 1 : -1));
