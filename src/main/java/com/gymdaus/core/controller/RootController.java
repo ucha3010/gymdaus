@@ -1,10 +1,7 @@
 package com.gymdaus.core.controller;
 
 import com.gymdaus.core.configuration.SessionData;
-import com.gymdaus.core.model.GymAddressModel;
-import com.gymdaus.core.model.GymModel;
-import com.gymdaus.core.model.UserModel;
-import com.gymdaus.core.model.UserRoleModel;
+import com.gymdaus.core.model.*;
 import com.gymdaus.core.service.*;
 import com.gymdaus.core.service.impl.UserService;
 import com.gymdaus.core.util.Constants;
@@ -35,6 +32,8 @@ public class RootController {
     private GymAddressService gymAddressService;
     @Autowired
     private GymService gymService;
+    @Autowired
+    private ManagerParameterService managerParameterService;
     @Autowired
     private MoreRegistrationService moreRegistrationService;
     @Autowired
@@ -368,6 +367,74 @@ public class RootController {
         modelAndView.addObject("moreRegistrationModelList", moreRegistrationService.findAll());
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return modelAndView;
+    }
+
+    @GetMapping("/parameters")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
+    public ModelAndView rootParameters(ModelAndView modelAndView) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        securityService.userAccessValidation("/root/parameters");
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/parameters");
+        modelAndView.setViewName("root/parameters");
+        ManagerParameterModel managerParameterModel = managerParameterService.get();
+        if (Utils.isNullOrEmpty(managerParameterModel.getPassword())) {
+            modelAndView.addObject("emptyPass", true);
+        } else {
+            modelAndView.addObject("emptyPass", false);
+            managerParameterModel.setPassword(null);
+        }
+        modelAndView.addObject("managerParameterModel", managerParameterModel);
+        modelAndView.addObject("utilListHost", Utils.chargeListHostProvider());
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return modelAndView;
+    }
+
+    @PostMapping("/update-parameters")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
+    public ModelAndView rootUpdateParameters(ModelAndView modelAndView, @ModelAttribute("managerParameterModel") ManagerParameterModel managerParameterModel) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), managerParameterModel, getClass());
+        securityService.userAccessValidation("/root/update-parameters");
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/update-parameters");
+        managerParameterService.updateNoPass(managerParameterModel);
+        modelAndView.addObject("updateOK", "updateOK");
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return rootParameters(modelAndView);
+    }
+
+    @GetMapping("/parameters-email-pass")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
+    public ModelAndView rootParametersEmailPass(ModelAndView modelAndView) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        securityService.userAccessValidation("/root/parameters-email-pass");
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/parameters-email-pass");
+        modelAndView.setViewName("root/parameter-change-pass");
+        modelAndView.addObject("passwordModel", new PasswordModel());
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return modelAndView;
+    }
+
+    @PostMapping("/update-parameters-email-pass")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
+    public ModelAndView rootUpdateParametersEmailPass(ModelAndView modelAndView, @ModelAttribute("passwordModel") PasswordModel passwordModel) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), "starting...", getClass());
+        securityService.userAccessValidation("/root/update-parameters-email-pass");
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/update-parameters-email-pass");
+        if (!managerParameterService.comparePassword(passwordModel.getOldPassword())) {
+            modelAndView.addObject("oldDifferent", "oldDifferent");
+            LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), "oldDifferent", getClass());
+            return rootParametersEmailPass(modelAndView);
+        } else {
+            ManagerParameterModel managerParameterModel = managerParameterService.get();
+            managerParameterModel.setPassword(passwordModel.getNewPassword());
+            managerParameterService.update(managerParameterModel);
+            modelAndView.addObject("updateOK", "updateOK");
+            LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), "updateOK", getClass());
+            return rootParameters(modelAndView);
+        }
     }
 
 }

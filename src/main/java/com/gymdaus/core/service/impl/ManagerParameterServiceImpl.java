@@ -5,6 +5,8 @@ import com.gymdaus.core.mapper.MapperManagerParameter;
 import com.gymdaus.core.model.ManagerParameterModel;
 import com.gymdaus.core.repository.ManagerParameterRepository;
 import com.gymdaus.core.service.ManagerParameterService;
+import com.gymdaus.core.util.EmailEnum;
+import com.gymdaus.core.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,5 +36,26 @@ public class ManagerParameterServiceImpl implements ManagerParameterService {
     @Override
     public ManagerParameterModel update(ManagerParameterModel managerParameterModel) {
         return mapperManagerParameter.entity2Model(managerParameterRepository.save(mapperManagerParameter.model2Entity(managerParameterModel)));
+    }
+
+    @Override
+    public void updateNoPass(ManagerParameterModel managerParameterModel) {
+        ManagerParameterModel managerParameterModelBBDD = get();
+        managerParameterModelBBDD.setHostPageName(managerParameterModel.getHostPageName());
+        managerParameterModelBBDD.setEmail(managerParameterModel.getEmail());
+        managerParameterModelBBDD.setEmailHost(managerParameterModel.getEmailHost());
+        for (EmailEnum emailEnum : EmailEnum.values()) {
+            if (emailEnum.getHost().equals(managerParameterModel.getEmailHost())) {
+                managerParameterModelBBDD.setEmailPort(emailEnum.getPort());
+                break;
+            }
+        }
+        managerParameterRepository.save(mapperManagerParameter.model2Entity(managerParameterModelBBDD));
+    }
+
+    @Override
+    public boolean comparePassword(String oldPassword) {
+        ManagerParameter managerParameter = managerParameterRepository.findAll().get(0);
+        return !Utils.isNullOrEmpty(oldPassword) && oldPassword.equals(managerParameter.getPassword());
     }
 }
