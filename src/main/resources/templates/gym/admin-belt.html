@@ -82,9 +82,14 @@
             </section>
 
             <section>
-                <div class="row mb-1 text-center">
-                    <div class="col-12 colorGreen">
+                <div class="row align-items-center justify-content-end">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-6 col-md-8 colorGreen">
                         <h1><span th:text="#{belts}"></span> <span th:text="${gymModel.name}"></span></h1>
+                    </div>
+                    <div class="col-3 col-md-2">
+                        <a class="btn btn-info" href="#" th:href="@{/gym/gym-admin/__${gymModel.id}__}"><span th:text="#{back}"></span></a>
                     </div>
                 </div>
             </section>
@@ -132,13 +137,6 @@
                     </div>
                 </div>
             </section>
-
-            <div class="row align-items-center justify-content-end">
-                <div class="col-3 col-md-2">
-                    <a class="btn btn-info" href="#" th:href="@{/gym/gym-admin/__${gymModel.id}__}"><span
-                            th:text="#{back}"></span></a>
-                </div>
-            </div>
         </div>
 
     </body>

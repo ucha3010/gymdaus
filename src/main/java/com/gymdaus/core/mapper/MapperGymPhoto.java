@@ -9,8 +9,9 @@ import org.springframework.stereotype.Component;
 public class MapperGymPhoto {
 
     public GymPhotoModel entity2Model(GymPhoto externObject) {
-        GymPhotoModel localObject = new GymPhotoModel();
+        GymPhotoModel localObject = null;
         if (externObject != null) {
+            localObject = new GymPhotoModel();
             localObject.setId(externObject.getId());
             localObject.setCreationDate(externObject.getCreationDate());
             localObject.setDeleteDate(externObject.getDeleteDate());
@@ -18,6 +19,7 @@ public class MapperGymPhoto {
             localObject.setFilename(externObject.getFilename());
             localObject.setPath(externObject.getPath());
             localObject.setSection(externObject.getSection());
+            localObject.setMainPhoto(externObject.isMainPhoto());
             if (externObject.getGymId() != 0) {
                 GymModel gymModel = new GymModel();
                 gymModel.setId(externObject.getGymId());
@@ -37,6 +39,7 @@ public class MapperGymPhoto {
             localObject.setFilename(externObject.getFilename());
             localObject.setPath(externObject.getPath());
             localObject.setSection(externObject.getSection());
+            localObject.setMainPhoto(externObject.isMainPhoto());
             if (externObject.getGymModel() != null) {
                 localObject.setGymId(externObject.getGymModel().getId());
             } else {

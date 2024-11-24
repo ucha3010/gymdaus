@@ -84,4 +84,9 @@ public class GymServiceImpl implements GymService {
     public GymModel findByIdEnabled(Long id) {
         return mapperGym.entity2Model(gymRepository.findByIdAndEnabledTrue(id).orElse(null));
     }
+
+    @Override
+    public List<Long> getGymIdEnabled() {
+        return gymRepository.findIdsByEnabledTrue();
+    }
 }

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="es">
+    <head>
+        <meta th:replace="~{static/headerMeta :: meta}">
+        <link th:replace="~{static/headerLink :: link}">
+        <script th:replace="~{static/headerScript :: script}"></script>
+        <script th:replace="~{static/headerScriptJquery :: script}"></script>
+        <script th:replace="~{static/headerScriptTable :: script}"></script>
+
+        <title th:text="#{photos}"></title>
+
+        <script>
+            function confirmDelete(id){
+                let deleteAsk = $('#deleteAsk').val();
+                if(confirm(deleteAsk + "?")){
+                    var relativeUrl = "gym/remove-photo/" + id;
+                    var domain = getDomain(location.href);
+                    location.href = domain + relativeUrl;
+                    return true;
+                }
+                return false;
+            }
+
+            function doMain(id){
+                var relativeUrl = "gym/main-photo/" + id;
+                var domain = getDomain(location.href);
+                location.href = domain + relativeUrl;
+            }
+        </script>
+
+    </head>
+    <body>
+        <div th:replace="~{static/barraUser :: div}"></div>
+        <div th:replace="~{static/barraNav :: nav}"></div>
+        <div th:replace="~{static/barraAdminRootButtons :: section}"></div>
+
+        <div class="container">
+            <input type="hidden" id="deleteAsk" th:value="#{confirm.delete}"/>
+            <section class="marginTopBottom1Percentage text-center">
+                <div th:if="${eraseOk != null}" class="alert alert-success textAlignCenter" role="alert"><span
+                        th:text="#{erase.ok}"></span></div>
+                <div th:if="${eraseError != null}" class="alert alert-danger textAlignCenter" role="alert"><span
+                        th:text="${erase.ko}"></span></div>
+                <div th:if="${uploadError != null}" class="alert alert-danger textAlignCenter" role="alert"><span
+                        th:text="#{upload.error}"></span></div>
+                <div th:if="${uploadOk != null}" class="alert alert-success textAlignCenter" role="alert"><span
+                        th:text="#{upload.ok}"></span></div>
+            </section>
+
+            <section>
+                <div class="row align-items-center justify-content-end">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-6 col-md-8 colorGreen">
+                        <h1><span th:text="#{photos}"></span> <span th:text="${gymModel.name}"></span></h1>
+                    </div>
+                    <div class="col-3 col-md-2">
+                        <a class="btn btn-info" href="#" th:href="@{/gym/gym-admin/__${gymModel.id}__}"><span
+                                th:text="#{back}"></span></a>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <section sec:authorize="hasRole('ROLE_ADMIN')">
+            <form action="#" th:action="@{/gym/upload-photo/__${gymModel.id}__}" method="post"
+                  enctype="multipart/form-data">
+                <div class="row text-center">
+                    <div class="col-12">
+                        <input type="file" name="file" accept=".jpg, .jpeg">
+                    </div>
+                </div>
+                <div class="row text-center mb-3">
+                    <div class="col-12">
+                        <h3><span th:text="#{accepted.extension}"></span>: .jpg, .jpeg</h3>
+                    </div>
+                </div>
+                <div class="row align-items-center justify-content-end mb-5">
+                    <div class="col-3 col-md-2">
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-success" type="submit"><span th:text="#{save}"></span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="row">
+                <div class="col-md-3">
+                </div>
+                <div class="col-12 col-md-6">
+                    <table class="table">
+                        <tbody>
+                        <tr th:each="photo, iStat : ${gymPhotoModelList}">
+                            <td th:if="${iStat.odd}" class="p-2 col-6">
+                                <img src="#" th:src="@{/photos/gym/__${gymModel.id}__/__${photo.filename}__}"
+                                     alt="Photo" class="img-fluid rounded shadow" width="400">
+                                <div th:if="!${photo.mainPhoto}" class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch"
+                                           th:id="'mainSwitch'+${photo.id}"
+                                           th:attr="onclick=|doMain('${photo.id}')|">
+                                    <label class="form-check-label" th:for="'mainSwitch'+${photo.id}">
+                                        <span th:text="#{make.main}"></span>
+                                    </label>
+                                </div>
+                                <div th:if="!${photo.mainPhoto}" class="row">
+                                    <div class="col-6">
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn btn-danger btn-sm justify-content-end"
+                                                th:attr="onclick=|confirmDelete('${photo.id}')|">
+                                            <span th:text="#{delete}"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td th:if="${iStat.odd and iStat.index + 1 < gymPhotoModelList.size()}"
+                                class="p-2 col-6"
+                                th:src="${gymPhotoModelList[iStat.index + 1].filename}">
+                                <img src="#"
+                                     th:src="@{/photos/gym/__${gymModel.id}__/__${gymPhotoModelList[iStat.index + 1].filename}__}"
+                                     alt="Photo" class="img-fluid rounded shadow" width="400">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch"
+                                           th:id="'mainSwitch'+${gymPhotoModelList[iStat.index + 1].id}"
+                                           th:attr="onclick=|doMain('${gymPhotoModelList[iStat.index + 1].id}')|">
+                                    <label class="form-check-label"
+                                           th:for="'mainSwitch'+${gymPhotoModelList[iStat.index + 1].id}">
+                                        <span th:text="#{make.main}"></span>
+                                    </label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn btn-danger btn-sm"
+                                                th:attr="onclick=|confirmDelete('${gymPhotoModelList[iStat.index + 1].id}')|">
+                                            <span th:text="#{delete}"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-3">
+                </div>
+            </div>
+        </section>
+
+    </body>
+
+    <footer th:replace="~{static/footer :: footer}"></footer>
+</html>

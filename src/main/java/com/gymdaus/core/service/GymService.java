@@ -22,4 +22,6 @@ public interface GymService {
     void enableDisable(Long gymIdModel);
 
     GymModel findByIdEnabled(Long id);
+
+    List<Long> getGymIdEnabled();
 }

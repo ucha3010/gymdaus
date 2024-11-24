@@ -30,6 +30,8 @@ public class MainController {
     @Autowired
     private GymUserService gymUserService;
     @Autowired
+    private MainService mainService;
+    @Autowired
     private SecurityService securityService;
     @Autowired
     private TokenService tokenService;
@@ -47,15 +49,13 @@ public class MainController {
     public ModelAndView mainPage(ModelAndView modelAndView) {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         modelAndView.setViewName("main-page");
-        String path = "src" + File.separator + "main" + File.separator + "resources" + File.separator
-                + "static" + File.separator + "imgs" + File.separator + File.separator + "mainPage";
+        String path = "files" + File.separator + "photos" + File.separator + "mainPage";
         utilService.basicDataCharge(modelAndView);
         List<String> photoList = new ArrayList<>(Utils.getFileName(path));
         if (!photoList.isEmpty()) {
             modelAndView.addObject("mainPhoto", photoList.get(0));
-            photoList.remove(0);
         }
-        modelAndView.addObject("photoList", photoList);
+        modelAndView.addObject("photoList", mainService.getPhotoList());
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return modelAndView;
     }

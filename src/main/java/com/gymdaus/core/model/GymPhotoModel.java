@@ -22,5 +22,6 @@ public class GymPhotoModel {
     private String path;
     private String section; //(campo de escritura abierto para poder organizar las fotos)
     private GymModel gymModel;
+    private boolean mainPhoto;
 
 }

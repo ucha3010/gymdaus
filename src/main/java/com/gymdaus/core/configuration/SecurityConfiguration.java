@@ -29,7 +29,7 @@ public class SecurityConfiguration {
 		http
 				.authorizeHttpRequests(authorizeRequests ->
 						authorizeRequests
-								.requestMatchers("/css/**", "/imgs/**", "/js/**", "/favicon.ico").permitAll()
+								.requestMatchers("/css/**", "/imgs/**", "/js/**", "/favicon.ico", "/photos/**").permitAll()
 								.requestMatchers("/","/login-page/*", "/forgot-pass", "/new-pass", "/pass-new", "/change-pass", "/user/new-user").permitAll()
 								.anyRequest().authenticated()
 				)

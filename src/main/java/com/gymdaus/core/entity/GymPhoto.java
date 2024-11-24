@@ -31,5 +31,6 @@ public class GymPhoto {
     private Long gymId;
     @Column(length = Constants.FILE_SECTION)
     private String section; //(campo de escritura abierto para poder organizar las fotos)
+    private boolean mainPhoto;
 
 }

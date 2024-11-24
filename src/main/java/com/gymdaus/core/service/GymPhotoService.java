@@ -2,6 +2,7 @@ package com.gymdaus.core.service;
 
 
 import com.gymdaus.core.model.GymPhotoModel;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -15,6 +16,13 @@ public interface GymPhotoService {
 
     void update(GymPhotoModel model);
 
-    void delete(Long id);
+    boolean delete(Long id);
 
+    List<GymPhotoModel> findByGymId(Long gymId);
+
+    GymPhotoModel findByGymIdAndMainPhotoTrue(Long gymId);
+
+    boolean addPhoto(Long gymId, MultipartFile file);
+
+    void doMain(Long id);
 }

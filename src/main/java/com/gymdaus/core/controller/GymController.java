@@ -16,6 +16,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -31,7 +32,10 @@ public class GymController {
     private GymService gymService;
     @Autowired
     private EmailService emailService;
-
+    @Autowired
+    private EnrollmentService enrollmentService;
+    @Autowired
+    private GymPhotoService gymPhotoService;
     @Autowired
     private GymParameterService gymParameterService;
     @Autowired
@@ -261,6 +265,93 @@ public class GymController {
         }
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return emailPassword(modelAndView, passwordModel.getGymId());
+    }
+
+    @GetMapping("/enrollments/{gymId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView gymEnrollments(ModelAndView modelAndView, @PathVariable Long gymId) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymId, getClass());
+        securityService.userAccessValidation("/gym/enrollments/" + gymId);
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, true, "/gym/enrollments/" + gymId);
+        modelAndView.setViewName("gym/enrollments");
+        modelAndView.addObject("gymModel", gymService.findByIdEnabled(gymId));
+        modelAndView.addObject("enrollmentModelList", enrollmentService.findByGymId(gymId));
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return modelAndView;
+    }
+
+    @GetMapping("/enrollment/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView gymEnrollment(ModelAndView modelAndView, @PathVariable Long id) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), id, getClass());
+        securityService.userAccessValidation("/gym/enrollment/" + id);
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        EnrollmentModel enrollmentModel = enrollmentService.findById(id);
+        securityService.enabledAdministrationGymUser(user.getUsername(), enrollmentModel.getGymModel().getId(), true, "/gym/enrollment/" + id);
+        modelAndView.setViewName("gym/enrollment-detail");
+        modelAndView.addObject("enrollment", enrollmentModel);
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return modelAndView;
+    }
+
+    @GetMapping("/photos/{gymId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView gymPhotos(ModelAndView modelAndView, @PathVariable Long gymId) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymId, getClass());
+        securityService.userAccessValidation("/gym/photos/" + gymId);
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, true, "/gym/photos/" + gymId);
+        modelAndView.setViewName("gym/photos");
+        modelAndView.addObject("gymModel", gymService.findByIdEnabled(gymId));
+        modelAndView.addObject("gymPhotoModelList", gymPhotoService.findByGymId(gymId));
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return modelAndView;
+    }
+
+    @PostMapping("/upload-photo/{gymId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView gymUploadPhoto(ModelAndView modelAndView, @PathVariable Long gymId, @RequestParam("file") MultipartFile file) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymId, getClass());
+        securityService.userAccessValidation("/gym/upload-photo/" + gymId);
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, true, "/gym/upload-photo/" + gymId);
+        if (gymPhotoService.addPhoto(gymId, file)) {
+            modelAndView.addObject("uploadOk", "uploadOk");
+        } else {
+            modelAndView.addObject("uploadError", "uploadError");
+        }
+        return gymPhotos(modelAndView, gymId);
+    }
+
+    @GetMapping("/remove-photo/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView removePhoto(ModelAndView modelAndView, @PathVariable Long id) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), id, getClass());
+        securityService.userAccessValidation("/root/remove-photo/" + id);
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        GymPhotoModel gymPhotoModel = gymPhotoService.findById(id);
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymPhotoModel.getGymModel().getId(), true, "/gym/upload-photo/" + id);
+        if (gymPhotoService.delete(id)) {
+            modelAndView.addObject("eraseOk", "eraseOk");
+        } else {
+            modelAndView.addObject("eraseError", "eraseError");
+        }
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return gymPhotos(modelAndView, gymPhotoModel.getGymModel().getId());
+    }
+
+    @GetMapping("/main-photo/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView mainPhoto(ModelAndView modelAndView, @PathVariable Long id) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), id, getClass());
+        securityService.userAccessValidation("/root/main-photo/" + id);
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        GymPhotoModel gymPhotoModel = gymPhotoService.findById(id);
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymPhotoModel.getGymModel().getId(), true, "/gym/main-photo/" + id);
+        gymPhotoService.doMain(id);
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return gymPhotos(modelAndView, gymPhotoModel.getGymModel().getId());
     }
 
 }

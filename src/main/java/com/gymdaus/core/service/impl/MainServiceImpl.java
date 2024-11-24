@@ -1,18 +1,15 @@
 package com.gymdaus.core.service.impl;
 
 
-import com.gymdaus.core.entity.User;
 import com.gymdaus.core.model.EnrollmentModel;
+import com.gymdaus.core.model.GymPhotoModel;
 import com.gymdaus.core.model.MainUserModel;
-import com.gymdaus.core.service.EnrollmentService;
-import com.gymdaus.core.service.MainService;
-import com.gymdaus.core.service.Menu1Service;
+import com.gymdaus.core.service.*;
 import com.gymdaus.core.util.LoggerMapper;
 import com.gymdaus.core.util.Utils;
 import org.apache.logging.log4j.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +19,10 @@ public class MainServiceImpl implements MainService {
 
     @Autowired
     private EnrollmentService enrollmentService;
-
+    @Autowired
+    private GymPhotoService gymPhotoService;
+    @Autowired
+    private GymService gymService;
     @Autowired
     private Menu1Service menu1Service;
     @Autowired
@@ -56,5 +56,17 @@ public class MainServiceImpl implements MainService {
     public void deleteEnrollment(Long enrollmentId) {
         enrollmentService.delete(enrollmentId);
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), enrollmentId, getClass());
+    }
+
+    @Override
+    public List<String> getPhotoList() {
+        List<String> fileNames = new ArrayList<>();
+        for (Long id : gymService.getGymIdEnabled()) {
+            GymPhotoModel gymPhotoModel = gymPhotoService.findByGymIdAndMainPhotoTrue(id);
+            if (gymPhotoModel != null) {
+                fileNames.add(id + "/" + gymPhotoModel.getFilename());
+            }
+        }
+        return fileNames;
     }
 }

@@ -70,7 +70,7 @@ public class UserDocumentManagerServiceImpl implements UserDocumentManagerServic
 
     @Override
     public boolean addPhoto(UserModel userModel, MultipartFile file) {
-        boolean answer = true;
+        boolean answer;
         try {
             UserDocumentManagerModel userDocumentManagerModel = findByUsernameEnabled(userModel.getUsername());
             if (userDocumentManagerModel != null) {
@@ -79,9 +79,7 @@ public class UserDocumentManagerServiceImpl implements UserDocumentManagerServic
                 update(userDocumentManagerModel);
             }
             userDocumentManagerModel = fillObject(userModel, file, "userPhotos" + File.separator + userModel.getUsername());
-            if(answer) {
-                answer = Utils.uploadFile(file, userDocumentManagerModel.getPath());
-            }
+            answer = Utils.uploadFile(file, userDocumentManagerModel.getPath());
             add(userDocumentManagerModel);
         } catch (Exception e) {
             answer = false;
@@ -97,7 +95,7 @@ public class UserDocumentManagerServiceImpl implements UserDocumentManagerServic
         } else {
             String[] path = userDocumentManagerModel.getPath().split(Pattern.quote(File.separator));
             String answer = "";
-            for (int i=1; i < path.length; i++) {
+            for (int i = 1; i < path.length; i++) {
                 answer = answer.concat("/").concat(path[i]);
             }
             return answer.concat("/").concat(userDocumentManagerModel.getFilename());
@@ -110,7 +108,7 @@ public class UserDocumentManagerServiceImpl implements UserDocumentManagerServic
         String ruta = "files" + File.separator + section;
         File folder = new File(Utils.getAbsolutePath() + ruta);
         if (!folder.exists()) {
-            if(!folder.mkdirs()) {
+            if (!folder.mkdirs()) {
                 LoggerMapper.methodIn(Level.ERROR, Utils.getMethodName(), "Problems making folder ".concat(folder.getName()), this.getClass());
             }
         }
