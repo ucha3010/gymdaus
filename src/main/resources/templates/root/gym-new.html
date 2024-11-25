@@ -52,39 +52,18 @@
         <div th:replace="~{static/barraAdminRootButtons :: section}"></div>
 
         <div class="container">
-            <section class="marginTopBottom1Percentage text-center">
-                <div th:if="${updateOK != null}" class="alert alert-success" role="alert"><span
-                        th:text="#{update.ok}"></span></div>
-            </section>
 
             <section>
                 <div class="row mb-1 text-center">
                     <div class="col-12 colorGreen">
-                        <h1><span th:text="#{gym}"></span> <span th:text="${gymModel.name}"></span></h1>
+                        <h1 th:text="#{gym}"></h1>
                     </div>
                 </div>
             </section>
 
             <section sec:authorize="hasRole('ROLE_ROOT')">
-                <form action="#" th:action="@{/root/gym}" th:object="${gymModel}" method="post"
+                <form action="#" th:action="@{/root/gym/new}" th:object="${gymModel}" method="post"
                       onsubmit="return validate()">
-
-                    <input type="hidden" th:field="*{position}"/>
-
-                    <div class="row mb-1">
-                        <div class="col-3 col-md-2 text-center">
-                            <label>ID</label>
-                        </div>
-                        <div class="col-9 col-md-3 mb-1">
-                            <input type="text" th:field="*{id}" class="form-control" readonly/>
-                        </div>
-                        <div class="col-3">
-                        </div>
-                        <div class="col-9 col-md-4">
-                            <a class="btn btn-info" href="#" th:href="@{/root/gym/__${gymModel.id}__/addresses}"><span
-                                    th:text="#{addresses}"></span></a>
-                        </div>
-                    </div>
 
                     <div class="row mb-1">
                         <div class="col-3 col-md-2 text-center">
@@ -97,39 +76,12 @@
                         </div>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col-3 col-md-2 text-center">
-                            <label th:text="#{registration.date}"></label>
-                        </div>
-                        <div class="col-9 col-md-3">
-                            <input type="datetime-local" th:field="*{registrationDate}" class="form-control" readonly/>
-                        </div>
-                        <div class="col-md-7">
-                        </div>
-                    </div>
-
                     <div class="row mb-1">
                         <div class="col-3 col-md-2 text-center">
                             <label for="taxIdCode" th:text="#{tax.id}"></label>
                         </div>
                         <div class="col-9 col-md-8">
                             <input type="text" th:field="*{taxIdCode}" id="taxIdCode" class="form-control" size="50"/>
-                        </div>
-                        <div class="col-md-2">
-                        </div>
-                    </div>
-
-                    <div class="row mb-1">
-                        <div class="col-3 col-md-2 text-center">
-                            <label th:text="#{enable}"></label>
-                        </div>
-                        <div class="col-9 col-md-8">
-                            <label class="containercheckbox">
-                                <a href="#" th:href="@{/root/gym/enabled/__${gymModel.id}__}">
-                                    <input type="checkbox" th:field="*{enabled}" th:checked="${gymModel.enabled}">
-                                    <span class="checkmark"></span>
-                                </a>
-                            </label>
                         </div>
                         <div class="col-md-2">
                         </div>
@@ -154,30 +106,6 @@
                         <div class="col-9 col-md-3">
                             <input type="number" th:field="*{contractedRecords}" id="contractedRecords"
                                    class="form-control" min="0"/>
-                        </div>
-                        <div class="col-md-7">
-                        </div>
-                    </div>
-
-                    <div class="row mb-1">
-                        <div class="col-3 col-md-2 text-center">
-                            <label for="modificationUsername" th:text="#{modification.username}"></label>
-                        </div>
-                        <div class="col-9 col-md-3">
-                            <input type="text" th:value="${gymModel.modificationUsername}" id="modificationUsername"
-                                   class="form-control" size="50" readonly/>
-                        </div>
-                        <div class="col-md-7">
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-3 col-md-2 text-center">
-                            <label for="modificationDate" th:text="#{modification.date}"></label>
-                        </div>
-                        <div class="col-9 col-md-3">
-                            <input type="datetime-local" th:value="${gymModel.modificationDate}" id="modificationDate"
-                                   class="form-control" readonly/>
                         </div>
                         <div class="col-md-7">
                         </div>

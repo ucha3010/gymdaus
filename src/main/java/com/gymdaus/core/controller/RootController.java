@@ -216,6 +216,56 @@ public class RootController {
         return gymDetail(modelAndView, gymModel.getId());
     }
 
+    @GetMapping("/gym/new")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
+    public ModelAndView newGym(ModelAndView modelAndView) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        securityService.userAccessValidation("/root/gym/new");
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/gym/new");
+        modelAndView.setViewName("root/gym-new");
+        modelAndView.addObject("gymModel", new GymModel());
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return modelAndView;
+    }
+
+    @PostMapping("/gym/new")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
+    public ModelAndView newGymSave(ModelAndView modelAndView, @ModelAttribute("gymModel") GymModel gymModel) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymModel, getClass());
+        securityService.userAccessValidation("/root/gym/new");
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/gym/new");
+        gymService.add(gymModel);
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return gyms(modelAndView);
+    }
+
+    @GetMapping("/gyms/sort")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
+    public ModelAndView sortGyms(ModelAndView modelAndView) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        securityService.userAccessValidation("/root/gyms/sort");
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/gyms/sort");
+        modelAndView.setViewName("root/gym-sort");
+        modelAndView.addObject("gymModelList", gymService.findAll());
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return modelAndView;
+    }
+
+    @GetMapping("/change-gym/{oldIndex}/{newIndex}")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
+    public ModelAndView changeGym(ModelAndView modelAndView, @PathVariable int oldIndex, @PathVariable int newIndex) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), "oldIndex=" + oldIndex + ", newIndex=" + newIndex, getClass());
+        securityService.userAccessValidation("/root/change-gym/" + oldIndex + "/" + newIndex);
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/change-gym");
+        gymService.dragOfPosition(oldIndex, newIndex);
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return sortGyms(modelAndView);
+    }
+
     @GetMapping("/gym/enabled/{gymId}")
     @PreAuthorize("hasRole('ROLE_ROOT')")
     public ModelAndView updateEnabledGym(ModelAndView modelAndView, @PathVariable Long gymId) {

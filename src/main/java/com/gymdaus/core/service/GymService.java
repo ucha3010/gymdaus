@@ -24,4 +24,8 @@ public interface GymService {
     GymModel findByIdEnabled(Long id);
 
     List<Long> getGymIdEnabled();
+
+    void dragOfPosition(int initialPosition, int finalPosition);
+
+    int findMaxPosition();
 }

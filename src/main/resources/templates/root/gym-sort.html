@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta th:replace="~{static/headerMeta :: meta}">
+        <link th:replace="~{static/headerLink :: link}">
+        <script th:replace="~{static/headerScript :: script}"></script>
+        <script th:replace="~{static/headerScriptJquery :: script}"></script>
+
+        <title th:text="#{position}"></title>
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $("#sortable").sortable({
+                    start: function(e,ui) {
+                        // creates a temporary attribute on the element with the old index
+                        $(this).attr('data-previndex', ui.item.index());
+                        //console.log("oldIndex: " + $(this).attr('data-previndex'));
+                    },
+                    update: function(e, ui) {
+                        // gets the new and old index then removes the temporary attribute
+                        var newIndex = ui.item.index();
+                        //console.log("newIndex: " + newIndex);
+                        var oldIndex = $(this).attr('data-previndex');
+                        var relativeUrl = "root/change-gym/" + oldIndex + "/" + newIndex;
+                        var domain = getDomain(location.href);
+                        $(this).removeAttr('data-previndex');
+                        //console.log(location.href + " - " + domain + relativeUrl);
+                        location.href = domain + relativeUrl;
+                    }
+                });
+            });
+        </script>
+
+    </head>
+    <body>
+        <div th:replace="~{static/barraUser :: div}"></div>
+        <div th:replace="~{static/barraNav :: nav}"></div>
+        <div th:replace="~{static/barraAdminRootButtons :: section}"></div>
+
+        <div class="container">
+
+            <section>
+                <div class="row mb-1 text-center">
+                    <div class="col-12 colorGreen">
+                        <h1><span th:text="#{gyms}"></span> - <span th:text="#{position}"></span></h1>
+                    </div>
+                </div>
+            </section>
+
+            <section sec:authorize="hasRole('ROLE_ROOT')">
+
+                <div class="row">
+                    <div class="col-1 col-lg-4">
+                    </div>
+                    <div class="col-10 col-lg-4 text-center">
+                        <ul id="sortable" class="list-group mb-1">
+                            <li th:each="unit : ${gymModelList}" th:value="${unit.id}" th:text="${unit.name}"
+                                class="list-group-item move">
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-1 col-lg-4">
+                    </div>
+                </div>
+            </section>
+
+            <div class="row align-items-center justify-content-end">
+                <div class="col-3 col-md-2">
+                    <a class="btn btn-info" href="#" th:href="@{/root/gyms}"><span th:text="#{back}"></span></a>
+                </div>
+            </div>
+        </div>
+
+    </body>
+
+    <footer th:replace="~{static/footer :: footer}"></footer>
+</html>

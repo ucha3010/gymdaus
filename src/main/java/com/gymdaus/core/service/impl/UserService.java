@@ -31,12 +31,12 @@ public class UserService implements UserDetailsService {
     private MapperUser mapperUser;
 
     public List<UserModel> findAll() {
-        List<com.gymdaus.core.entity.User> userList = userRepository.findAll();
-        Set<UserModel> userModelSet = new HashSet<>();
+        List<com.gymdaus.core.entity.User> userList = userRepository.findAllByOrderByUsernameAsc();
+        List<UserModel> userModelList = new ArrayList<>();
         for (com.gymdaus.core.entity.User user : userList) {
-            userModelSet.add(mapperUser.entity2Model(user));
+            userModelList.add(mapperUser.entity2Model(user));
         }
-        return new ArrayList<>(userModelSet);
+        return userModelList;
     }
 
     @Override

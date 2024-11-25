@@ -11,8 +11,16 @@ import java.util.Optional;
 @Repository()
 public interface GymRepository extends JpaRepository<Gym, Long> {
 
+    List<Gym> findAllByOrderByPositionAsc();
+
     List<Gym> findAllByEnabledTrueOrderByPositionAsc();
+
     Optional<Gym> findByIdAndEnabledTrue(Long id);
+
     @Query("SELECT m.id FROM Gym m WHERE m.enabled = true")
     List<Long> findIdsByEnabledTrue();
+
+    Gym findByPosition(int position);
+
+    Gym findTopByOrderByPositionDesc();
 }

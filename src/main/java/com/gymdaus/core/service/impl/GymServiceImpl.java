@@ -28,7 +28,7 @@ public class GymServiceImpl implements GymService {
     @Override
     public List<GymModel> findAll() {
         List<GymModel> gymModelList = new ArrayList<>();
-        for (Gym gym : gymRepository.findAll()) {
+        for (Gym gym : gymRepository.findAllByOrderByPositionAsc()) {
             gymModelList.add(mapperGym.entity2Model(gym));
         }
         return gymModelList;
@@ -54,6 +54,10 @@ public class GymServiceImpl implements GymService {
 
     @Override
     public void add(GymModel gymModel) {
+        gymModel.setEnabled(Boolean.TRUE);
+        gymModel.setRegistrationDate(new Date());
+        gymModel.setModificationUsername(userService.getLoggedUser().getUsername());
+        gymModel.setPosition(findMaxPosition() + 1);
         gymRepository.save(mapperGym.model2Entity(gymModel));
     }
 
@@ -88,5 +92,38 @@ public class GymServiceImpl implements GymService {
     @Override
     public List<Long> getGymIdEnabled() {
         return gymRepository.findIdsByEnabledTrue();
+    }
+
+    @Override
+    public void dragOfPosition(int initialPosition, int finalPosition) {
+        Gym gym = gymRepository.findByPosition(initialPosition);
+        if (initialPosition > finalPosition) {
+            for (int i = initialPosition - 1; i >= finalPosition; i--) {
+                moveItem(i, true);
+            }
+        }
+        if (initialPosition < finalPosition) {
+            for (int i = initialPosition + 1; i <= finalPosition; i++) {
+                moveItem(i, false);
+            }
+        }
+        gym.setPosition(finalPosition);
+        gymRepository.save(gym);
+    }
+
+    @Override
+    public int findMaxPosition() {
+        Gym gym = gymRepository.findTopByOrderByPositionDesc();
+        if (gym != null) {
+            return gym.getPosition();
+        } else {
+            return -1;
+        }
+    }
+
+    private void moveItem(int position, boolean moveUp) {
+        Gym gym = gymRepository.findByPosition(position);
+        gym.setPosition(position + (moveUp ? 1 : -1));
+        gymRepository.save(gym);
     }
 }

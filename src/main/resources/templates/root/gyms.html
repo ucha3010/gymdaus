@@ -34,9 +34,15 @@
             </section>
 
             <section>
-                <div class="row mb-1 text-center">
-                    <div class="col-12 colorGreen">
+                <div class="row align-items-center justify-content-end">
+                    <div class="col-md-2">
+                        <a class="btn btn-warning" href="#" th:href="@{/root/gyms/sort}"><span th:text="#{sort}"></span></a>
+                    </div>
+                    <div class="col-6 col-md-8 colorGreen">
                         <h1 th:text="#{gyms}"></h1>
+                    </div>
+                    <div class="col-3 col-md-2">
+                        <a class="btn btn-success" href="#" th:href="@{/root/gym/new}"><span th:text="#{new.gym}"></span></a>
                     </div>
                 </div>
             </section>

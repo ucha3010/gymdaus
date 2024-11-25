@@ -223,3 +223,11 @@ a:link, a:visited,  a:hover, a:active
     opacity: 1;
     pointer-events: auto;
 }
+
+.img-fixed-size {
+    width: 100%;
+    height: 600px; /* Fixed height in container */
+    object-fit: cover; /* Cut the image to cover the container */
+    object-position: center; /* Center de image position */
+    background-color: white; /* White background for non covered zones */
+}
