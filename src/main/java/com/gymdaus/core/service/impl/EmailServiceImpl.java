@@ -74,6 +74,12 @@ public class EmailServiceImpl implements EmailService {
             }
             updateGymParameterModel(gymParameterModelHost, gymModel, now, modificationUsername);
         }
+        if (!Utils.isNullOrEmpty(emailModel.getPassword())) {
+            gymParameterModel = new GymParameterModel();
+            gymParameterModel.setKeyData(Constants.EMAIL_PASSWORD);
+            gymParameterModel.setValue(emailModel.getPassword());
+            updateGymParameterModel(gymParameterModel, gymModel, now, modificationUsername);
+        }
     }
 
     @Override

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="es">
+    <head>
+        <meta th:replace="~{static/headerMeta :: meta}">
+        <link th:replace="~{static/headerLink :: link}">
+        <script th:replace="~{static/headerScript :: script}"></script>
+
+        <title th:text="#{new.address}"></title>
+
+        <script type="text/javascript">
+
+		function validate(){
+
+			var field = ['name','email','phone','addressStreet','addressCity','addressZip'];
+			restore();
+			var validated = true;
+			for(var i=0; i < field.length; i++){
+			    var rolName = document.getElementById(field[i]);
+			    var rolNameError = document.getElementById(field[i]+'Error');
+				if(rolName.value==''){
+					if(rolNameError != null){
+						rolNameError.className = "colorRed";
+					}
+					rolName.style.borderColor="red";
+					validated = false;
+				}
+			}
+
+			if(validated){
+				return true;
+			} else {
+				document.getElementById('thereIsError').className = "colorRed";
+				return false;
+			}
+		}
+		function restore(){
+			var errorSpan = document.getElementsByName('errorSpan');
+			for (var i = 0; i < errorSpan.length; i++) {
+				errorSpan[i].className = "d-none";
+			}
+			var fields = document.getElementsByClassName("form-control");
+			for (var i = 0; i < fields.length; i++) {
+				fields[i].style.borderColor="#ced4da";
+			}
+		}
+        </script>
+    </head>
+    <body>
+        <div th:replace="~{static/barraUser :: div}"></div>
+        <div th:replace="~{static/barraNav :: nav}"></div>
+        <div th:replace="~{static/barraAdminRootButtons :: section}"></div>
+
+        <div class="container">
+
+            <section>
+                <div class="row mb-1 text-center">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-9 col-md-8 colorGreen">
+                        <h1 th:text="#{new.address}"></h1>
+                    </div>
+                    <div class="col-3 col-md-2">
+                        <a class="btn btn-info" href="#" th:href="@{/gym/addresses/__${gymAddressModel.gymModel.id}__}">
+                            <span th:text="#{back}"></span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section sec:authorize="hasRole('ROLE_ADMIN')">
+                <form action="#" th:action="@{/gym/address/new}" th:object="${gymAddressModel}" method="post"
+                      onsubmit="return validate()">
+
+                    <input type="hidden" name="enabled" th:value="true"/>
+                    <input type="hidden" name="gymModel.id" th:value="${gymAddressModel.gymModel.id}"/>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{name}"></label>
+                        </div>
+                        <div class="col-9 col-md-8">
+                            <input type="text" th:field="*{name}" id="name" class="form-control"/>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{email}"></label>
+                        </div>
+                        <div class="col-9 col-md-3">
+                            <input type="text" th:field="*{email}" id="email" class="form-control"/>
+                        </div>
+                        <div class="col-md-7">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{host.provider}"></label>
+                        </div>
+                        <div class="col-9 col-md-3">
+                            <select th:field="*{emailHost}" id="emailHost" class="form-select">
+                                <option th:each="unitHost : ${utilListHost}" th:value="${unitHost.value}"
+                                        th:text="${unitHost.key}"
+                                        th:selected="${unitHost.value == gymAddressModel.emailHost}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-7">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{phone}"></label>
+                        </div>
+                        <div class="col-9 col-md-8">
+                            <input type="text" th:field="*{phone}" id="phone" class="form-control"/>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{address.street}"></label>
+                        </div>
+                        <div class="col-9 col-md-8">
+                            <input type="text" th:field="*{addressStreet}" id="addressStreet" class="form-control"/>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{address.number}"></label>
+                        </div>
+                        <div class="col-9 col-md-8">
+                            <input type="text" th:field="*{addressNumber}" id="addressNumber" class="form-control"/>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{address.other}"></label>
+                        </div>
+                        <div class="col-9 col-md-8">
+                            <input type="text" th:field="*{addressOther}" id="addressOther" class="form-control"/>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{address.city}"></label>
+                        </div>
+                        <div class="col-9 col-md-8">
+                            <input type="text" th:field="*{addressCity}" id="addressCity" class="form-control"/>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{address.zip}"></label>
+                        </div>
+                        <div class="col-9 col-md-8">
+                            <input type="text" th:field="*{addressZip}" id="addressZip" class="form-control"/>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2">
+                            <label for="country" th:text="#{country}"></label>
+                        </div>
+                        <div class="col-9 col-md-8">
+                            <select th:field="*{countryModel.id}" id="country" class="form-select">
+                                <option th:each="p : ${countryList}" th:value="${p.id}"
+                                        th:text="#{__${p.name}__}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+
+                    <div class="row align-items-center justify-content-end mb-3">
+                        <div class="col-9 p-0">
+                        </div>
+                        <div class="col-2 p-0">
+                            <button class="btn btn-success" type="submit"><span th:text="#{save}"></span></button>
+                        </div>
+                        <div class="col-1 p-0">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-6">
+                        </div>
+                        <div class="col-6">
+                            <span id="thereIsError" name="errorSpan" class="d-none" th:text="#{fillObligatory}"></span>
+                        </div>
+                    </div>
+                </form>
+            </section>
+
+        </div>
+    </body>
+
+    <footer th:replace="~{static/footer :: footer}"></footer>
+</html>

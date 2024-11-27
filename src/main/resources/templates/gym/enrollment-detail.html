@@ -15,9 +15,14 @@
         <div class="container">
 
             <section>
-                <div class="row mb-1 text-center">
-                    <div class="col-12 colorGreen">
+                <div class="row align-items-center justify-content-end">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-9 col-md-8 colorGreen">
                         <h1 th:text="#{enrollment}"></h1>
+                    </div>
+                    <div class="col-3 col-md-2">
+                        <a class="btn btn-info" href="#" th:href="@{/gym/enrollments/__${enrollment.gymModel.id}__}"><span th:text="#{back}"></span></a>
                     </div>
                 </div>
             </section>
@@ -521,9 +526,7 @@
                 </div>
 
                 <div class="row align-items-center justify-content-end">
-                    <div class="col-5">
-                    </div>
-                    <div class="col-3">
+                    <div class="col-9 col-md-10">
                     </div>
                     <div class="col-3 col-md-2">
                         <a class="btn btn-info" href="#" th:href="@{/gym/enrollments/__${enrollment.gymModel.id}__}"><span th:text="#{back}"></span></a>

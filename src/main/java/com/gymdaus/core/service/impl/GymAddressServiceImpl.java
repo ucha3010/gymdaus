@@ -7,6 +7,7 @@ import com.gymdaus.core.repository.GymAddressRepository;
 import com.gymdaus.core.service.GymAddressService;
 import com.gymdaus.core.util.EmailEnum;
 import com.gymdaus.core.util.LoggerMapper;
+import com.gymdaus.core.util.Utils;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.logging.log4j.Level;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,5 +88,11 @@ public class GymAddressServiceImpl implements GymAddressService {
                 break;
             }
         }
+    }
+
+    @Override
+    public boolean comparePassword(String oldPassword, Long id) {
+        GymAddress gymAddress = gymAddressRepository.findById(id).orElse(new GymAddress());
+        return !Utils.isNullOrEmpty(oldPassword) && oldPassword.equals(gymAddress.getEmailPassword());
     }
 }

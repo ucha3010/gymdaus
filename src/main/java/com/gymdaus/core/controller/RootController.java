@@ -334,7 +334,6 @@ public class RootController {
         return gymAddresses(modelAndView, gymAddressModel.getGymModel().getId());
     }
 
-
     @GetMapping("/gym/{gymId}/new-address")
     @PreAuthorize("hasRole('ROLE_ROOT')")
     public ModelAndView newGymAddress(ModelAndView modelAndView, @PathVariable Long gymId) {
@@ -342,7 +341,7 @@ public class RootController {
         securityService.userAccessValidation("/root/gym/" + gymId + "/new-address");
         UserModel user = utilService.basicDataCharge(modelAndView);
         securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/gym/" + gymId + "/new-address");
-        modelAndView.setViewName("root/gym-new-address");
+        modelAndView.setViewName("root/gym-address-new");
         GymModel gymModel = new GymModel();
         gymModel.setId(gymId);
         GymAddressModel gymAddressModel = new GymAddressModel();

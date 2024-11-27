@@ -6,7 +6,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class GymAddressModel {
 
     private Long id;
@@ -25,4 +24,23 @@ public class GymAddressModel {
     private CountryModel countryModel;
     private GymModel gymModel;
 
+    @Override
+    public String toString() {
+        return "GymAddressModel{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", enabled=" + enabled +
+                ", email='" + email + '\'' +
+                ", emailHost='" + emailHost + '\'' +
+                ", emailPort='" + emailPort + '\'' +
+                ", phone='" + phone + '\'' +
+                ", addressStreet='" + addressStreet + '\'' +
+                ", addressNumber='" + addressNumber + '\'' +
+                ", addressOther='" + addressOther + '\'' +
+                ", addressCity='" + addressCity + '\'' +
+                ", addressZip='" + addressZip + '\'' +
+                ", countryModel=" + countryModel +
+                ", gymModel=" + gymModel +
+                '}';
+    }
 }

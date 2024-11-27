@@ -20,4 +20,6 @@ public interface GymAddressService {
     void delete(Long id);
 
     GymAddressModel enableDisable(Long gymAddressId);
+
+    boolean comparePassword(String oldPassword, Long id);
 }

@@ -9,6 +9,7 @@
 
         <script type="text/javascript">
             function validate(){
+
                 var field = ['oldPassword','newPassword','newPasswordRepeat'];
                 restore();
                 var validated = true;
@@ -43,7 +44,6 @@
                     return false;
                 }
             }
-
             function restore(){
                 var errorSpan = document.getElementsByName('errorSpan');
                 for (var i = 0; i < errorSpan.length; i++) {
@@ -52,6 +52,15 @@
                 var fields = document.getElementsByClassName("form-control");
                 for (var i = 0; i < fields.length; i++) {
                     fields[i].style.borderColor="#ced4da";
+                }
+            }
+
+            function showPass(elementId) {
+                var x = document.getElementById(elementId);
+                    if (x.type === "password") {
+                    x.type = "text";
+                } else {
+                    x.type = "password";
                 }
             }
         </script>
@@ -66,29 +75,21 @@
             <section class="marginBottom2Percentage text-center">
                 <div th:if="${oldDifferent != null}" class="alert alert-danger" role="alert"><span
                         th:text="#{password.old.different}"></span></div>
-                <div th:if="${modifiedPass != null}" class="alert alert-success" role="alert"><span
-                        th:text="#{password.modified}"></span></div>
             </section>
 
             <section>
-                <div class="row align-items-center justify-content-end">
-                    <div class="col-md-2">
-                    </div>
-                    <div class="col-9 col-md-8 colorGreen">
-                        <h1><span th:text="#{change.pass}"></span> - <span th:text="#{email}"></span> - <span
-                                th:text="${gymModel.name}"></span></h1>
-                    </div>
-                    <div class="col-3 col-md-2">
-                        <a class="btn btn-info" href="#" th:href="@{/gym/parameters/__${gymModel.id}__}"><span
-                                th:text="#{back}"></span></a>
+                <div class="row mb-1 text-center">
+                    <div class="col-12 colorGreen">
+                        <h1><span th:text="#{change.pass}"></span> - <span th:text="#{email}"></span></h1>
                     </div>
                 </div>
             </section>
 
-            <form sec:authorize="hasRole('ROLE_ADMIN')" action="#" th:action="@{/gym/update-email-pass}"
+            <form sec:authorize="hasRole('ROLE_ADMIN')" action="#" th:action="@{/gym/address/update-email-pass}"
                   th:object="${passwordModel}" method="post" onsubmit="return validate()">
 
-                <input type="hidden" name="gymId" th:value="${gymModel.id}"/>
+                <input type="hidden" th:field="*{gymId}"/>
+                <input type="hidden" th:field="*{gymAddressId}"/>
 
                 <div class="row mt-2 mb-1">
                     <div class="col-md-3">
@@ -100,6 +101,7 @@
                         <input type="password" th:field="*{oldPassword}" id="oldPassword" class="form-control"/>
                     </div>
                     <div class="col-md-4">
+                        <input type="checkbox" onclick="showPass('oldPassword')"><span th:text="#{show.password}"></span>
                     </div>
                 </div>
 
@@ -113,6 +115,7 @@
                         <input type="password" th:field="*{newPassword}" id="newPassword" class="form-control"/>
                     </div>
                     <div class="col-md-4">
+                        <input type="checkbox" onclick="showPass('newPassword')"><span th:text="#{show.password}"></span>
                     </div>
                 </div>
 
@@ -136,6 +139,7 @@
                                class="form-control"/>
                     </div>
                     <div class="col-md-4">
+                        <input type="checkbox" onclick="showPass('newPasswordRepeat')"><span th:text="#{show.password}"></span>
                     </div>
                 </div>
 
@@ -143,6 +147,10 @@
                     <div class="col-2 col-md-3">
                     </div>
                     <div class="col-2">
+                        <a class="btn btn-info" href="#"
+                           th:href="@{/gym/address/__${passwordModel.gymId}__/__${passwordModel.gymAddressId}__}">
+                            <span th:text="#{back}"></span>
+                        </a>
                     </div>
                     <div class="col-4 col-md-3">
                     </div>

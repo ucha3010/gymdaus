@@ -40,8 +40,7 @@
                     <div class="col-md-2">
                     </div>
                     <div class="col-9 col-md-8 colorGreen">
-                        <h1><span th:text="#{gym}"></span> <span th:value="${gymModel.name}"></span> - <span
-                                th:text="#{addresses}"></span></h1>
+                        <h1><span th:text="${gymModel.name}"></span> - <span th:text="#{addresses}"></span></h1>
                     </div>
                     <div class="col-3 col-md-2">
                         <a class="btn btn-success" href="#" th:href="@{/root/gym/__${gymModel.id}__/new-address}"><span

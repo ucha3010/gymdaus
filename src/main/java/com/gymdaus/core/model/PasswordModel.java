@@ -13,6 +13,7 @@ public class PasswordModel {
 
     private String username;
     private Long gymId;
+    private Long gymAddressId;
     private String oldPassword;
     private String newPassword;
     private String newPasswordRepeat;
