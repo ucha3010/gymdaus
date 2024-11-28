@@ -9,6 +9,7 @@ import com.gymdaus.core.util.Constants;
 import com.gymdaus.core.util.LoggerMapper;
 import com.gymdaus.core.util.Utils;
 import jakarta.persistence.NoResultException;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +38,8 @@ public class GymController {
     private EnrollmentService enrollmentService;
     @Autowired
     private GymAddressService gymAddressService;
+    @Autowired
+    private GymDocumentManagerService gymDocumentManagerService;
     @Autowired
     private GymPhotoService gymPhotoService;
     @Autowired
@@ -500,6 +504,63 @@ public class GymController {
             LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), "updateOK", getClass());
             return gymAddressDetail(modelAndView, gymAddressModel.getGymModel().getId(), gymAddressModel.getId());
         }
+    }
+
+    @GetMapping("/documents/{gymId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView gymDocuments(ModelAndView modelAndView, @PathVariable Long gymId) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymId, getClass());
+        securityService.userAccessValidation("/gym/documents/" + gymId);
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, true, "/gym/documents/" + gymId);
+        modelAndView.setViewName("gym/documents");
+        modelAndView.addObject("gymModel", gymService.findByIdEnabled(gymId));
+        modelAndView.addObject("gymDocumentManagerModel", new GymDocumentManagerModel());
+        modelAndView.addObject("gymDocumentManagerModelList", gymDocumentManagerService.findByGymId(gymId));
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return modelAndView;
+    }
+
+    @GetMapping("/remove-document/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView removeDocument(ModelAndView modelAndView, @PathVariable Long id) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), "gymDocumentManagerId=" + id, getClass());
+        securityService.userAccessValidation("/gym/remove-document/" + id);
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        GymDocumentManagerModel gymDocumentManagerModel = gymDocumentManagerService.findById(id);
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymDocumentManagerModel.getGymModel().getId(), true, "/gym/remove-document/" + id);
+        gymDocumentManagerService.delete(id);
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return gymDocuments(modelAndView, gymDocumentManagerModel.getGymModel().getId());
+    }
+
+    @PostMapping("/upload-document")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView uploadDocument(ModelAndView modelAndView, @RequestParam("file") MultipartFile file,
+            @RequestParam("section") String section, @RequestParam("gymId") Long gymId) {
+
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), file.getOriginalFilename(), getClass());
+        securityService.userAccessValidation("/gym/upload-document");
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, true, "/gym/upload-document");
+        if (!gymDocumentManagerService.addDocument(user, file, section, gymService.findById(gymId))) {
+            modelAndView.addObject("uploadError", "uploadError");
+        } else {
+            modelAndView.addObject("uploadOk", "uploadOk");
+        }
+        return gymDocuments(modelAndView, gymId);
+    }
+
+    @GetMapping("/download/{gymId}/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void downloadDocument(@PathVariable Long gymId, @PathVariable Long id, HttpServletResponse response) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), "gymDocumentManagerId=" + id, getClass());
+        securityService.userAccessValidation("/gym/download/" + gymId + "/" + id);
+        UserModel user = userService.getLoggedUserModel();
+        GymDocumentManagerModel gymDocumentManagerModel = gymDocumentManagerService.findById(id);
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymDocumentManagerModel.getGymModel().getId(), true, "/gym/download/" + gymId + "/" + id);
+        Utils.downloadFile(gymDocumentManagerModel.getPath() + File.separator + gymDocumentManagerModel.getFilename(), gymDocumentManagerModel.getFilename(), response);
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), "Download ok", getClass());
     }
 
 }

@@ -4,7 +4,11 @@ import com.gymdaus.core.entity.GymDocumentManager;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository()
 public interface GymDocumentManagerRepository extends JpaRepository<GymDocumentManager, Long> {
+
+    List<GymDocumentManager> findAllByGymIdOrderByCreationDateDesc(Long gymId);
 
 }

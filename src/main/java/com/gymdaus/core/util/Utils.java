@@ -1,6 +1,8 @@
 package com.gymdaus.core.util;
 
 import com.gymdaus.core.model.UtilModel;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.passay.CharacterRule;
@@ -10,6 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -163,6 +167,22 @@ public class Utils {
             }
         }
         return answer;
+    }
+
+
+    public static void downloadFile(String localFullPathWithFilenameWithExt, String filenameWithExt, HttpServletResponse response) {
+        response.setContentType("application/octet-stream");
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename = " + filenameWithExt;
+        response.setHeader(headerKey, headerValue);
+        try {
+            ServletOutputStream outputStream = response.getOutputStream();
+            byte[] file = Files.readAllBytes(Paths.get(localFullPathWithFilenameWithExt));
+            outputStream.write(file, 0, file.length);
+            outputStream.close();
+        } catch (IOException e) {
+            LoggerMapper.log(Level.ERROR, Utils.getMethodName(), e.getMessage(), Utils.class);
+        }
     }
 
     public static String getClearFilename(MultipartFile file) {

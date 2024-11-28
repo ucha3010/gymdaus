@@ -87,7 +87,7 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     public ModelAndView uploadPhoto(ModelAndView modelAndView, @RequestParam("file") MultipartFile file) {
 
-        LoggerMapper.methodIn(Level.INFO, "user/upload-photo", file.getOriginalFilename(), getClass());
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), file.getOriginalFilename(), getClass());
         securityService.userAccessValidation("/user/upload-photo");
         UserModel userModel = utilService.basicDataCharge(modelAndView);
         if (!userDocumentManagerService.addPhoto(userModel, file)) {
