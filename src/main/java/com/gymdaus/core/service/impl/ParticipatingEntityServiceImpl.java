@@ -1,6 +1,7 @@
 package com.gymdaus.core.service.impl;
 
 import com.gymdaus.core.entity.ParticipatingEntity;
+import com.gymdaus.core.exception.RemoveException;
 import com.gymdaus.core.mapper.MapperParticipatingEntity;
 import com.gymdaus.core.model.ParticipatingEntityModel;
 import com.gymdaus.core.repository.ParticipatingEntityRepository;
@@ -22,9 +23,9 @@ public class ParticipatingEntityServiceImpl implements ParticipatingEntityServic
     private MapperParticipatingEntity mapperParticipatingEntity;
 
     @Override
-    public List<ParticipatingEntityModel> findAll() {
+    public List<ParticipatingEntityModel> findAllByGymId(Long gymId) {
         List<ParticipatingEntityModel> participatingEntityModelList = new ArrayList<>();
-        for (ParticipatingEntity participatingEntity : participatingEntityRepository.findAllByOrderByPositionAsc()) {
+        for (ParticipatingEntity participatingEntity : participatingEntityRepository.findAllByGymIdOrderByPositionAsc(gymId)) {
             participatingEntityModelList.add(mapperParticipatingEntity.entity2Model(participatingEntity));
         }
         return participatingEntityModelList;
@@ -50,28 +51,35 @@ public class ParticipatingEntityServiceImpl implements ParticipatingEntityServic
     }
 
     @Override
-    public void delete(Long id) {
-        participatingEntityRepository.deleteById(id);
-        List<ParticipatingEntity> participatingEntityList = participatingEntityRepository.findAllByOrderByPositionAsc();
-        for (int i = 0; i < participatingEntityList.size(); i++) {
-            if (participatingEntityList.get(i).getPosition() != i) {
-                participatingEntityList.get(i).setPosition(i);
-                participatingEntityRepository.save(participatingEntityList.get(i));
+    public void delete(Long id) throws RemoveException {
+        ParticipatingEntity participatingEntity = participatingEntityRepository.findById(id).orElse(null);
+        if (participatingEntity != null) {
+            try {
+                participatingEntityRepository.deleteById(id);
+                List<ParticipatingEntity> participatingEntityList = participatingEntityRepository.findAllByGymIdOrderByPositionAsc(participatingEntity.getGymId());
+                for (int i = 0; i < participatingEntityList.size(); i++) {
+                    if (participatingEntityList.get(i).getPosition() != i) {
+                        participatingEntityList.get(i).setPosition(i);
+                        participatingEntityRepository.save(participatingEntityList.get(i));
+                    }
+                }
+            } catch (Exception e) {
+                throw new RemoveException("1000", e.getMessage());
             }
         }
     }
 
     @Override
-    public void dragOfPosition(int initialPosition, int finalPosition) {
-        ParticipatingEntity participatingEntity = participatingEntityRepository.findByPosition(initialPosition);
+    public void dragOfPosition(Long gymId, int initialPosition, int finalPosition) {
+        ParticipatingEntity participatingEntity = participatingEntityRepository.findByGymIdAndPosition(gymId, initialPosition);
         if (initialPosition > finalPosition) {
             for (int i = initialPosition - 1; i >= finalPosition; i--) {
-                moveItem(i, true);
+                moveItem(gymId, i, true);
             }
         }
         if (initialPosition < finalPosition) {
             for (int i = initialPosition + 1; i <= finalPosition; i++) {
-                moveItem(i, false);
+                moveItem(gymId, i, false);
             }
         }
         participatingEntity.setPosition(finalPosition);
@@ -79,8 +87,8 @@ public class ParticipatingEntityServiceImpl implements ParticipatingEntityServic
     }
 
     @Override
-    public int findMaxPosition() {
-        ParticipatingEntity participatingEntity = participatingEntityRepository.findTopByOrderByPositionDesc();
+    public int findMaxPosition(Long gymId) {
+        ParticipatingEntity participatingEntity = participatingEntityRepository.findTopByGymIdOrderByPositionDesc(gymId);
         if (participatingEntity != null) {
             return participatingEntity.getPosition();
         } else {
@@ -88,8 +96,8 @@ public class ParticipatingEntityServiceImpl implements ParticipatingEntityServic
         }
     }
 
-    private void moveItem(int position, boolean moveUp) {
-        ParticipatingEntity participatingEntity = participatingEntityRepository.findByPosition(position);
+    private void moveItem(Long gymId, int position, boolean moveUp) {
+        ParticipatingEntity participatingEntity = participatingEntityRepository.findByGymIdAndPosition(gymId, position);
         participatingEntity.setPosition(position + (moveUp ? 1 : -1));
         participatingEntityRepository.save(participatingEntity);
     }

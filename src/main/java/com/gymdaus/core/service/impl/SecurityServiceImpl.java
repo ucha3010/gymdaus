@@ -44,7 +44,7 @@ public class SecurityServiceImpl implements SecurityService {
 
         Random r = new Random();
         StringBuilder code = new StringBuilder();
-        for (int i=0; i < 6; i++) {
+        for (int i = 0; i < 6; i++) {
             code.append(alphabet.charAt(r.nextInt(alphabet.length())));
         }
         return code.toString();
@@ -119,7 +119,7 @@ public class SecurityServiceImpl implements SecurityService {
         List<GymUserModel> gymUserModelList = gymUserService.findByGymId(gymId);
         boolean validAccess = false;
         for (GymUserModel gymUserModel : gymUserModelList) {
-            if (gymUserModel.getGymModel().getId().equals(gymId)) {
+            if (gymUserModel.getGymModel().getId().equals(gymId) && gymUserModel.getUserModel().getUsername().equals(username)) {
                 if (managerRequired && Constants.ROLE_MANAGER.equals(gymUserModel.getGymRole())) {
                     validAccess = true;
                     break;
@@ -158,7 +158,7 @@ public class SecurityServiceImpl implements SecurityService {
             throw new AccessDeniedException(uri);
         } else {
             UserModel user = userService.findModelByUsername(username);
-            if(user.getUserRoles() == null || !user.getUserRoles().contains(role)) {
+            if (user.getUserRoles() == null || !user.getUserRoles().contains(role)) {
                 throw new AccessDeniedException(uri);
             }
         }

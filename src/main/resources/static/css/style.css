@@ -231,3 +231,22 @@ a:link, a:visited,  a:hover, a:active
     object-position: center; /* Center de image position */
     background-color: white; /* White background for non covered zones */
 }
+
+.customTooltip {
+    display: none;
+    position: absolute;
+    top: 60%; /* Under li */
+    left: 0%;
+    //transform: translateX(-50%);
+    background-color: yellow;
+    //color: #000;
+    //padding: 5px;
+    //border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 10;
+}
+
+li:hover .customTooltip {
+    display: block;
+}

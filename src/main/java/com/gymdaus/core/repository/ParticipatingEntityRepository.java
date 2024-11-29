@@ -8,10 +8,11 @@ import java.util.List;
 
 @Repository()
 public interface ParticipatingEntityRepository extends JpaRepository<ParticipatingEntity, Long> {
-    List<ParticipatingEntity> findAllByOrderByPositionAsc();
 
-    ParticipatingEntity findByPosition(int position);
+    List<ParticipatingEntity> findAllByGymIdOrderByPositionAsc(Long gymId);
 
-    ParticipatingEntity findTopByOrderByPositionDesc();
+    ParticipatingEntity findByGymIdAndPosition(Long gymId, int position);
+
+    ParticipatingEntity findTopByGymIdOrderByPositionDesc(Long gymId);
 
 }
