@@ -56,7 +56,7 @@
                         <h5 class="text-center" th:text="#{menu1.activities}"></h5>
                         <div class="d-grid gap-2">
                             <a th:if="${gymUserModel.gymRole == 'ROLE_MANAGER'}" class="btn btn-secondary"
-                               th:href="@{/gym/}"><span th:text="#{associate.entity}"></span></a>
+                               th:href="@{/gymActivity/activities/__${gymModel.id}__}"><span th:text="#{associate.activity}"></span></a>
                             <a class="btn btn-secondary" th:href="@{/gym/}"><span th:text="#{user.enrollments}"></span></a>
                         </div>
                     </div>

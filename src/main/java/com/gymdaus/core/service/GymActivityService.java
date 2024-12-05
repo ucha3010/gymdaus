@@ -9,12 +9,13 @@ public interface GymActivityService {
 
     List<GymActivityModel> findAll();
 
+    List<GymActivityModel> findAllByGymId(Long gymId);
+
     GymActivityModel findById(Long id);
 
-    void add(GymActivityModel model);
+    GymActivityModel add(GymActivityModel model);
 
     void update(GymActivityModel model);
 
     void delete(Long id);
-
 }

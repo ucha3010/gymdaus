@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="es">
+    <head>
+        <meta th:replace="~{static/headerMeta :: meta}">
+        <link th:replace="~{static/headerLink :: link}">
+        <script th:replace="~{static/headerScript :: script}"></script>
+        <script th:replace="~{static/headerScriptJquery :: script}"></script>
+
+        <title th:text="#{activity}"></title>
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $("#sortable").sortable({
+                    start: function(e,ui) {
+                        // creates a temporary attribute on the element with the old index
+                        $(this).attr('data-previndex', ui.item.index());
+                        //console.log("oldIndex: " + $(this).attr('data-previndex'));
+                    },
+                    update: function(e, ui) {
+                        // gets the new and old index then removes the temporary attribute
+                        var newIndex = ui.item.index();
+                        //console.log("newIndex: " + newIndex);
+                        var oldIndex = $(this).attr('data-previndex');
+                        var relativeUrl = "gymActivity/changeActivitySchedule/" + $('#gymActivityId').val() + "/"  + oldIndex + "/" + newIndex;
+                        var domain = getDomain(location.href);
+                        $(this).removeAttr('data-previndex');
+                        //console.log(location.href + " - " + domain + relativeUrl);
+                        location.href = domain + relativeUrl;
+                    }
+                });
+            });
+
+            function validate(){
+
+                var field = ['name','specificStartDate','specificEndDate','startTime','endTime'];
+                restore();
+                var validated = true;
+                for(var i=0; i < field.length; i++){
+                    var rolName = document.getElementById(field[i]);
+                    var rolNameError = document.getElementById(field[i]+'Error');
+                    if(rolName.value==''){
+                        if(rolNameError != null){
+                            rolNameError.className = "colorRed";
+                        }
+                        rolName.style.borderColor="red";
+                        validated = false;
+                    }
+                }
+
+                var isAdult = document.getElementById('adult').checked;
+                var isMinor = document.getElementById('minor').checked;
+                var isInclusive = document.getElementById('inclusive').checked;
+                if(!isAdult && !isMinor && !isInclusive){
+                    var labelAmi = document.getElementsByName('label-ami');
+                    for (var i = 0; i < labelAmi.length; i++) {
+                        labelAmi[i].className = "colorRed";
+                    }
+                    validated = false;
+                }
+
+                var monday = document.getElementById('monday').checked;
+                var tuesday = document.getElementById('tuesday').checked;
+                var wednesday = document.getElementById('wednesday').checked;
+                var thursday = document.getElementById('thursday').checked;
+                var friday = document.getElementById('friday').checked;
+                var saturday = document.getElementById('saturday').checked;
+                var sunday = document.getElementById('sunday').checked;
+                if(!monday && !tuesday && !wednesday && !thursday && !friday && !saturday && !sunday){
+                    var labelWeek = document.getElementsByName('label-week');
+                    for (var i = 0; i < labelWeek.length; i++) {
+                        labelWeek[i].className = "colorRed";
+                    }
+                    validated = false;
+                }
+
+                if(document.getElementById('price').value=='') {
+                    document.getElementById('price').value=0;
+                }
+
+                if(validated){
+                    return true;
+                } else {
+                    document.getElementById('thereIsError').className = "colorRed";
+                    return false;
+                }
+            }
+            function restore(){
+                var errorSpan = document.getElementsByName('errorSpan');
+                for (var i = 0; i < errorSpan.length; i++) {
+                    errorSpan[i].className = "d-none";
+                }
+                var fields = document.getElementsByClassName("form-control");
+                for (var i = 0; i < fields.length; i++) {
+                    fields[i].style.borderColor="#ced4da";
+                }
+                var fields = document.getElementsByName("label-ami");
+                for (var i = 0; i < fields.length; i++) {
+                    fields[i].className="form-check-label";
+                }
+                var fields = document.getElementsByName("label-week");
+                for (var i = 0; i < fields.length; i++) {
+                    fields[i].className="form-check-label";
+                }
+            }
+
+            function confirmDelete(id, name){
+                let deleteAsk = $('#deleteAsk').val();
+                if(confirm(deleteAsk + " " + name + "?")){
+                    var relativeUrl = "gymActivity/remove-activity/" + id;
+                    var domain = getDomain(location.href);
+                    location.href = domain + relativeUrl;
+                    return true;
+                }
+                return false;
+            }
+        </script>
+    </head>
+    <body>
+        <div th:replace="~{static/barraUser :: div}"></div>
+        <div th:replace="~{static/barraNav :: nav}"></div>
+        <div th:replace="~{static/barraAdminRootButtons :: section}"></div>
+
+        <div class="container">
+            <input type="hidden" id="gymActivityId" th:value="${gymActivityModel.id}"/>
+            <input type="hidden" id="deleteAsk" th:value="#{confirm.delete}"/>
+            <section class="marginTopBottom1Percentage text-center">
+                <div th:if="${updateOK != null}" class="alert alert-success" role="alert"><span
+                        th:text="#{update.ok}"></span></div>
+            </section>
+
+            <section sec:authorize="hasRole('ROLE_ADMIN')">
+                <div class="row mb-1 text-center">
+                    <div class="col-md-2">
+                        <a class="btn btn-danger" href="#"
+                           th:attr="onclick=|confirmDelete('${gymActivityModel.id}','#{__${gymActivityModel.activityModel.name}__}')|">
+                            <span th:text="#{delete}"></span> <span th:text="#{activity}"></span>
+                        </a>
+                    </div>
+                    <div class="col-9 col-md-8 colorGreen">
+                        <h1><span th:text="#{__${gymActivityModel.activityModel.name}__}"></span> - <span th:text="${gymActivityModel.gymAddressModel.name}"></span></h1>
+                    </div>
+                    <div class="col-3 col-md-2">
+                        <a class="btn btn-info" href="#" th:href="@{/gymActivity/activities/__${gymModel.id}__}">
+                            <span th:text="#{back}"></span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section sec:authorize="hasRole('ROLE_ADMIN')">
+                <form action="#" th:action="@{/gymActivity/activitySchedule}" th:object="${gymActivityScheduleModel}" method="post"
+                      onsubmit="return validate()">
+
+                    <input type="hidden" name="gymActivityModel.id" th:value="${gymActivityModel.id}"/>
+                    <input type="hidden" name="gymActivityModel.gymModel.id" th:value="${gymActivityModel.gymModel.id}"/>
+                    <input type="hidden" name="gymAddressModel.id" th:value="${gymActivityModel.gymAddressModel.id}"/>
+                    <input type="hidden" name="activityModel.id" th:value="${gymActivityModel.activityModel.id}"/>
+
+                    <div class="row align-items-center text-center">
+                        <div class="col-6 col-lg-1 p-0">
+                            <label for="name" th:text="#{name}"></label>
+                        </div>
+                        <div class="col-6 col-lg-4 p-0">
+                            <input type="text" th:field="*{name}" class="form-control" id="name" />
+                        </div>
+                        <div class="col-6 col-lg-1 p-0">
+                            <label for="roomName" th:text="#{room.name}"></label>
+                        </div>
+                        <div class="col-6 col-lg-4 p-0">
+                            <input type="text" th:field="*{roomName}" class="form-control" id="roomName" />
+                        </div>
+
+                        <div class="col-6 col-lg-1 p-0">
+                            <label for="capacity" th:text="#{capacity}"></label>
+                        </div>
+                        <div class="col-6 col-lg-1 p-0">
+                            <input type="number" th:field="*{capacity}" class="form-control" id="capacity" />
+                        </div>
+                    </div>
+
+                    <div class="row align-items-center d-flex flex-wrap">
+                        <div class="col-6 col-lg-2 p-0">
+                            <div class="form-check">
+                                <input type="checkbox" th:field="*{adult}" class="form-check-input" id="adult" />
+                                <label class="form-check-label" for="adult" th:text="#{adult}" name="label-ami"></label>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-2 p-0">
+                            <div class="form-check">
+                                <input type="checkbox" th:field="*{minor}" class="form-check-input" id="minor" />
+                                <label class="form-check-label" for="minor" th:text="#{minor}" name="label-ami"></label>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-2 p-0">
+                            <div class="form-check">
+                                <input type="checkbox" th:field="*{inclusive}" class="form-check-input" id="inclusive" />
+                                <label class="form-check-label" for="inclusive" th:text="#{inclusive}" name="label-ami"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row align-items-center text-center">
+                        <div class="col-6 col-lg-1 p-0">
+                            <label for="specificStartDate" th:text="#{start.date}"></label>
+                        </div>
+                        <div class="col-6 col-lg-2 p-0">
+                            <input type="date" th:field="*{specificStartDate}" class="form-control" id="specificStartDate" />
+                        </div>
+                        <div class="col-6 col-lg-1 p-0">
+                            <label for="specificEndDate" th:text="#{end.date}"></label>
+                        </div>
+                        <div class="col-6 col-lg-2 p-0">
+                            <input type="date" th:field="*{specificEndDate}" class="form-control" id="specificEndDate" />
+                        </div>
+
+                        <div class="col-6 col-lg-1 p-0">
+                            <label for="startTime" th:text="#{start.time}"></label>
+                        </div>
+                        <div class="col-6 col-lg-2 p-0">
+                            <input type="time" th:field="*{startTime}" class="form-control" id="startTime" />
+                        </div>
+                        <div class="col-6 col-lg-1 p-0">
+                            <label for="endTime" th:text="#{end.time}"></label>
+                        </div>
+                        <div class="col-6 col-lg-2 p-0">
+                            <input type="time" th:field="*{endTime}" class="form-control" id="endTime" />
+                        </div>
+                        <div class="col-md-4">
+                        </div>
+                    </div>
+
+                    <div class="row align-items-center d-flex flex-wrap">
+                        <div class="col-4 col-lg-2 p-0">
+                            <div class="form-check">
+                                <input type="checkbox" th:field="*{monday}" class="form-check-input" id="monday" />
+                                <label class="form-check-label" for="monday" th:text="#{monday}" name="label-week"></label>
+                            </div>
+                        </div>
+                        <div class="col-4 col-lg-2 p-0">
+                            <div class="form-check">
+                                <input type="checkbox" th:field="*{tuesday}" class="form-check-input" id="tuesday" />
+                                <label class="form-check-label" for="tuesday" th:text="#{tuesday}" name="label-week"></label>
+                            </div>
+                        </div>
+                        <div class="col-4 col-lg-2 p-0">
+                            <div class="form-check">
+                                <input type="checkbox" th:field="*{wednesday}" class="form-check-input" id="wednesday" />
+                                <label class="form-check-label" for="wednesday" th:text="#{wednesday}" name="label-week"></label>
+                            </div>
+                        </div>
+                        <div class="col-4 col-lg-2 p-0">
+                            <div class="form-check">
+                                <input type="checkbox" th:field="*{thursday}" class="form-check-input" id="thursday" />
+                                <label class="form-check-label" for="thursday" th:text="#{thursday}" name="label-week"></label>
+                            </div>
+                        </div>
+                        <div class="col-4 col-lg-2 p-0">
+                            <div class="form-check">
+                                <input type="checkbox" th:field="*{friday}" class="form-check-input" id="friday" />
+                                <label class="form-check-label" for="friday" th:text="#{friday}" name="label-week"></label>
+                            </div>
+                        </div>
+                        <div class="col-4 col-lg-2 p-0">
+                            <div class="form-check">
+                                <input type="checkbox" th:field="*{saturday}" class="form-check-input" id="saturday" />
+                                <label class="form-check-label" for="saturday" th:text="#{saturday}" name="label-week"></label>
+                            </div>
+                        </div>
+                        <div class="col-4 col-lg-2 p-0">
+                            <div class="form-check">
+                                <input type="checkbox" th:field="*{sunday}" class="form-check-input" id="sunday" />
+                                <label class="form-check-label" for="sunday" th:text="#{sunday}" name="label-week"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row align-items-center text-center">
+                        <div class="d-none col-lg-2 p-0">
+                        </div>
+                        <div class="col-6 col-lg-1 p-0">
+                            <label for="price" th:text="#{price}"></label>
+                        </div>
+                        <div class="col-6 col-lg-2 p-0">
+                            <input type="number" th:field="*{price}" id="price" class="form-control" placeholder="0.00" step="0.01" min="0">
+                        </div>
+                        <div class="col-6 col-lg-2 p-0">
+                        </div>
+                        <div class="col-6 col-lg-2 p-0">
+                            <button class="btn btn-success" type="submit"><span th:text="#{save}"></span></button>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="d-none col-lg-6">
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <span id="thereIsError" name="errorSpan" class="d-none" th:text="#{fillObligatory}"></span>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row mb-3">
+                    <div class="col-1">
+                    </div>
+                    <div class="col-10 text-center">
+                        <ul id="sortable" class="list-group mb-1">
+                            <li th:each="unit : ${gymActivityScheduleModelList}" th:value="${unit.id}" class="list-group-item move">
+                                <span th:text="${unit.name}+' / '"></span>
+                                <span th:if="${unit.adult}" th:text="#{adult}+' / '"></span>
+                                <span th:if="${unit.minor}" th:text="#{minor}+' / '"></span>
+                                <span th:if="${unit.inclusive}" th:text="#{inclusive}+' / '"></span>
+                                <span th:if="${unit.monday}" th:text="#{monday.short}+' '"></span>
+                                <span th:if="${unit.tuesday}" th:text="#{tuesday.short}+' '"></span>
+                                <span th:if="${unit.wednesday}" th:text="#{wednesday.short}+' '"></span>
+                                <span th:if="${unit.thursday}" th:text="#{thursday.short}+' '"></span>
+                                <span th:if="${unit.friday}" th:text="#{friday.short}+' '"></span>
+                                <span th:if="${unit.saturday}" th:text="#{saturday.short}+' '"></span>
+                                <span th:if="${unit.sunday}" th:text="#{sunday.short}+' '"></span>
+                                <span>/ </span>
+                                <span th:text="${unit.startTime}+' - '"></span>
+                                <span th:text="${unit.endTime}+' / '"></span>
+                                <span th:text="${#calendars.format(unit.specificStartDate,'dd/MM/yyyy')}+' - '"></span>
+                                <span th:text="${#calendars.format(unit.specificEndDate,'dd/MM/yyyy')}+' / '"></span>
+                                <span th:text="#{price}+': '"></span>
+                                <span th:text="${unit.price}+' / '"></span>
+                                <span th:text="${unit.roomName}+' '"></span>
+                                <span th:text="${unit.capacity}"></span>
+                                <a class="btn btn-info" href="#" th:href="@{/gymActivity/activitySchedule/__${unit.id}__}">
+                                    <span th:text="#{edit}"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-1">
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </body>
+
+    <footer th:replace="~{static/footer :: footer}"></footer>
+</html>

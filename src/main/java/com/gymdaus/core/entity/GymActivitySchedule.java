@@ -22,6 +22,8 @@ public class GymActivitySchedule {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gymScheduleGenerator")
     private Long id;
     private Long gymActivityId;
+    private Long activityId;
+    private Long gymAddressId;
     private boolean monday;
     private boolean tuesday;
     private boolean wednesday;

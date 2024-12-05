@@ -20,6 +20,7 @@ public class GymActivity {
     private Long id;
     private Long activityId;
     private Long gymId;
+    private Long gymAddressId;
     @Column(nullable = false)
     private Date registrationDate;
     @Column(nullable = false)

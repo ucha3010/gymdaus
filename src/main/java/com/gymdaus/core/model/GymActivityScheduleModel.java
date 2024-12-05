@@ -3,7 +3,7 @@ package com.gymdaus.core.model;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.OffsetTime;
+import java.time.LocalTime;
 import java.util.Date;
 
 @Getter
@@ -21,15 +21,15 @@ public class GymActivityScheduleModel {
     private boolean friday;
     private boolean saturday;
     private boolean sunday;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date specificStartDate;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date specificEndDate;
     //OffsetTime time = OffsetTime.of(15, 30, 0, 0, ZoneOffset.ofHours(-5)); // 15:30 con zona horaria UTC-5
     @DateTimeFormat(pattern = "HH:mm")
-    private OffsetTime startTime;
+    private LocalTime startTime;
     @DateTimeFormat(pattern = "HH:mm")
-    private OffsetTime endTime;
+    private LocalTime endTime;
     private String name;
     private String roomName;
     private boolean adult;
@@ -38,6 +38,8 @@ public class GymActivityScheduleModel {
     private Double price;
     private int capacity;
     private GymActivityModel gymActivityModel;
+    private GymAddressModel gymAddressModel;
+    private ActivityModel activityModel;
     private int position;
 
 }

@@ -31,6 +31,15 @@ public class GymActivityScheduleServiceImpl implements GymActivityScheduleServic
     }
 
     @Override
+    public List<GymActivityScheduleModel> findAllByGymAddressIdAndActivityId(Long gymAddressId, Long activityId) {
+        List<GymActivityScheduleModel> gymActivityScheduleModelList = new ArrayList<>();
+        for (GymActivitySchedule gymActivitySchedule : gymActivityScheduleRepository.findAllByGymAddressIdAndActivityIdOrderByPositionAsc(gymAddressId, activityId)) {
+            gymActivityScheduleModelList.add(mapperGymActivitySchedule.entity2Model(gymActivitySchedule));
+        }
+        return gymActivityScheduleModelList;
+    }
+
+    @Override
     public GymActivityScheduleModel findById(Long id) {
         try {
             return mapperGymActivitySchedule.entity2Model(gymActivityScheduleRepository.findById(id).orElse(null));
@@ -62,16 +71,16 @@ public class GymActivityScheduleServiceImpl implements GymActivityScheduleServic
     }
 
     @Override
-    public void dragOfPosition(int initialPosition, int finalPosition) {
-        GymActivitySchedule gymActivitySchedule = gymActivityScheduleRepository.findByPosition(initialPosition);
+    public void dragOfPosition(Long gymAddressId, Long activityId, int initialPosition, int finalPosition) {
+        GymActivitySchedule gymActivitySchedule = gymActivityScheduleRepository.findByGymAddressIdAndActivityIdAndPosition(gymAddressId, activityId, initialPosition);
         if (initialPosition > finalPosition) {
             for (int i = initialPosition - 1; i >= finalPosition; i--) {
-                moveItem(i, true);
+                moveItem(gymAddressId, activityId, i, true);
             }
         }
         if (initialPosition < finalPosition) {
             for (int i = initialPosition + 1; i <= finalPosition; i++) {
-                moveItem(i, false);
+                moveItem(gymAddressId, activityId, i, false);
             }
         }
         gymActivitySchedule.setPosition(finalPosition);
@@ -79,8 +88,8 @@ public class GymActivityScheduleServiceImpl implements GymActivityScheduleServic
     }
 
     @Override
-    public int findMaxPosition() {
-        GymActivitySchedule gymActivitySchedule = gymActivityScheduleRepository.findTopByOrderByPositionDesc();
+    public int findMaxPosition(Long gymAddressId, Long activityId) {
+        GymActivitySchedule gymActivitySchedule = gymActivityScheduleRepository.findTopByGymAddressIdAndActivityIdOrderByPositionDesc(gymAddressId, activityId);
         if (gymActivitySchedule != null) {
             return gymActivitySchedule.getPosition();
         } else {
@@ -88,8 +97,8 @@ public class GymActivityScheduleServiceImpl implements GymActivityScheduleServic
         }
     }
 
-    private void moveItem(int position, boolean moveUp) {
-        GymActivitySchedule gymActivitySchedule = gymActivityScheduleRepository.findByPosition(position);
+    private void moveItem(Long gymAddressId, Long activityId, int position, boolean moveUp) {
+        GymActivitySchedule gymActivitySchedule = gymActivityScheduleRepository.findByGymAddressIdAndActivityIdAndPosition(gymAddressId, activityId, position);
         gymActivitySchedule.setPosition(position + (moveUp ? 1 : -1));
         gymActivityScheduleRepository.save(gymActivitySchedule);
     }

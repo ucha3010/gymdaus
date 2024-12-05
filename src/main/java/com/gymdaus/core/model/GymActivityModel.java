@@ -19,6 +19,7 @@ public class GymActivityModel {
     private String registrationUser;
     private ActivityModel activityModel;
     private GymModel gymModel;
+    private GymAddressModel gymAddressModel;
     List<GymActivityScheduleModel> gymActivityScheduleModelList;
     private List<EnrollmentModel> enrollmentModelList;
 

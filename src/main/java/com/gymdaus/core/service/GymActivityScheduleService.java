@@ -9,6 +9,8 @@ public interface GymActivityScheduleService {
 
     List<GymActivityScheduleModel> findAll();
 
+    List<GymActivityScheduleModel> findAllByGymAddressIdAndActivityId(Long gymAddressId, Long activityId);
+
     GymActivityScheduleModel findById(Long id);
 
     void add(GymActivityScheduleModel model);
@@ -17,8 +19,8 @@ public interface GymActivityScheduleService {
 
     void delete(Long id);
 
-    void dragOfPosition(int initialPosition, int finalPosition);
+    void dragOfPosition(Long gymAddressId, Long activityId, int initialPosition, int finalPosition);
 
-    int findMaxPosition();
+    int findMaxPosition(Long gymAddressId, Long activityId);
 
 }
