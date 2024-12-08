@@ -24,7 +24,7 @@ public class GymActivityScheduleServiceImpl implements GymActivityScheduleServic
     @Override
     public List<GymActivityScheduleModel> findAll() {
         List<GymActivityScheduleModel> gymActivityScheduleModelList = new ArrayList<>();
-        for (GymActivitySchedule gymActivitySchedule : gymActivityScheduleRepository.findAllByOrderByPositionAsc()) {
+        for (GymActivitySchedule gymActivitySchedule : gymActivityScheduleRepository.findAllByEnabledTrueOrderByPositionAsc()) {
             gymActivityScheduleModelList.add(mapperGymActivitySchedule.entity2Model(gymActivitySchedule));
         }
         return gymActivityScheduleModelList;
@@ -33,7 +33,7 @@ public class GymActivityScheduleServiceImpl implements GymActivityScheduleServic
     @Override
     public List<GymActivityScheduleModel> findAllByGymAddressIdAndActivityId(Long gymAddressId, Long activityId) {
         List<GymActivityScheduleModel> gymActivityScheduleModelList = new ArrayList<>();
-        for (GymActivitySchedule gymActivitySchedule : gymActivityScheduleRepository.findAllByGymAddressIdAndActivityIdOrderByPositionAsc(gymAddressId, activityId)) {
+        for (GymActivitySchedule gymActivitySchedule : gymActivityScheduleRepository.findAllByGymAddressIdAndActivityIdAndEnabledTrueOrderByPositionAsc(gymAddressId, activityId)) {
             gymActivityScheduleModelList.add(mapperGymActivitySchedule.entity2Model(gymActivitySchedule));
         }
         return gymActivityScheduleModelList;
@@ -50,6 +50,7 @@ public class GymActivityScheduleServiceImpl implements GymActivityScheduleServic
 
     @Override
     public void add(GymActivityScheduleModel gymActivityScheduleModel) {
+        gymActivityScheduleModel.setEnabled(Boolean.TRUE);
         gymActivityScheduleRepository.save(mapperGymActivitySchedule.model2Entity(gymActivityScheduleModel));
     }
 
@@ -60,8 +61,13 @@ public class GymActivityScheduleServiceImpl implements GymActivityScheduleServic
 
     @Override
     public void delete(Long id) {
-        gymActivityScheduleRepository.deleteById(id);
-        List<GymActivitySchedule> gymActivityScheduleList = gymActivityScheduleRepository.findAllByOrderByPositionAsc();
+        GymActivityScheduleModel gymActivityScheduleModel = findById(id);
+        gymActivityScheduleModel.setEnabled(Boolean.FALSE);
+        gymActivityScheduleModel.setPosition(gymActivityScheduleRepository.countByGymAddressIdAndActivityIdOrderByPositionAsc(
+                gymActivityScheduleModel.getGymAddressModel().getId(), gymActivityScheduleModel.getActivityModel().getId()).intValue());
+        update(gymActivityScheduleModel);
+        List<GymActivitySchedule> gymActivityScheduleList = gymActivityScheduleRepository.findAllByGymAddressIdAndActivityIdOrderByPositionAsc(
+                gymActivityScheduleModel.getGymAddressModel().getId(), gymActivityScheduleModel.getActivityModel().getId());
         for (int i = 0; i < gymActivityScheduleList.size(); i++) {
             if (gymActivityScheduleList.get(i).getPosition() != i) {
                 gymActivityScheduleList.get(i).setPosition(i);

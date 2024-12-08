@@ -35,6 +35,7 @@ public class MapperGymActivity {
             }
             localObject.setRegistrationDate(externObject.getRegistrationDate());
             localObject.setRegistrationUser(externObject.getRegistrationUser());
+            localObject.setEnabled(externObject.isEnabled());
         }
         return localObject;
     }
@@ -60,6 +61,7 @@ public class MapperGymActivity {
             }
             localObject.setRegistrationDate(externObject.getRegistrationDate());
             localObject.setRegistrationUser(externObject.getRegistrationUser());
+            localObject.setEnabled(externObject.isEnabled());
         }
         return localObject;
     }

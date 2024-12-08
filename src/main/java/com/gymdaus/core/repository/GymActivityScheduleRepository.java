@@ -11,15 +11,21 @@ public interface GymActivityScheduleRepository extends JpaRepository<GymActivity
 
     List<GymActivitySchedule> findAllByOrderByPositionAsc();
 
+    List<GymActivitySchedule> findAllByEnabledTrueOrderByPositionAsc();
+
+    Long countByGymAddressIdAndActivityIdOrderByPositionAsc(Long gymAddressId, Long activityId);
+
     List<GymActivitySchedule> findAllByGymAddressIdAndActivityIdOrderByPositionAsc(Long gymAddressId, Long activityId);
+
+    List<GymActivitySchedule> findAllByGymAddressIdAndActivityIdAndEnabledTrueOrderByPositionAsc(Long gymAddressId, Long activityId);
 
     GymActivitySchedule findByGymAddressIdAndActivityIdAndPosition(Long gymAddressId, Long activityId, int position);
 
     GymActivitySchedule findTopByGymAddressIdAndActivityIdOrderByPositionDesc(Long gymAddressId, Long activityId);
 
-    List<GymActivitySchedule> findAllByGymActivityIdAndAdultTrue(Long gymActivityId);
+    List<GymActivitySchedule> findAllByGymActivityIdAndAdultTrueAndEnabledTrue(Long gymActivityId);
 
-    List<GymActivitySchedule> findAllByGymActivityIdAndMinorTrue(Long gymActivityId);
+    List<GymActivitySchedule> findAllByGymActivityIdAndMinorTrueAndEnabledTrue(Long gymActivityId);
 
-    List<GymActivitySchedule> findAllByGymActivityIdAndInclusiveTrue(Long gymActivityId);
+    List<GymActivitySchedule> findAllByGymActivityIdAndInclusiveTrueAndEnabledTrue(Long gymActivityId);
 }

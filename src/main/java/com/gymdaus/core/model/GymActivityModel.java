@@ -17,6 +17,7 @@ public class GymActivityModel {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date registrationDate;
     private String registrationUser;
+    private boolean enabled;
     private ActivityModel activityModel;
     private GymModel gymModel;
     private GymAddressModel gymAddressModel;

@@ -25,5 +25,6 @@ public class GymActivity {
     private Date registrationDate;
     @Column(nullable = false)
     private String registrationUser;
+    private boolean enabled;
 
 }

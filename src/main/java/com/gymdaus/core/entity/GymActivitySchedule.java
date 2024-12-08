@@ -47,5 +47,6 @@ public class GymActivitySchedule {
     private Double price;
     private int capacity;
     private int position;
+    private boolean enabled;
 
 }

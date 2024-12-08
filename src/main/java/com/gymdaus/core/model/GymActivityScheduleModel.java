@@ -41,5 +41,6 @@ public class GymActivityScheduleModel {
     private GymAddressModel gymAddressModel;
     private ActivityModel activityModel;
     private int position;
+    private boolean enabled;
 
 }

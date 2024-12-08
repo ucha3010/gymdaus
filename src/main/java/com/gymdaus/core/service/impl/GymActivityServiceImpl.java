@@ -38,7 +38,7 @@ public class GymActivityServiceImpl implements GymActivityService {
     @Override
     public List<GymActivityModel> findAllByGymId(Long gymId) {
         List<GymActivityModel> gymActivityModelList = new ArrayList<>();
-        for (GymActivity gymActivity : gymActivityRepository.findAllByGymIdOrderByRegistrationDateAsc(gymId)) {
+        for (GymActivity gymActivity : gymActivityRepository.findAllByGymIdAndEnabledTrueOrderByRegistrationDateAsc(gymId)) {
             gymActivityModelList.add(mapperGymActivity.entity2Model(gymActivity));
         }
         return gymActivityModelList;
@@ -55,6 +55,7 @@ public class GymActivityServiceImpl implements GymActivityService {
 
     @Override
     public GymActivityModel add(GymActivityModel gymActivityModel) {
+        gymActivityModel.setEnabled(Boolean.TRUE);
         gymActivityModel.setRegistrationDate(new Date());
         return mapperGymActivity.entity2Model(gymActivityRepository.save(mapperGymActivity.model2Entity(gymActivityModel)));
     }
@@ -67,9 +68,11 @@ public class GymActivityServiceImpl implements GymActivityService {
     @Override
     public void delete(Long id) {
         GymActivityModel gymActivityModel = findById(id);
-        gymActivityRepository.deleteById(id);
-        for (GymActivitySchedule gymActivitySchedule : gymActivityScheduleRepository.findAllByGymAddressIdAndActivityIdOrderByPositionAsc(gymActivityModel.getGymAddressModel().getId(), gymActivityModel.getActivityModel().getId())) {
-            gymActivityScheduleRepository.delete(gymActivitySchedule);
+        gymActivityModel.setEnabled(Boolean.FALSE);
+        update(gymActivityModel);
+        for (GymActivitySchedule gymActivitySchedule : gymActivityScheduleRepository.findAllByGymAddressIdAndActivityIdAndEnabledTrueOrderByPositionAsc(gymActivityModel.getGymAddressModel().getId(), gymActivityModel.getActivityModel().getId())) {
+            gymActivitySchedule.setEnabled(Boolean.FALSE);
+            gymActivityScheduleRepository.save(gymActivitySchedule);
         }
     }
 }

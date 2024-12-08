@@ -51,6 +51,7 @@ public class MapperGymActivitySchedule {
             localObject.setPrice(externObject.getPrice());
             localObject.setCapacity(externObject.getCapacity());
             localObject.setPosition(externObject.getPosition());
+            localObject.setEnabled(externObject.isEnabled());
         }
         return localObject;
     }
@@ -93,6 +94,7 @@ public class MapperGymActivitySchedule {
             localObject.setPrice(externObject.getPrice());
             localObject.setCapacity(externObject.getCapacity());
             localObject.setPosition(externObject.getPosition());
+            localObject.setEnabled(externObject.isEnabled());
         }
         return localObject;
     }
