@@ -29,11 +29,11 @@
             </section>
 
             <section sec:authorize="hasRole('ROLE_ADMIN')" th:if="${gymModel != null}">
-                <div class="row row-cols-1 row-cols-md-3 g-4">
+                <div th:attr="class=${gymUserModel.gymRole == 'ROLE_MANAGER' ? 'row row-cols-1 row-cols-md-2 g-4' : 'row row-cols-1 g-4'}">
                     <div class="col">
                         <h5 class="text-center" th:text="#{gym}"></h5>
                         <div class="d-grid gap-2">
-                            <a class="btn btn-primary" th:href="@{/gym/enrollments/__${gymModel.id}__}"><span
+                            <a class="btn btn-primary" th:href="@{/enrollment/enrollments/__${gymModel.id}__}"><span
                                     th:text="#{enrollments}"></span></a>
                             <a th:if="${gymUserModel.gymRole == 'ROLE_MANAGER'}" class="btn btn-primary"
                                th:href="@{/gym/gym-user/__${gymModel.id}__}"><span
@@ -46,28 +46,27 @@
                                     th:text="#{poomsaes}"></span></a>
                             <a class="btn btn-primary" th:href="@{/gym/photos/__${gymModel.id}__}"><span
                                     th:text="#{photos}"></span></a>
-                            <a class="btn btn-primary" th:href="@{/gym/addresses/__${gymModel.id}__}"><span th:text="#{addresses}"></span></a>
-                            <a class="btn btn-primary" th:href="@{/gym/documents/__${gymModel.id}__}"><span th:text="#{documents}"></span></a>
-                            <a class="btn btn-primary" th:href="@{/participatingEntity/participants/__${gymModel.id}__}"><span
+                            <a class="btn btn-primary" th:href="@{/gym/addresses/__${gymModel.id}__}"><span
+                                    th:text="#{addresses}"></span></a>
+                            <a class="btn btn-primary" th:href="@{/gym/documents/__${gymModel.id}__}"><span
+                                    th:text="#{documents}"></span></a>
+                            <a class="btn btn-primary"
+                               th:href="@{/participatingEntity/participants/__${gymModel.id}__}"><span
                                     th:text="#{participating.entities}"></span></a>
                         </div>
                     </div>
-                    <div class="col">
+                    <div th:if="${gymUserModel.gymRole == 'ROLE_MANAGER'}" class="col">
                         <h5 class="text-center" th:text="#{menu1.activities}"></h5>
-                        <div class="d-grid gap-2">
-                            <a th:if="${gymUserModel.gymRole == 'ROLE_MANAGER'}" class="btn btn-secondary"
-                               th:href="@{/gymActivity/activities/__${gymModel.id}__}"><span th:text="#{associate.activity}"></span></a>
-                            <a class="btn btn-secondary" th:href="@{/gym/}"><span th:text="#{user.enrollments}"></span></a>
+                        <div class="d-grid gap-2 mb-3">
+                            <a class="btn btn-secondary" th:href="@{/gymActivity/activities/__${gymModel.id}__}">
+                                <span th:text="#{associate.activity}"></span>
+                            </a>
                         </div>
-                    </div>
-                    <div class="col">
                         <h5 class="text-center" th:text="#{menu1.more.registrations}"></h5>
                         <div class="d-grid gap-2">
-                            <a th:if="${gymUserModel.gymRole == 'ROLE_MANAGER'}" class="btn btn-success"
-                               th:href="@{/gym/}"><span
-                                    th:text="#{associate.more.enrollments}"></span></a>
-                            <a class="btn btn-success" th:href="@{/gym/}"><span
-                                    th:text="#{user.enrollments}"></span></a>
+                            <a class="btn btn-success" th:href="@{/gym/}">
+                                <span th:text="#{associate.more.enrollments}"></span>
+                            </a>
                         </div>
                     </div>
                 </div>

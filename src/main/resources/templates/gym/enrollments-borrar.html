@@ -10,26 +10,11 @@
         <title th:text="#{enrollments}"></title>
 
         <script>
-            function viewDetail(id){
-                var relativeUrl = "enrollment/enrollment/" + id;
-                var domain = getDomain(location.href);
-                location.href = domain + relativeUrl;
-            }
-
-            // Filtrar filas de la tabla según el valor seleccionado en el desplegable
-            function filterTable() {
-                const selectedSection = document.getElementById("sectionSelect").value;
-                const rows = document.querySelectorAll("tbody tr");
-
-                rows.forEach(row => {
-                    const rowSection = row.getAttribute("data-section");
-                    if (selectedSection === "all" || rowSection === selectedSection) {
-                        row.style.display = "";
-                    } else {
-                        row.style.display = "none";
-                    }
-                });
-            }
+        function viewDetail(id){
+            var relativeUrl = "gym/enrollment/" + id;
+            var domain = getDomain(location.href);
+            location.href = domain + relativeUrl;
+        }
 
         </script>
 
@@ -62,19 +47,6 @@
         </div>
 
         <section sec:authorize="hasRole('ROLE_ADMIN')">
-            <div class="row">
-                <div class="col-1 col-md-4">
-                </div>
-                <div class="col-10 col-md-4">
-                    <select id="sectionSelect" class="form-select" onchange="filterTable()">
-                        <option value="all"></option>
-                        <option th:each="section : ${sectionList}" th:value="${section}" th:text="${section}"></option>
-                    </select>
-                </div>
-                <div class="col-1 col-md-4">
-                </div>
-            </div>
-
             <h5 class="d-lg-none" th:text="#{to.see.full.table}"></h5>
             <table class="table table-striped table-hover sortable">
                 <thead>
@@ -103,7 +75,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="enrollment : ${enrollmentModelList}" th:attr="onclick=|viewDetail('${enrollment.id}')|, data-section=${enrollment.gymActivityModel.gymAddressModel.name}">
+                <tr th:each="enrollment : ${enrollmentModelList}" th:attr="onclick=|viewDetail('${enrollment.id}')|">
                     <td class="text-center"><span th:text="${enrollment.id}"></span></td>
                     <td><span th:text="${enrollment.userEnrollmentName}"></span></td>
                     <td><span th:text="${enrollment.userEnrollmentLastname}"></span></td>

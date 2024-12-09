@@ -147,7 +147,7 @@
                 </div>
             </section>
 
-            <section sec:authorize="hasRole('ROLE_ADMIN')">
+            <section sec:authorize="hasRole('ROLE_ADMIN')" class="backgroundColorGreen">
                 <form action="#" th:action="@{/gymActivity/activitySchedule}" th:object="${gymActivityScheduleModel}" method="post"
                       onsubmit="return validate()">
 
@@ -298,7 +298,9 @@
                         </div>
                     </div>
                 </form>
+            </section>
 
+            <section sec:authorize="hasRole('ROLE_ADMIN')">
                 <div class="row mb-3">
                     <div class="col-1">
                     </div>

@@ -35,8 +35,6 @@ public class GymController {
     @Autowired
     private EmailService emailService;
     @Autowired
-    private EnrollmentService enrollmentService;
-    @Autowired
     private GymAddressService gymAddressService;
     @Autowired
     private GymDocumentManagerService gymDocumentManagerService;
@@ -271,34 +269,6 @@ public class GymController {
         }
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return emailPassword(modelAndView, passwordModel.getGymId());
-    }
-
-    @GetMapping("/enrollments/{gymId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ModelAndView gymEnrollments(ModelAndView modelAndView, @PathVariable Long gymId) {
-        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymId, getClass());
-        securityService.userAccessValidation("/gym/enrollments/" + gymId);
-        UserModel user = utilService.basicDataCharge(modelAndView);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, false, "/gym/enrollments/" + gymId);
-        modelAndView.setViewName("gym/enrollments");
-        modelAndView.addObject("gymModel", gymService.findByIdEnabled(gymId));
-        modelAndView.addObject("enrollmentModelList", enrollmentService.findByGymId(gymId));
-        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
-        return modelAndView;
-    }
-
-    @GetMapping("/enrollment/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ModelAndView gymEnrollment(ModelAndView modelAndView, @PathVariable Long id) {
-        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), id, getClass());
-        securityService.userAccessValidation("/gym/enrollment/" + id);
-        UserModel user = utilService.basicDataCharge(modelAndView);
-        EnrollmentModel enrollmentModel = enrollmentService.findById(id);
-        securityService.enabledAdministrationGymUser(user.getUsername(), enrollmentModel.getGymModel().getId(), false, "/gym/enrollment/" + id);
-        modelAndView.setViewName("gym/enrollment-detail");
-        modelAndView.addObject("enrollment", enrollmentModel);
-        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
-        return modelAndView;
     }
 
     @GetMapping("/photos/{gymId}")
@@ -537,7 +507,7 @@ public class GymController {
     @PostMapping("/upload-document")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ModelAndView uploadDocument(ModelAndView modelAndView, @RequestParam("file") MultipartFile file,
-            @RequestParam("section") String section, @RequestParam("gymId") Long gymId) {
+                                       @RequestParam("section") String section, @RequestParam("gymId") Long gymId) {
 
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), file.getOriginalFilename(), getClass());
         securityService.userAccessValidation("/gym/upload-document");
