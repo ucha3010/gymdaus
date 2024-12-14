@@ -10,15 +10,13 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class AgeCategoryModel {
+public class GymMoreRegistrationGymCategoryModel {
 
     private Long id;
-    private String name;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date startAge;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date endAge;
-    private int position;
+    private Date registrationDate;
+    private String registrationUser;
     private GymMoreRegistrationModel gymMoreRegistrationModel;
+    private GymCategoryModel gymCategoryModel;
 
 }

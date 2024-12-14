@@ -2,10 +2,12 @@ package com.gymdaus.core.service.impl;
 
 import com.gymdaus.core.entity.GymMoreRegistration;
 import com.gymdaus.core.mapper.MapperGymMoreRegistration;
+import com.gymdaus.core.model.GymCategoryModel;
+import com.gymdaus.core.model.GymMoreRegistrationGymCategoryModel;
 import com.gymdaus.core.model.GymMoreRegistrationModel;
 import com.gymdaus.core.repository.GymMoreRegistrationRepository;
+import com.gymdaus.core.service.GymMoreRegistrationGymCategoryService;
 import com.gymdaus.core.service.GymMoreRegistrationService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,8 @@ public class GymMoreRegistrationServiceImpl implements GymMoreRegistrationServic
 
     @Autowired
     private MapperGymMoreRegistration mapperGymMoreRegistration;
+    @Autowired
+    private GymMoreRegistrationGymCategoryService gymMoreRegistrationGymCategoryService;
 
     @Override
     public List<GymMoreRegistrationModel> findAll() {
@@ -32,11 +36,20 @@ public class GymMoreRegistrationServiceImpl implements GymMoreRegistrationServic
 
     @Override
     public GymMoreRegistrationModel findById(Long id) {
-        try {
-            return mapperGymMoreRegistration.entity2Model(gymMoreRegistrationRepository.findById(id).orElse(null));
-        } catch (EntityNotFoundException e) {
-            return new GymMoreRegistrationModel();
+        GymMoreRegistrationModel gymMoreRegistrationModel = mapperGymMoreRegistration.entity2Model(gymMoreRegistrationRepository.findById(id).orElse(null));
+        if (gymMoreRegistrationModel != null) {
+            List<GymMoreRegistrationGymCategoryModel> gymMoreRegistrationGymCategoryModelList =
+                    gymMoreRegistrationGymCategoryService.findByGymMoreRegistration(id);
+            if (gymMoreRegistrationGymCategoryModelList != null && !gymMoreRegistrationGymCategoryModelList.isEmpty()) {
+                List<GymCategoryModel> gymCategoryModelList = new ArrayList<>();
+                for (GymMoreRegistrationGymCategoryModel gymMoreRegistrationGymCategoryModel : gymMoreRegistrationGymCategoryModelList) {
+                    gymCategoryModelList.add(gymMoreRegistrationGymCategoryModel.getGymCategoryModel());
+                }
+                gymMoreRegistrationModel.setGymCategoryModelList(gymCategoryModelList);
+            }
         }
+        return gymMoreRegistrationModel;
+
     }
 
     @Override

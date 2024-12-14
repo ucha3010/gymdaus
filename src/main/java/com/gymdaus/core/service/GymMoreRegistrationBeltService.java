@@ -9,6 +9,8 @@ public interface GymMoreRegistrationBeltService {
 
     List<GymMoreRegistrationBeltModel> findAll();
 
+    List<GymMoreRegistrationBeltModel> findAllByGymMoreRegistration(Long gymMoreRegistrationId);
+
     GymMoreRegistrationBeltModel findById(Long id);
 
     void add(GymMoreRegistrationBeltModel model);

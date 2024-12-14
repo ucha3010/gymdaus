@@ -1,9 +1,8 @@
 package com.gymdaus.core.model;
 
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -14,15 +13,13 @@ public class GymCategoryModel {
 
     private Long id;
     private String name;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date startAge;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date endAge;
-    private AgeCategoryModel ageCategoryModel;
-    private GymMoreRegistrationBeltModel startBeltModel;
-    private GymMoreRegistrationBeltModel endBeltModel;
+    private int startBirthdayYear;
+    private int endBirthdayYear;
+    private GymModel gymModel;
     private GymPoomsaeModel gymPoomsaeModel;
     private int position;
-    private GymMoreRegistrationModel gymMoreRegistrationModel;
+    private List<GymBeltModel> gymBeltModelList;
+    private List<Long> beltIdList;
+    private String beltNameList;
 
 }

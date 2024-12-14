@@ -1,6 +1,7 @@
 package com.gymdaus.core.service.impl;
 
 import com.gymdaus.core.entity.GymCategory;
+import com.gymdaus.core.exception.RemoveException;
 import com.gymdaus.core.mapper.MapperGymCategory;
 import com.gymdaus.core.model.GymCategoryModel;
 import com.gymdaus.core.repository.GymCategoryRepository;
@@ -22,9 +23,9 @@ public class GymCategoryServiceImpl implements GymCategoryService {
     private MapperGymCategory mapperGymCategory;
 
     @Override
-    public List<GymCategoryModel> findAll() {
+    public List<GymCategoryModel> findAllByGymId(Long gymId) {
         List<GymCategoryModel> gymCategoryModelList = new ArrayList<>();
-        for (GymCategory gymCategory : gymCategoryRepository.findAllByOrderByPositionAsc()) {
+        for (GymCategory gymCategory : gymCategoryRepository.findAllByGymIdOrderByPositionAsc(gymId)) {
             gymCategoryModelList.add(mapperGymCategory.entity2Model(gymCategory));
         }
         return gymCategoryModelList;
@@ -40,8 +41,8 @@ public class GymCategoryServiceImpl implements GymCategoryService {
     }
 
     @Override
-    public void add(GymCategoryModel gymCategoryModel) {
-        gymCategoryRepository.save(mapperGymCategory.model2Entity(gymCategoryModel));
+    public GymCategoryModel add(GymCategoryModel gymCategoryModel) {
+        return mapperGymCategory.entity2Model(gymCategoryRepository.save(mapperGymCategory.model2Entity(gymCategoryModel)));
     }
 
     @Override
@@ -50,28 +51,35 @@ public class GymCategoryServiceImpl implements GymCategoryService {
     }
 
     @Override
-    public void delete(Long id) {
-        gymCategoryRepository.deleteById(id);
-        List<GymCategory> gymCategoryList = gymCategoryRepository.findAllByOrderByPositionAsc();
-        for (int i = 0; i < gymCategoryList.size(); i++) {
-            if (gymCategoryList.get(i).getPosition() != i) {
-                gymCategoryList.get(i).setPosition(i);
-                gymCategoryRepository.save(gymCategoryList.get(i));
+    public void delete(Long id) throws RemoveException {
+        GymCategory gymCategory = gymCategoryRepository.findById(id).orElse(null);
+        if (gymCategory != null) {
+            try {
+                gymCategoryRepository.deleteById(id);
+                List<GymCategory> gymCategoryList = gymCategoryRepository.findAllByGymIdOrderByPositionAsc(gymCategory.getGymId());
+                for (int i = 0; i < gymCategoryList.size(); i++) {
+                    if (gymCategoryList.get(i).getPosition() != i) {
+                        gymCategoryList.get(i).setPosition(i);
+                        gymCategoryRepository.save(gymCategoryList.get(i));
+                    }
+                }
+            } catch (Exception e) {
+                throw new RemoveException("1000", e.getMessage());
             }
         }
     }
 
     @Override
-    public void dragOfPosition(int initialPosition, int finalPosition) {
-        GymCategory gymCategory = gymCategoryRepository.findByPosition(initialPosition);
+    public void dragOfPosition(Long gymId, int initialPosition, int finalPosition) {
+        GymCategory gymCategory = gymCategoryRepository.findByGymIdAndPosition(gymId, initialPosition);
         if (initialPosition > finalPosition) {
             for (int i = initialPosition - 1; i >= finalPosition; i--) {
-                moveItem(i, true);
+                moveItem(gymId, i, true);
             }
         }
         if (initialPosition < finalPosition) {
             for (int i = initialPosition + 1; i <= finalPosition; i++) {
-                moveItem(i, false);
+                moveItem(gymId, i, false);
             }
         }
         gymCategory.setPosition(finalPosition);
@@ -79,8 +87,8 @@ public class GymCategoryServiceImpl implements GymCategoryService {
     }
 
     @Override
-    public int findMaxPosition() {
-        GymCategory gymCategory = gymCategoryRepository.findTopByOrderByPositionDesc();
+    public int findMaxPosition(Long gymId) {
+        GymCategory gymCategory = gymCategoryRepository.findTopByGymIdOrderByPositionDesc(gymId);
         if (gymCategory != null) {
             return gymCategory.getPosition();
         } else {
@@ -88,8 +96,8 @@ public class GymCategoryServiceImpl implements GymCategoryService {
         }
     }
 
-    private void moveItem(int position, boolean moveUp) {
-        GymCategory gymCategory = gymCategoryRepository.findByPosition(position);
+    private void moveItem(Long gymId, int position, boolean moveUp) {
+        GymCategory gymCategory = gymCategoryRepository.findByGymIdAndPosition(gymId, position);
         gymCategory.setPosition(position + (moveUp ? 1 : -1));
         gymCategoryRepository.save(gymCategory);
     }

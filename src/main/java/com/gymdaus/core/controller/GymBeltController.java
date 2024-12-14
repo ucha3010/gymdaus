@@ -87,7 +87,7 @@ public class GymBeltController {
         try {
             gymBeltService.delete(id);
         } catch (RemoveException re) {
-            modelAndView.addObject("removeProblem", "removeProblem");
+            modelAndView.addObject("removeProblem", re.getMessage());
             LoggerMapper.log(Level.ERROR, Utils.getMethodName(), re.getMessage(), this.getClass());
         }
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());

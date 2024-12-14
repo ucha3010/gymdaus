@@ -2,43 +2,54 @@ package com.gymdaus.core.mapper;
 
 import com.gymdaus.core.entity.GymCategory;
 import com.gymdaus.core.model.*;
+import com.gymdaus.core.service.GymBeltService;
+import com.gymdaus.core.service.GymCategoryGymBeltService;
+import com.gymdaus.core.service.GymPoomsaeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class MapperGymCategory {
+    @Autowired
+    private GymBeltService gymBeltService;
+    @Autowired
+    private GymCategoryGymBeltService gymCategoryGymBeltService;
+    @Autowired
+    private GymPoomsaeService gymPoomsaeService;
 
     public GymCategoryModel entity2Model(GymCategory externObject) {
         GymCategoryModel localObject = new GymCategoryModel();
         if (externObject != null) {
             localObject.setId(externObject.getId());
             localObject.setName(externObject.getName());
-            localObject.setStartAge(externObject.getStartAge());
-            localObject.setEndAge(externObject.getEndAge());
+            localObject.setStartBirthdayYear(externObject.getStartBirthdayYear());
+            localObject.setEndBirthdayYear(externObject.getEndBirthdayYear());
             localObject.setPosition(externObject.getPosition());
-            if (externObject.getGymMoreRegistrationId() != 0) {
-                GymMoreRegistrationModel gymMoreRegistrationModel = new GymMoreRegistrationModel();
-                gymMoreRegistrationModel.setId(externObject.getGymMoreRegistrationId());
-                localObject.setGymMoreRegistrationModel(gymMoreRegistrationModel);
-            }
-            if (externObject.getAgeCategoryId() != 0) {
-                AgeCategoryModel ageCategoryModel = new AgeCategoryModel();
-                ageCategoryModel.setId(externObject.getAgeCategoryId());
-                localObject.setAgeCategoryModel(ageCategoryModel);
-            }
-            if (externObject.getStartBeltId() != 0) {
-                GymMoreRegistrationBeltModel gymMoreRegistrationBeltModel = new GymMoreRegistrationBeltModel();
-                gymMoreRegistrationBeltModel.setId(externObject.getStartBeltId());
-                localObject.setStartBeltModel(gymMoreRegistrationBeltModel);
-            }
-            if (externObject.getEndBeltId() != 0) {
-                GymMoreRegistrationBeltModel gymMoreRegistrationBeltModel = new GymMoreRegistrationBeltModel();
-                gymMoreRegistrationBeltModel.setId(externObject.getEndBeltId());
-                localObject.setEndBeltModel(gymMoreRegistrationBeltModel);
+            if (externObject.getGymId() != 0) {
+                GymModel gymModel = new GymModel();
+                gymModel.setId(externObject.getGymId());
+                localObject.setGymModel(gymModel);
             }
             if (externObject.getPoomsaeId() != 0) {
-                GymPoomsaeModel gymPoomsaeModel = new GymPoomsaeModel();
-                gymPoomsaeModel.setId(externObject.getPoomsaeId());
-                localObject.setGymPoomsaeModel(gymPoomsaeModel);
+                localObject.setGymPoomsaeModel(gymPoomsaeService.findById(externObject.getPoomsaeId()));
+            }
+            List<GymCategoryGymBeltModel> gymCategoryGymBeltModelList = gymCategoryGymBeltService.findByGymCategory(externObject.getId());
+            if (gymCategoryGymBeltModelList != null && !gymCategoryGymBeltModelList.isEmpty()) {
+                List<GymBeltModel> gymBeltModelList = new ArrayList<>();
+                StringBuilder beltNameList = new StringBuilder();
+                for (int i=0; i<gymCategoryGymBeltModelList.size(); i++) {
+                    GymBeltModel gymBeltModel = gymBeltService.findById(gymCategoryGymBeltModelList.get(i).getGymBeltModel().getId());
+                    gymBeltModelList.add(gymBeltModel);
+                    beltNameList.append(gymBeltModel.getColor());
+                    if(i < gymCategoryGymBeltModelList.size() - 1) {
+                        beltNameList.append(", ");
+                    }
+                }
+                localObject.setBeltNameList(beltNameList.toString());
+                localObject.setGymBeltModelList(gymBeltModelList);
             }
         }
         return localObject;
@@ -49,28 +60,13 @@ public class MapperGymCategory {
         if (externObject != null) {
             localObject.setId(externObject.getId());
             localObject.setName(externObject.getName());
-            localObject.setStartAge(externObject.getStartAge());
-            localObject.setEndAge(externObject.getEndAge());
+            localObject.setStartBirthdayYear(externObject.getStartBirthdayYear());
+            localObject.setEndBirthdayYear(externObject.getEndBirthdayYear());
             localObject.setPosition(externObject.getPosition());
-            if (externObject.getGymMoreRegistrationModel() != null) {
-                localObject.setGymMoreRegistrationId(externObject.getGymMoreRegistrationModel().getId());
+            if (externObject.getGymModel() != null) {
+                localObject.setGymId(externObject.getGymModel().getId());
             } else {
-                localObject.setGymMoreRegistrationId(0L);
-            }
-            if (externObject.getAgeCategoryModel() != null) {
-                localObject.setAgeCategoryId(externObject.getAgeCategoryModel().getId());
-            } else {
-                localObject.setAgeCategoryId(0L);
-            }
-            if (externObject.getStartBeltModel() != null) {
-                localObject.setStartBeltId(externObject.getStartBeltModel().getId());
-            } else {
-                localObject.setStartBeltId(0L);
-            }
-            if (externObject.getEndBeltModel() != null) {
-                localObject.setEndBeltId(externObject.getEndBeltModel().getId());
-            } else {
-                localObject.setEndBeltId(0L);
+                localObject.setGymId(0L);
             }
             if (externObject.getGymPoomsaeModel() != null) {
                 localObject.setPoomsaeId(externObject.getGymPoomsaeModel().getId());

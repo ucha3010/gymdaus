@@ -31,6 +31,15 @@ public class GymMoreRegistrationBeltServiceImpl implements GymMoreRegistrationBe
     }
 
     @Override
+    public List<GymMoreRegistrationBeltModel> findAllByGymMoreRegistration(Long gymMoreRegistrationId) {
+        List<GymMoreRegistrationBeltModel> gymMoreRegistrationBeltModelList = new ArrayList<>();
+        for (GymMoreRegistrationBelt gymMoreRegistrationBelt : gymMoreRegistrationBeltRepository.findAllByGymMoreRegistrationId(gymMoreRegistrationId)) {
+            gymMoreRegistrationBeltModelList.add(mapperGymMoreRegistrationBelt.entity2Model(gymMoreRegistrationBelt));
+        }
+        return gymMoreRegistrationBeltModelList;
+    }
+
+    @Override
     public GymMoreRegistrationBeltModel findById(Long id) {
         try {
             return mapperGymMoreRegistrationBelt.entity2Model(gymMoreRegistrationBeltRepository.findById(id).orElse(null));

@@ -1,11 +1,16 @@
 package com.gymdaus.core.service.impl;
 
 import com.gymdaus.core.entity.GymBelt;
+import com.gymdaus.core.entity.GymCategory;
+import com.gymdaus.core.entity.GymCategoryGymBelt;
 import com.gymdaus.core.exception.RemoveException;
 import com.gymdaus.core.mapper.MapperGymBelt;
 import com.gymdaus.core.model.GymBeltModel;
 import com.gymdaus.core.repository.GymBeltRepository;
+import com.gymdaus.core.repository.GymCategoryGymBeltRepository;
+import com.gymdaus.core.repository.GymCategoryRepository;
 import com.gymdaus.core.service.GymBeltService;
+import com.gymdaus.core.util.Constants;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +26,10 @@ public class GymBeltServiceImpl implements GymBeltService {
 
     @Autowired
     private MapperGymBelt mapperGymBelt;
+    @Autowired
+    private GymCategoryRepository gymCategoryRepository;
+    @Autowired
+    private GymCategoryGymBeltRepository gymCategoryGymBeltRepository;
 
     @Override
     public List<GymBeltModel> findAllByGymId(Long gymId) {
@@ -54,6 +63,15 @@ public class GymBeltServiceImpl implements GymBeltService {
     public void delete(Long id) throws RemoveException {
         GymBelt gymBelt = gymBeltRepository.findById(id).orElse(null);
         if (gymBelt != null) {
+            List<GymCategory> gymCategoryList = gymCategoryRepository.findAllByGymIdOrderByPositionAsc(gymBelt.getGymId());
+            for (GymCategory gymCategory : gymCategoryList) {
+                List<GymCategoryGymBelt> gymCategoryGymBeltList = gymCategoryGymBeltRepository.findByGymCategoryId(gymCategory.getId());
+                for (GymCategoryGymBelt gymCategoryGymBelt : gymCategoryGymBeltList) {
+                    if (id.equals(gymCategoryGymBelt.getGymBeltId())) {
+                        throw new RemoveException(Constants.DELETE_ADVICE, "error.deleting.item.in.use");
+                    }
+                }
+            }
             try {
                 gymBeltRepository.deleteById(id);
                 List<GymBelt> gymBeltList = gymBeltRepository.findAllByGymIdOrderByPositionAsc(gymBelt.getGymId());
@@ -64,7 +82,7 @@ public class GymBeltServiceImpl implements GymBeltService {
                     }
                 }
             } catch (Exception e) {
-                throw new RemoveException("1000", e.getMessage());
+                throw new RemoveException("1000", "error.deleting.item");
             }
         }
     }

@@ -6,7 +6,7 @@
         <script th:replace="~{static/headerScript :: script}"></script>
         <script th:replace="~{static/headerScriptJquery :: script}"></script>
 
-        <title th:text="#{poomsaes}"></title>
+        <title th:text="#{categories}"></title>
 
         <script type="text/javascript">
             $(document).ready(function(){
@@ -21,7 +21,7 @@
                         var newIndex = ui.item.index();
                         //console.log("newIndex: " + newIndex);
                         var oldIndex = $(this).attr('data-previndex');
-                        var relativeUrl = "gymPoomsae/changePoomsae/" + $('#gymId').val() + "/"  + oldIndex + "/" + newIndex;
+                        var relativeUrl = "gymCategory/change-category/" + $('#gymId').val() + "/"  + oldIndex + "/" + newIndex;
                         var domain = getDomain(location.href);
                         $(this).removeAttr('data-previndex');
                         //console.log(location.href + " - " + domain + relativeUrl);
@@ -52,10 +52,10 @@
             }
 
             function confirmDelete(){
-                var poomsae = document.getElementById('gymPoomsaeId').selectedOptions[0];
+                var category = document.getElementById('gymCategoryId').selectedOptions[0];
                 let deleteAsk = $('#deleteAsk').val();
-                if(confirm(deleteAsk + " " + poomsae.text + "?")){
-                    var relativeUrl = "gymPoomsae/removePoomsae/" + poomsae.value;
+                if(confirm(deleteAsk + " " + category.text + "?")){
+                    var relativeUrl = "gymCategory/remove-category/" + category.value;
                     var domain = getDomain(location.href);
                     location.href = domain + relativeUrl;
                     return true;
@@ -78,7 +78,7 @@
 
             <section class="marginTopBottom1Percentage text-center">
                 <div th:if="${removeProblem != null}" class="alert alert-danger" role="alert"><span
-                        th:text="#{__${removeProblem}__}"></span></div>
+                        th:text="#{error.deleting.item}"></span></div>
             </section>
 
             <section>
@@ -86,7 +86,7 @@
                     <div class="col-md-2">
                     </div>
                     <div class="col-9 col-md-8 colorGreen">
-                        <h1><span th:text="#{poomsaes}"></span> <span th:text="${gymModel.name}"></span></h1>
+                        <h1><span th:text="#{categories}"></span> <span th:text="${gymModel.name}"></span></h1>
                     </div>
                     <div class="col-3 col-md-2">
                         <a class="btn btn-info" href="#" th:href="@{/gym/gym-admin/__${gymModel.id}__}"><span th:text="#{back}"></span></a>
@@ -94,44 +94,80 @@
                 </div>
             </section>
 
-            <section sec:authorize="hasRole('ROLE_ADMIN')">
-                <form action="#" th:action="@{/gymPoomsae/addPoomsae/__${gymModel.id}__}" th:object="${gymPoomsaeModel}"
+            <section sec:authorize="hasRole('ROLE_ADMIN')" class="row mt-1 backgroundColorLightViolet">
+                <form action="#" th:action="@{/gymCategory/category}" th:object="${gymCategoryModel}"
                       method="post" onsubmit="return validate()">
-                    <div class="row mb-3">
+
+                    <input type="hidden" name="gymModel.id" th:value="${gymModel.id}"/>
+                    <div class="row mt-3 mb-1">
                         <div class="col-12 col-md-1">
                             <label for="name" th:text="#{name}"></label>
                         </div>
-                        <div class="col-9 col-md-3 mb-3">
+                        <div class="col-12 col-md-3">
                             <input type="text" th:field="*{name}" id="name" class="form-control" maxlength="50"/>
                         </div>
-                        <div class="col-3 col-md-1 mb-3">
-                            <button class="btn btn-success" type="submit"><span th:text="#{save}"></span></button>
+                        <div class="col-12 col-md-2">
+                            <label for="startBirthdayYear" th:text="#{start.birthday.year}"></label>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-6 col-md-2">
+                            <input type="number" th:field="*{startBirthdayYear}" id="startBirthdayYear" class="form-control" step="1" min="1900"/>
                         </div>
-                        <div class="col-7 col-md-3">
-                            <select id="gymPoomsaeId" class="form-select">
+                        <div class="col-6 d-md-none">
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <label for="endBirthdayYear" th:text="#{end.birthday.year}"></label>
+                        </div>
+                        <div class="col-6 col-md-2">
+                            <input type="number" th:field="*{endBirthdayYear}" id="endBirthdayYear" class="form-control" step="1" min="1900"/>
+                        </div>
+                        <div class="col-6 col-md-1">
+                        </div>
+                    </div>
+
+                    <div class="row row-cols-1 row-cols-md-5 g-3 mt-1 mb-1">
+                        <div th:each="belt : ${gymBeltModelList}">
+                            <div class="col">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" th:field="*{beltIdList}" th:value="${belt.id}"/>
+                                    <span th:text="${belt.color}"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-12 col-md-1">
+                            <label for="gymPoomsaeModel" th:text="#{poomsae}"></label>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <select id="gymPoomsaeModel" name="gymPoomsaeModel.id" class="form-select">
                                 <option th:each="unit : ${gymPoomsaeModelList}" th:value="${unit.id}"
                                         th:text="${unit.name}"></option>
                             </select>
                         </div>
-                        <div class="col-3 col-md-1">
-                            <a class="btn btn-danger" onclick="confirmDelete()"><span th:text="#{delete}"></span></a>
+                        <div class="col-12 col-md-2 d-flex justify-content-end">
+                            <button class="btn btn-success" type="submit"><span th:text="#{save}"></span></button>
                         </div>
                     </div>
                 </form>
+            </section>
 
-                <div class="row">
-                    <div class="col-2 col-lg-4">
+            <section sec:authorize="hasRole('ROLE_ADMIN')">
+                <div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
+                    <div class="col pe-5">
+                        <select id="gymCategoryId" class="form-select">
+                            <option th:each="unit : ${gymCategoryModelList}" th:value="${unit.id}"
+                                    th:text="${unit.name}"></option>
+                        </select>
+                        <a class="btn btn-danger" onclick="confirmDelete()"><span th:text="#{delete}"></span></a>
                     </div>
-                    <div class="col-10 col-lg-4 text-center">
+                    <div class="col text-center">
                         <ul id="sortable" class="list-group mb-1">
-                            <li th:each="unit : ${gymPoomsaeModelList}" th:value="${unit.id}" th:text="${unit.name}"
-                                class="list-group-item move">
+                            <li th:each="unit : ${gymCategoryModelList}" th:value="${unit.id}"
+                                th:text="${unit.name+' / '+unit.startBirthdayYear+'-'+unit.endBirthdayYear+' / '+unit.beltNameList+' / '+unit.gymPoomsaeModel.name}"
+                                class="list-group-item move mb-1">
                             </li>
                         </ul>
-                    </div>
-                    <div class="col-1 col-lg-4">
                     </div>
                 </div>
             </section>

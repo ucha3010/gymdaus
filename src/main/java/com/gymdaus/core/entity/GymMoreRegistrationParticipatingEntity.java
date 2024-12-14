@@ -1,5 +1,6 @@
 package com.gymdaus.core.entity;
 
+import com.gymdaus.core.util.Constants;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,8 +23,8 @@ public class GymMoreRegistrationParticipatingEntity {
     private Long participatingEntityId;
     @Column(nullable = false)
     private Date registrationDate;
-    @Column(nullable = false)
-    private Date registrationUser;
+    @Column(nullable = false, length = Constants.USERNAME_OR_ID_CARD)
+    private String registrationUser;
     private int position;
 
 }

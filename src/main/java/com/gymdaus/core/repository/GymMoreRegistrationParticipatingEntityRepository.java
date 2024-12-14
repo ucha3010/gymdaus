@@ -8,7 +8,10 @@ import java.util.List;
 
 @Repository()
 public interface GymMoreRegistrationParticipatingEntityRepository extends JpaRepository<GymMoreRegistrationParticipatingEntity, Long> {
+
     List<GymMoreRegistrationParticipatingEntity> findAllByOrderByPositionAsc();
+
+    List<GymMoreRegistrationParticipatingEntity> findAllByGymMoreRegistrationIdOrderByRegistrationDateDesc(Long gymMoreRegistrationId);
 
     GymMoreRegistrationParticipatingEntity findByPosition(int position);
 

@@ -10,14 +10,13 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class GymMoreRegistrationParticipatingEntityModel {
+public class GymCategoryGymBeltModel {
 
     private Long id;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date registrationDate;
     private String registrationUser;
-    private GymMoreRegistrationModel gymMoreRegistrationModel;
-    private ParticipatingEntityModel participatingEntityModel;
-    private int position;
+    private GymCategoryModel gymCategoryModel;
+    private GymBeltModel gymBeltModel;
 
 }

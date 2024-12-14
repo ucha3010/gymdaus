@@ -31,6 +31,15 @@ public class GymMoreRegistrationParticipatingEntityServiceImpl implements GymMor
     }
 
     @Override
+    public List<GymMoreRegistrationParticipatingEntityModel> findAllByGymMoreRegistration(Long gymMoreRegistrationId) {
+        List<GymMoreRegistrationParticipatingEntityModel> gymMoreRegistrationParticipatingEntityModelList = new ArrayList<>();
+        for (GymMoreRegistrationParticipatingEntity gymMoreRegistrationParticipatingEntity : gymMoreRegistrationParticipatingEntityRepository.findAllByGymMoreRegistrationIdOrderByRegistrationDateDesc(gymMoreRegistrationId)) {
+            gymMoreRegistrationParticipatingEntityModelList.add(mapperGymMoreRegistrationParticipatingEntity.entity2Model(gymMoreRegistrationParticipatingEntity));
+        }
+        return gymMoreRegistrationParticipatingEntityModelList;
+    }
+
+    @Override
     public GymMoreRegistrationParticipatingEntityModel findById(Long id) {
         try {
             return mapperGymMoreRegistrationParticipatingEntity.entity2Model(gymMoreRegistrationParticipatingEntityRepository.findById(id).orElse(null));

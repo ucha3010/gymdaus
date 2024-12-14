@@ -31,6 +31,15 @@ public class GymMoreRegistrationDateServiceImpl implements GymMoreRegistrationDa
     }
 
     @Override
+    public List<GymMoreRegistrationDateModel> findAllByGymMoreRegistration(Long gymMoreRegistrationId) {
+        List<GymMoreRegistrationDateModel> gymMoreRegistrationDateModelList = new ArrayList<>();
+        for (GymMoreRegistrationDate gymMoreRegistrationDate : gymMoreRegistrationDateRepository.findAllByGymMoreRegistrationId(gymMoreRegistrationId)) {
+            gymMoreRegistrationDateModelList.add(mapperGymMoreRegistrationDate.entity2Model(gymMoreRegistrationDate));
+        }
+        return gymMoreRegistrationDateModelList;
+    }
+
+    @Override
     public GymMoreRegistrationDateModel findById(Long id) {
         try {
             return mapperGymMoreRegistrationDate.entity2Model(gymMoreRegistrationDateRepository.findById(id).orElse(null));

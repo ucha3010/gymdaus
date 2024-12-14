@@ -49,7 +49,7 @@ public class Constants {
 	public static final int SWIFT = 11;
 	public static final int CATEGORY_NAME = 100;
 	public static final int BELT_NAME = 30;
-	public static final int POOMSAE_NAME = 30;
+	public static final int POOMSAE_NAME = 50;
 	public static final int GYM_ACTIVITY_SCHEDULE_NAME = 100;
 	public static final int GYM_CATEGORY_NAME = 100;
 	public static final int GYM_ACTIVITY_SCHEDULE_ROOM_NAME = 100;
@@ -72,7 +72,8 @@ public class Constants {
 	public static final int ROLE = 45;
 
 	//Nuevas constantes
-    public static final String GYM_ADVISE = "gymAdvise";
+	public static final String DELETE_ADVICE = "400";
+    public static final String GYM_ADVICE = "gymAdvise";
 	public static final String GYM_DETAIL = "/gym/detail/";
 	public static final String EMAIL_ADDRESS = "email.address";
 	public static final String EMAIL_HOST = "email.host";

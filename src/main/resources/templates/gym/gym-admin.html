@@ -29,7 +29,8 @@
             </section>
 
             <section sec:authorize="hasRole('ROLE_ADMIN')" th:if="${gymModel != null}">
-                <div th:attr="class=${gymUserModel.gymRole == 'ROLE_MANAGER' ? 'row row-cols-1 row-cols-md-2 g-4' : 'row row-cols-1 g-4'}">
+                <div th:attr="class=${gymUserModel.gymRole == 'ROLE_MANAGER' ? 'row row-cols-1 row-cols-md-2 g-4' : 'row row-cols-1 row-cols-md-3 g-4'}">
+                    <div th:if="${gymUserModel.gymRole != 'ROLE_MANAGER'}" class="col"></div>
                     <div class="col">
                         <h5 class="text-center" th:text="#{gym}"></h5>
                         <div class="d-grid gap-2">
@@ -40,21 +41,24 @@
                                     th:text="#{administrators}"></span></a>
                             <a th:if="${gymUserModel.gymRole == 'ROLE_MANAGER'}" class="btn btn-primary"
                                th:href="@{/gym/parameters/__${gymModel.id}__}"><span th:text="#{parameters}"></span></a>
-                            <a class="btn btn-primary" th:href="@{/gymBelt/belts/__${gymModel.id}__}"><span
-                                    th:text="#{belts}"></span></a>
-                            <a class="btn btn-primary" th:href="@{/gymPoomsae/poomsaes/__${gymModel.id}__}"><span
-                                    th:text="#{poomsaes}"></span></a>
                             <a class="btn btn-primary" th:href="@{/gym/photos/__${gymModel.id}__}"><span
                                     th:text="#{photos}"></span></a>
                             <a class="btn btn-primary" th:href="@{/gym/addresses/__${gymModel.id}__}"><span
                                     th:text="#{addresses}"></span></a>
                             <a class="btn btn-primary" th:href="@{/gym/documents/__${gymModel.id}__}"><span
                                     th:text="#{documents}"></span></a>
+                            <a class="btn btn-primary" th:href="@{/gymCategory/categories/__${gymModel.id}__}"><span
+                                    th:text="#{categories}"></span></a>
+                            <a class="btn btn-primary" th:href="@{/gymBelt/belts/__${gymModel.id}__}"><span
+                                    th:text="#{belts}"></span></a>
+                            <a class="btn btn-primary" th:href="@{/gymPoomsae/poomsaes/__${gymModel.id}__}"><span
+                                    th:text="#{poomsaes}"></span></a>
                             <a class="btn btn-primary"
                                th:href="@{/participatingEntity/participants/__${gymModel.id}__}"><span
                                     th:text="#{participating.entities}"></span></a>
                         </div>
                     </div>
+                    <div th:if="${gymUserModel.gymRole != 'ROLE_MANAGER'}" class="col"></div>
                     <div th:if="${gymUserModel.gymRole == 'ROLE_MANAGER'}" class="col">
                         <h5 class="text-center" th:text="#{menu1.activities}"></h5>
                         <div class="d-grid gap-2 mb-3">

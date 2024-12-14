@@ -8,10 +8,10 @@ import java.util.List;
 
 @Repository()
 public interface GymCategoryRepository extends JpaRepository<GymCategory, Long> {
-    List<GymCategory> findAllByOrderByPositionAsc();
+    List<GymCategory> findAllByGymIdOrderByPositionAsc(Long gymId);
 
-    GymCategory findByPosition(int position);
+    GymCategory findByGymIdAndPosition(Long gymId, int position);
 
-    GymCategory findTopByOrderByPositionDesc();
+    GymCategory findTopByGymIdOrderByPositionDesc(Long gymId);
 
 }

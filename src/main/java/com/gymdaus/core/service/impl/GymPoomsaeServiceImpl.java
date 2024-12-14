@@ -1,11 +1,14 @@
 package com.gymdaus.core.service.impl;
 
+import com.gymdaus.core.entity.GymCategory;
 import com.gymdaus.core.entity.GymPoomsae;
 import com.gymdaus.core.exception.RemoveException;
 import com.gymdaus.core.mapper.MapperGymPoomsae;
 import com.gymdaus.core.model.GymPoomsaeModel;
+import com.gymdaus.core.repository.GymCategoryRepository;
 import com.gymdaus.core.repository.GymPoomsaeRepository;
 import com.gymdaus.core.service.GymPoomsaeService;
+import com.gymdaus.core.util.Constants;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,9 +21,10 @@ public class GymPoomsaeServiceImpl implements GymPoomsaeService {
 
     @Autowired
     private GymPoomsaeRepository gymPoomsaeRepository;
-
     @Autowired
     private MapperGymPoomsae mapperGymPoomsae;
+    @Autowired
+    private GymCategoryRepository gymCategoryRepository;
 
     @Override
     public List<GymPoomsaeModel> findAllByGymId(Long gymId) {
@@ -54,6 +58,12 @@ public class GymPoomsaeServiceImpl implements GymPoomsaeService {
     public void delete(Long id) throws RemoveException {
         GymPoomsae gymPoomsae = gymPoomsaeRepository.findById(id).orElse(null);
         if (gymPoomsae != null) {
+            List<GymCategory> gymCategoryList = gymCategoryRepository.findAllByGymIdOrderByPositionAsc(gymPoomsae.getGymId());
+            for (GymCategory gymCategory : gymCategoryList) {
+                if (id.equals(gymCategory.getPoomsaeId())) {
+                    throw new RemoveException(Constants.DELETE_ADVICE, "error.deleting.item.in.use");
+                }
+            }
             try {
                 gymPoomsaeRepository.deleteById(id);
                 List<GymPoomsae> gymPoomsaeList = gymPoomsaeRepository.findAllByGymIdOrderByPositionAsc(gymPoomsae.getGymId());

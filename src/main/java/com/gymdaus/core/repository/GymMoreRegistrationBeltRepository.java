@@ -8,7 +8,10 @@ import java.util.List;
 
 @Repository()
 public interface GymMoreRegistrationBeltRepository extends JpaRepository<GymMoreRegistrationBelt, Long> {
+
     List<GymMoreRegistrationBelt> findAllByOrderByPositionAsc();
+
+    List<GymMoreRegistrationBelt> findAllByGymMoreRegistrationId(Long gymMoreRegistrationId);
 
     GymMoreRegistrationBelt findByPosition(int position);
 

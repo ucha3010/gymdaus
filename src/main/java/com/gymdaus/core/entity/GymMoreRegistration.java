@@ -28,6 +28,11 @@ public class GymMoreRegistration {
     @Column(nullable = false, length = Constants.USERNAME_OR_ID_CARD)
     private String registrationUser;
     private boolean enabled;
+    private Date modificationDate;
+    @Column(length = Constants.USERNAME_OR_ID_CARD)
+    private String modificationUser;
+    private Date startRegistrationAvailable;
+    private Date endRegistrationAvailable;
     @Column(length = Constants.ADDRESS_STREET)
     private String addressStreet;
     @Column(length = Constants.ADDRESS_NUMBER)

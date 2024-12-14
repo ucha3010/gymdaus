@@ -33,7 +33,7 @@ public class Menu2ServiceImpl implements Menu2Service {
         for (GymModel gymModel : gymModelList) {
             menu2Model = new Menu2Model();
             menu2Model.setName(gymModel.getName());
-            menu2Model.setAdvise(Constants.GYM_ADVISE);
+            menu2Model.setAdvise(Constants.GYM_ADVICE);
             menu2Model.setUrl(Constants.GYM_DETAIL + gymModel.getId());
             menu2ModelList.add(menu2Model);
         }

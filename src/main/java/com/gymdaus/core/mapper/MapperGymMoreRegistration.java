@@ -15,13 +15,18 @@ public class MapperGymMoreRegistration {
     private CountryService countryService;
 
     public GymMoreRegistrationModel entity2Model(GymMoreRegistration externObject) {
-        GymMoreRegistrationModel localObject = new GymMoreRegistrationModel();
+        GymMoreRegistrationModel localObject = null;
         if (externObject != null) {
+            localObject = new GymMoreRegistrationModel();
             localObject.setId(externObject.getId());
             localObject.setName(externObject.getName());
             localObject.setRegistrationDate(externObject.getRegistrationDate());
             localObject.setRegistrationUser(externObject.getRegistrationUser());
             localObject.setEnabled(externObject.isEnabled());
+            localObject.setModificationDate(externObject.getModificationDate());
+            localObject.setModificationUser(externObject.getModificationUser());
+            localObject.setStartRegistrationAvailable(externObject.getStartRegistrationAvailable());
+            localObject.setEndRegistrationAvailable(externObject.getEndRegistrationAvailable());
             localObject.setAddressStreet(externObject.getAddressStreet());
             localObject.setAddressNumber(externObject.getAddressNumber());
             localObject.setAddressOther(externObject.getAddressOther());
@@ -52,6 +57,10 @@ public class MapperGymMoreRegistration {
             localObject.setRegistrationDate(externObject.getRegistrationDate());
             localObject.setRegistrationUser(externObject.getRegistrationUser());
             localObject.setEnabled(externObject.isEnabled());
+            localObject.setModificationDate(externObject.getModificationDate());
+            localObject.setModificationUser(externObject.getModificationUser());
+            localObject.setStartRegistrationAvailable(externObject.getStartRegistrationAvailable());
+            localObject.setEndRegistrationAvailable(externObject.getEndRegistrationAvailable());
             localObject.setAddressStreet(externObject.getAddressStreet());
             localObject.setAddressNumber(externObject.getAddressNumber());
             localObject.setAddressOther(externObject.getAddressOther());

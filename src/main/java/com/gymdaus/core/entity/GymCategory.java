@@ -4,8 +4,6 @@ import com.gymdaus.core.util.Constants;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
-
 @Entity
 @Table(name = "gym_category")
 @Getter
@@ -21,12 +19,9 @@ public class GymCategory {
     private Long id;
     @Column(nullable = false, length = Constants.GYM_CATEGORY_NAME)
     private String name;
-    private Date startAge;
-    private Date endAge;
-    private Long gymMoreRegistrationId;
-    private Long ageCategoryId;
-    private Long startBeltId;
-    private Long endBeltId;
+    private int startBirthdayYear;
+    private int endBirthdayYear;
+    private Long gymId;
     private Long poomsaeId;
     private int position;
 

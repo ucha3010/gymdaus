@@ -9,6 +9,8 @@ public interface GymMoreRegistrationParticipatingEntityService {
 
     List<GymMoreRegistrationParticipatingEntityModel> findAll();
 
+    List<GymMoreRegistrationParticipatingEntityModel> findAllByGymMoreRegistration(Long gymMoreRegistrationId);
+
     GymMoreRegistrationParticipatingEntityModel findById(Long id);
 
     void add(GymMoreRegistrationParticipatingEntityModel model);
