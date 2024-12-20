@@ -1,6 +1,5 @@
 package com.gymdaus.core.controller;
 
-import com.gymdaus.core.configuration.SessionData;
 import com.gymdaus.core.model.*;
 import com.gymdaus.core.service.*;
 import com.gymdaus.core.service.impl.UserService;
@@ -44,8 +43,6 @@ public class RootController {
     private UserService userService;
     @Autowired
     private UtilService utilService;
-    @Autowired
-    private SessionData sessionData;
 
     @GetMapping("/countries")
     @PreAuthorize("hasRole('ROLE_ROOT')")

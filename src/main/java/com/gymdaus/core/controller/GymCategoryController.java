@@ -1,6 +1,5 @@
 package com.gymdaus.core.controller;
 
-import com.gymdaus.core.configuration.SessionData;
 import com.gymdaus.core.exception.RemoveException;
 import com.gymdaus.core.model.GymBeltModel;
 import com.gymdaus.core.model.GymCategoryGymBeltModel;
@@ -37,8 +36,6 @@ public class GymCategoryController {
     private SecurityService securityService;
     @Autowired
     private UtilService utilService;
-    @Autowired
-    private SessionData sessionData;
 
     @GetMapping("/categories/{gymId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

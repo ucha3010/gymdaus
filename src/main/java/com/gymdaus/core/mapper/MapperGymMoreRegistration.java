@@ -1,10 +1,10 @@
 package com.gymdaus.core.mapper;
 
 import com.gymdaus.core.entity.GymMoreRegistration;
-import com.gymdaus.core.model.GymModel;
 import com.gymdaus.core.model.GymMoreRegistrationModel;
-import com.gymdaus.core.model.MoreRegistrationModel;
 import com.gymdaus.core.service.CountryService;
+import com.gymdaus.core.service.GymService;
+import com.gymdaus.core.service.MoreRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +13,10 @@ public class MapperGymMoreRegistration {
 
     @Autowired
     private CountryService countryService;
+    @Autowired
+    private GymService gymService;
+    @Autowired
+    private MoreRegistrationService moreRegistrationService;
 
     public GymMoreRegistrationModel entity2Model(GymMoreRegistration externObject) {
         GymMoreRegistrationModel localObject = null;
@@ -36,14 +40,10 @@ public class MapperGymMoreRegistration {
             localObject.setNeedsPaid(externObject.isNeedsPaid());
             localObject.setSepa(externObject.isSepa());
             if (externObject.getGymId() != 0) {
-                GymModel gymModel = new GymModel();
-                gymModel.setId(externObject.getGymId());
-                localObject.setGymModel(gymModel);
+                localObject.setGymModel(gymService.findById(externObject.getGymId()));
             }
             if (externObject.getMoreRegistrationId() != 0) {
-                MoreRegistrationModel moreRegistrationModel = new MoreRegistrationModel();
-                moreRegistrationModel.setId(externObject.getMoreRegistrationId());
-                localObject.setMoreRegistrationModel(moreRegistrationModel);
+                localObject.setMoreRegistrationModel(moreRegistrationService.findById(externObject.getMoreRegistrationId()));
             }
         }
         return localObject;

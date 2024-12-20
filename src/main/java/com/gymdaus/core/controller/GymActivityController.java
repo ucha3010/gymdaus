@@ -1,6 +1,5 @@
 package com.gymdaus.core.controller;
 
-import com.gymdaus.core.configuration.SessionData;
 import com.gymdaus.core.model.GymActivityModel;
 import com.gymdaus.core.model.GymActivityScheduleModel;
 import com.gymdaus.core.model.GymAddressModel;
@@ -33,8 +32,6 @@ public class GymActivityController {
     private SecurityService securityService;
     @Autowired
     private UtilService utilService;
-    @Autowired
-    private SessionData sessionData;
 
     @GetMapping("/activities/{gymId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

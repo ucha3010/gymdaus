@@ -9,9 +9,11 @@ public interface GymMoreRegistrationService {
 
     List<GymMoreRegistrationModel> findAll();
 
+    List<GymMoreRegistrationModel> findAllByGymId(Long gymId);
+
     GymMoreRegistrationModel findById(Long id);
 
-    void add(GymMoreRegistrationModel model);
+    GymMoreRegistrationModel add(GymMoreRegistrationModel model);
 
     void update(GymMoreRegistrationModel model);
 

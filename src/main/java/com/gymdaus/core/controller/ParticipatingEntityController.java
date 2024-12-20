@@ -1,6 +1,5 @@
 package com.gymdaus.core.controller;
 
-import com.gymdaus.core.configuration.SessionData;
 import com.gymdaus.core.exception.RemoveException;
 import com.gymdaus.core.model.GymModel;
 import com.gymdaus.core.model.ParticipatingEntityModel;
@@ -30,8 +29,6 @@ public class ParticipatingEntityController {
     private SecurityService securityService;
     @Autowired
     private UtilService utilService;
-    @Autowired
-    private SessionData sessionData;
 
     @GetMapping("/participants/{gymId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

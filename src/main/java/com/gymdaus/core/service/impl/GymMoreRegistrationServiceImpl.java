@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service()
@@ -29,6 +30,15 @@ public class GymMoreRegistrationServiceImpl implements GymMoreRegistrationServic
     public List<GymMoreRegistrationModel> findAll() {
         List<GymMoreRegistrationModel> gymMoreRegistrationModelList = new ArrayList<>();
         for (GymMoreRegistration gymMoreRegistration : gymMoreRegistrationRepository.findAll()) {
+            gymMoreRegistrationModelList.add(mapperGymMoreRegistration.entity2Model(gymMoreRegistration));
+        }
+        return gymMoreRegistrationModelList;
+    }
+
+    @Override
+    public List<GymMoreRegistrationModel> findAllByGymId(Long gymId) {
+        List<GymMoreRegistrationModel> gymMoreRegistrationModelList = new ArrayList<>();
+        for (GymMoreRegistration gymMoreRegistration : gymMoreRegistrationRepository.findAllByGymIdAndEnabledTrueOrderByRegistrationDateAsc(gymId)) {
             gymMoreRegistrationModelList.add(mapperGymMoreRegistration.entity2Model(gymMoreRegistration));
         }
         return gymMoreRegistrationModelList;
@@ -53,12 +63,15 @@ public class GymMoreRegistrationServiceImpl implements GymMoreRegistrationServic
     }
 
     @Override
-    public void add(GymMoreRegistrationModel gymMoreRegistrationModel) {
-        gymMoreRegistrationRepository.save(mapperGymMoreRegistration.model2Entity(gymMoreRegistrationModel));
+    public GymMoreRegistrationModel add(GymMoreRegistrationModel gymMoreRegistrationModel) {
+        gymMoreRegistrationModel.setRegistrationDate(new Date());
+        gymMoreRegistrationModel.setEnabled(Boolean.TRUE);
+        return mapperGymMoreRegistration.entity2Model(gymMoreRegistrationRepository.save(mapperGymMoreRegistration.model2Entity(gymMoreRegistrationModel)));
     }
 
     @Override
     public void update(GymMoreRegistrationModel gymMoreRegistrationModel) {
+        gymMoreRegistrationModel.setModificationDate(new Date());
         gymMoreRegistrationRepository.save(mapperGymMoreRegistration.model2Entity(gymMoreRegistrationModel));
     }
 

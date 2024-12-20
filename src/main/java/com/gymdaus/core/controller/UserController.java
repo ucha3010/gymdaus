@@ -34,8 +34,6 @@ public class UserController {
     private UserDocumentManagerService userDocumentManagerService;
     @Autowired
     private SecurityService securityService;
-    //	@Autowired
-//	private UserRegistrationService userRegistrationService;
     @Autowired
     private UtilService utilService;
     @Autowired

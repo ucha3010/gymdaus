@@ -1,6 +1,5 @@
 package com.gymdaus.core.controller;
 
-import com.gymdaus.core.configuration.SessionData;
 import com.gymdaus.core.exception.SenderException;
 import com.gymdaus.core.model.*;
 import com.gymdaus.core.service.*;
@@ -52,8 +51,6 @@ public class GymController {
     private UserService userService;
     @Autowired
     private UtilService utilService;
-    @Autowired
-    private SessionData sessionData;
 
     private final MessageSource messageSource;
 

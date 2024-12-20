@@ -1,6 +1,5 @@
 package com.gymdaus.core.controller;
 
-import com.gymdaus.core.configuration.SessionData;
 import com.gymdaus.core.model.EnrollmentModel;
 import com.gymdaus.core.model.UserModel;
 import com.gymdaus.core.service.EnrollmentService;
@@ -34,8 +33,6 @@ public class EnrollmentController {
     private SecurityService securityService;
     @Autowired
     private UtilService utilService;
-    @Autowired
-    private SessionData sessionData;
 
     @GetMapping("/enrollments/{gymId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

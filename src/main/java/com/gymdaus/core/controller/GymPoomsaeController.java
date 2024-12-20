@@ -1,6 +1,5 @@
 package com.gymdaus.core.controller;
 
-import com.gymdaus.core.configuration.SessionData;
 import com.gymdaus.core.exception.RemoveException;
 import com.gymdaus.core.model.GymModel;
 import com.gymdaus.core.model.GymPoomsaeModel;
@@ -30,8 +29,6 @@ public class GymPoomsaeController {
     private SecurityService securityService;
     @Autowired
     private UtilService utilService;
-    @Autowired
-    private SessionData sessionData;
 
     @GetMapping("/poomsaes/{gymId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

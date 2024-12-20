@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="es">
+    <head>
+        <meta th:replace="~{static/headerMeta :: meta}">
+        <link th:replace="~{static/headerLink :: link}">
+        <script th:replace="~{static/headerScript :: script}"></script>
+        <script th:replace="~{static/headerScriptJquery :: script}"></script>
+
+        <title th:text="#{activity}"></title>
+
+        <script type="text/javascript">
+
+            function validate(){
+
+                var field = ['name','startRegistrationAvailable','endRegistrationAvailable','addressStreet','addressCity'];
+                restore();
+                var validated = true;
+                for(var i=0; i < field.length; i++){
+                    var rolName = document.getElementById(field[i]);
+                    var rolNameError = document.getElementById(field[i]+'Error');
+                    if(rolName.value==''){
+                        if(rolNameError != null){
+                            rolNameError.className = "colorRed";
+                        }
+                        rolName.style.borderColor="red";
+                        validated = false;
+                    }
+                }
+
+                if(validated){
+                    return true;
+                } else {
+                    document.getElementById('thereIsError').className = "colorRed";
+                    return false;
+                }
+            }
+            function restore(){
+                var errorSpan = document.getElementsByName('errorSpan');
+                for (var i = 0; i < errorSpan.length; i++) {
+                    errorSpan[i].className = "d-none";
+                }
+                var fields = document.getElementsByClassName("form-control");
+                for (var i = 0; i < fields.length; i++) {
+                    fields[i].style.borderColor="#ced4da";
+                }
+            }
+
+            function confirmDelete(id, name){
+                let deleteAsk = $('#deleteAsk').val();
+                if(confirm(deleteAsk + " " + name + "?")){
+                    var relativeUrl = "gymMoreRegistration/remove-more-registration/" + id;
+                    var domain = getDomain(location.href);
+                    location.href = domain + relativeUrl;
+                    return true;
+                }
+                return false;
+            }
+        </script>
+    </head>
+    <body>
+        <div th:replace="~{static/barraUser :: div}"></div>
+        <div th:replace="~{static/barraNav :: nav}"></div>
+        <div th:replace="~{static/barraAdminRootButtons :: section}"></div>
+
+        <div class="container">
+            <input type="hidden" id="deleteAsk" th:value="#{confirm.delete}"/>
+            <section class="marginTopBottom1Percentage text-center">
+                <div th:if="${updateOK != null}" class="alert alert-success" role="alert"><span
+                        th:text="#{update.ok}"></span></div>
+            </section>
+
+            <section sec:authorize="hasRole('ROLE_ADMIN')">
+                <div class="row mb-1 text-center">
+                    <div class="col-md-2">
+                        <a class="btn btn-danger" href="#"
+                           th:attr="onclick=|confirmDelete('${gymMoreRegistrationModel.id}','${gymMoreRegistrationModel.name}')|">
+                            <span th:text="#{delete}"></span> <span th:text="#{activity}"></span>
+                        </a>
+                    </div>
+                    <div class="col-9 col-md-8 colorGreen">
+                        <h1 th:text="${gymModel.name}"></h1>
+                    </div>
+                    <div class="col-3 col-md-2">
+                        <a class="btn btn-info" href="#" th:href="@{/gymMoreRegistration/more-registrations/__${gymModel.id}__}">
+                            <span th:text="#{back}"></span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section sec:authorize="hasRole('ROLE_ADMIN')">
+                <form action="#" th:action="@{/gymMoreRegistration/update-more-registration}" th:object="${gymMoreRegistrationModel}" method="post"
+                      onsubmit="return validate()">
+
+                    <input type="hidden" th:field="*{id}"/>
+                    <input type="hidden" th:field="*{registrationDate}"/>
+                    <input type="hidden" th:field="*{registrationUser}"/>
+                    <input type="hidden" th:field="*{gymModel.id}"/>
+                    <input type="hidden" th:field="*{moreRegistrationModel.id}"/>
+
+                    <div class="row align-items-center text-center">
+                        <div class="col-md-6">
+                            <div class="mb-1">
+                                <label for="name" th:text="#{name}"></label>
+                                <input type="text" th:field="*{name}" class="form-control" id="name" />
+                            </div>
+                            <div class="form-check mb-1">
+                                <input type="checkbox" th:field="*{enabled}" class="form-check-input" id="enabled" />
+                                <label class="form-check-label" for="enabled" th:text="#{enabled}"></label>
+                            </div>
+                            <div class="mb-1">
+                                <label for="startRegistrationAvailable" th:text="#{registration.start.date}"></label>
+                                <input type="date" th:field="*{startRegistrationAvailable}" class="form-control" id="startRegistrationAvailable" />
+                            </div>
+                            <div class="mb-1">
+                                <label for="endRegistrationAvailable" th:text="#{registration.end.date}"></label>
+                                <input type="date" th:field="*{endRegistrationAvailable}" class="form-control" id="endRegistrationAvailable" />
+                            </div>
+                            <div class="mb-1">
+                                <h5 th:text="#{event.address}"></h5>
+                            </div>
+                            <div class="mb-1">
+                                <label th:text="#{address.street}"></label>
+                                <input type="text" th:field="*{addressStreet}" id="addressStreet" class="form-control"/>
+                            </div>
+                            <div class="mb-1">
+                                <label th:text="#{address.number}"></label>
+                                <input type="text" th:field="*{addressNumber}" id="addressNumber" class="form-control"/>
+                            </div>
+                            <div class="mb-1">
+                                <label th:text="#{address.other}"></label>
+                                <input type="text" th:field="*{addressOther}" id="addressOther" class="form-control"/>
+                            </div>
+                            <div class="mb-1">
+                                <label th:text="#{address.city}"></label>
+                                <input type="text" th:field="*{addressCity}" id="addressCity" class="form-control"/>
+                            </div>
+                            <div class="mb-1">
+                                <label th:text="#{address.zip}"></label>
+                                <input type="text" th:field="*{addressZip}" id="addressZip" class="form-control"/>
+                            </div>
+                            <div class="mb-1">
+                                <label for="country" th:text="#{country}"></label>
+                                <select th:field="*{countryModel.id}" id="country" class="form-select">
+                                    <option th:each="p : ${countryModelList}" th:value="${p.id}"
+                                            th:text="#{__${p.name}__}"></option>
+                                </select>
+                            </div>
+                            <div class="form-check mb-1">
+                                <input type="checkbox" th:field="*{needsPaid}" class="form-check-input" id="needsPaid" />
+                                <label class="form-check-label" for="needsPaid" th:text="#{needs.paid}"></label>
+                            </div>
+                            <div class="form-check mb-1">
+                                <input type="checkbox" th:field="*{sepa}" class="form-check-input" id="sepa" />
+                                <label class="form-check-label" for="sepa" th:text="#{pay.bank.account}"></label>
+                            </div>
+                            <div class="mt-1">
+                                <button class="btn btn-success" type="submit"><span th:text="#{save}"></span></button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-1">
+                                <label for="eventDates" th:text="#{event.dates}"></label>
+                                <a class="btn btn-info" href="#" th:href="@{/gymMoreRegistration/dates/__${gymMoreRegistrationModel.id}__}" id="eventDates">
+                                    <span th:text="#{edit}"></span>
+                                </a>
+                            </div>
+                            <div class="mb-3">
+                                <h3 th:each="unit : ${gymMoreRegistrationDateModelList}" th:text="${unit.startDateTime+' - '+unit.endDateTime}"></h3>
+                            </div>
+                            <div class="d-flex align-items-center mb-1">
+                                <label for="categories" th:text="#{categories}"></label>
+                                <a class="btn btn-info" href="#" th:href="@{/gymMoreRegistration/categories/__${gymMoreRegistrationModel.id}__}" id="categories">
+                                    <span th:text="#{edit}"></span>
+                                </a>
+                            </div>
+                            <div class="mb-3">
+                                <div class="mb-3">
+                                    <select class="form-select">
+                                        <option th:each="p : ${gymMoreRegistrationGymCategoryModelList}" th:value="${p.id}"
+                                                th:text="${p.gymCategoryModel.name}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-1">
+                                <label for="participatingEntities" th:text="#{participating.entities}"></label>
+                                <a class="btn btn-info" href="#" th:href="@{/gymMoreRegistration/participating-entities/__${gymMoreRegistrationModel.id}__}" id="participatingEntities">
+                                    <span th:text="#{edit}"></span>
+                                </a>
+                            </div>
+                            <div class="mb-3">
+                                <div class="mb-3">
+                                    <select class="form-select">
+                                        <option th:each="p : ${gymMoreRegistrationParticipatingEntityModelList}" th:value="${p.id}"
+                                                th:text="${p.participatingEntityModel.name}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-1">
+                                <label for="belts" th:text="#{belts}"></label>
+                                <a class="btn btn-info" href="#" th:href="@{/gymMoreRegistration/belts/__${gymMoreRegistrationModel.id}__}" id="belts">
+                                    <span th:text="#{edit}"></span>
+                                </a>
+                            </div>
+                            <div class="mb-3">
+                                <div class="mb-3">
+                                    <select class="form-select">
+                                        <option th:each="p : ${gymMoreRegistrationBeltModelList}" th:value="${p.id}"
+                                                th:text="${p.gymBeltModel.color}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mt-1">
+                                <a class="btn btn-info" href="#"
+                                   th:href="@{/gymMoreRegistration/more-registrations/__${gymModel.id}__}">
+                                    <span th:text="#{back}"></span></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="mt-3">
+                            <span id="thereIsError" name="errorSpan" class="d-none" th:text="#{fillObligatory}"></span>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </body>
+
+    <footer th:replace="~{static/footer :: footer}"></footer>
+</html>

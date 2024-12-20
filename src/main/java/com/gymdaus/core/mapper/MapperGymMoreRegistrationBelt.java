@@ -4,10 +4,15 @@ import com.gymdaus.core.entity.GymMoreRegistrationBelt;
 import com.gymdaus.core.model.GymBeltModel;
 import com.gymdaus.core.model.GymMoreRegistrationBeltModel;
 import com.gymdaus.core.model.GymMoreRegistrationModel;
+import com.gymdaus.core.service.GymBeltService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MapperGymMoreRegistrationBelt {
+
+    @Autowired
+    private GymBeltService gymBeltService;
 
     public GymMoreRegistrationBeltModel entity2Model(GymMoreRegistrationBelt externObject) {
         GymMoreRegistrationBeltModel localObject = new GymMoreRegistrationBeltModel();
@@ -20,9 +25,7 @@ public class MapperGymMoreRegistrationBelt {
                 localObject.setGymMoreRegistrationModel(gymMoreRegistrationModel);
             }
             if (externObject.getBeltId() != null) {
-                GymBeltModel gymBeltModel = new GymBeltModel();
-                gymBeltModel.setId(externObject.getBeltId());
-                localObject.setGymBeltModel(gymBeltModel);
+                localObject.setGymBeltModel(gymBeltService.findById(externObject.getBeltId()));
             }
         }
         return localObject;

@@ -5,7 +5,6 @@ import com.gymdaus.core.exception.ValidationException;
 import com.gymdaus.core.model.TokenModel;
 import com.gymdaus.core.model.UserModel;
 import com.gymdaus.core.service.*;
-import com.gymdaus.core.service.impl.UserService;
 import com.gymdaus.core.util.Constants;
 import com.gymdaus.core.util.LoggerMapper;
 import com.gymdaus.core.util.Utils;
@@ -37,8 +36,6 @@ public class MainController {
     private TokenService tokenService;
     @Autowired
     private UtilService utilService;
-    @Autowired
-    private UserService userService;
     @Autowired
     private UserRoleService userRoleService;
     @Autowired
