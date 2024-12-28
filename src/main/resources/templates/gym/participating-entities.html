@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta th:replace="~{static/headerMeta :: meta}">
+    <link th:replace="~{static/headerLink :: link}">
+    <script th:replace="~{static/headerScript :: script}"></script>
+
+    <title th:text="#{participating.entities}"></title>
+
+</head>
+<body>
+<div th:replace="~{static/barraUser :: div}"></div>
+<div th:replace="~{static/barraNav :: nav}"></div>
+<div th:replace="~{static/barraAdminRootButtons :: section}"></div>
+
+<div class="container">
+    <section>
+        <div class="row align-items-center justify-content-end">
+            <div class="col-md-2">
+            </div>
+            <div class="col-9 col-md-8 colorGreen">
+                <h1><span th:text="#{participating.entities}"></span> <span th:text="${gymMoreRegistrationModel.name}"></span></h1>
+            </div>
+            <div class="col-3 col-md-2">
+                <a class="btn btn-info" href="#"
+                   th:href="@{/gymMoreRegistration/more-registration/__${gymMoreRegistrationModel.id}__}"><span
+                        th:text="#{back}"></span></a>
+            </div>
+        </div>
+    </section>
+
+    <section sec:authorize="hasRole('ROLE_ADMIN')">
+        <form action="#" th:action="@{/gymMoreRegistration/add-participating-entity}"
+              th:object="${gymMoreRegistrationModel}" method="post">
+            <input type="hidden" th:field="*{id}"/>
+            <div class="row mt-3" th:each="unit, iStat : ${participatingEntityList}">
+                <div class="col text-center">
+                    <label class="form-check-label">
+                        <input type="checkbox" class="form-check-input" name="participatingEntityIdList"
+                               th:id="'participatingEntityIdList' + ${iStat.index + 1}" th:value="${unit.id}"
+                               th:attr="checked=${unit.selected}"/>
+                        <span class="fw-semibold" th:text="${unit.name}"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-6 d-flex justify-content-end">
+                    <button class="btn btn-success" type="submit"><span th:text="#{save}"></span></button>
+                </div>
+            </div>
+        </form>
+    </section>
+</div>
+
+</body>
+
+<footer th:replace="~{static/footer :: footer}"></footer>
+</html>

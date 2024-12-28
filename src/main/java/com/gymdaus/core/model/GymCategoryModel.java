@@ -13,13 +13,14 @@ public class GymCategoryModel {
 
     private Long id;
     private String name;
-    private int startBirthdayYear;
-    private int endBirthdayYear;
+    private int startAge;
+    private int endAge;
     private GymModel gymModel;
     private GymPoomsaeModel gymPoomsaeModel;
     private int position;
     private List<GymBeltModel> gymBeltModelList;
     private List<Long> beltIdList;
     private String beltNameList;
+    private boolean selected;
 
 }

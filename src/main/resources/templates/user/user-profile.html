@@ -64,8 +64,6 @@
 
                 <input type="hidden" name="enabled" th:value="${user.enabled}"/>
                 <input type="hidden" name="username" th:value="${user.username}"/>
-                <input th:if="${user.registrationDate != null}" type="hidden" name="registrationDate"
-                       th:value="${#dates.format(user.registrationDate, 'yyyy/MM/dd HH:mm:ss')}"/>
 
 
                 <div class="row align-items-center justify-content-end">

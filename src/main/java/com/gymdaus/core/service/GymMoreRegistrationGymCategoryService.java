@@ -1,25 +1,17 @@
 package com.gymdaus.core.service;
 
 
+import com.gymdaus.core.model.GymCategoryModel;
 import com.gymdaus.core.model.GymMoreRegistrationGymCategoryModel;
+import com.gymdaus.core.model.GymMoreRegistrationModel;
 
 import java.util.List;
 
 public interface GymMoreRegistrationGymCategoryService {
 
-    List<GymMoreRegistrationGymCategoryModel> findAll();
+    List<GymCategoryModel> findAllByGymMoreRegistration(Long gymMoreRegistrationId);
 
-    GymMoreRegistrationGymCategoryModel findById(Long id);
+    void addGymCategoryList(GymMoreRegistrationModel gymMoreRegistrationModel, String username);
 
-    void add(GymMoreRegistrationGymCategoryModel model);
-
-    void update(GymMoreRegistrationGymCategoryModel model);
-
-    void delete(Long id);
-
-    List<GymMoreRegistrationGymCategoryModel> findByGymMoreRegistration(Long gymMoreRegistrationId);
-
-    List<GymMoreRegistrationGymCategoryModel> findByGymCategory(Long gymCategoryId);
-
-    GymMoreRegistrationGymCategoryModel findByGymMoreRegistrationAndGymCategory(Long gymMoreRegistrationId, Long gymCategoryId);
+    void emptyByGymMoreRegistrationId(Long gymMoreRegistrationId);
 }

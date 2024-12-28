@@ -6,6 +6,7 @@ import lombok.*;
 import java.util.Date;
 
 @Entity
+@IdClass(GymMoreRegistrationGymCategoryId.class)
 @Table(name = "gym_more_registration_gym_category")
 @Getter
 @Setter
@@ -15,12 +16,8 @@ import java.util.Date;
 public class GymMoreRegistrationGymCategory {
 
     @Id
-    @SequenceGenerator(name = "gymMoreRegistrationGymCategoryGenerator", sequenceName = "CHANGE_LOW_SEQUENCE", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gymMoreRegistrationGymCategoryGenerator")
-    private Long id;
-    @Column(nullable = false)
     private Long gymMoreRegistrationId;
-    @Column(nullable = false)
+    @Id
     private Long gymCategoryId;
     @Column(nullable = false)
     private Date registrationDate;

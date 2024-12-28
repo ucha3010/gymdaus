@@ -1,11 +1,15 @@
 package com.gymdaus.core.service.impl;
 
 import com.gymdaus.core.entity.GymCategory;
+import com.gymdaus.core.entity.GymMoreRegistrationGymCategory;
 import com.gymdaus.core.exception.RemoveException;
 import com.gymdaus.core.mapper.MapperGymCategory;
 import com.gymdaus.core.model.GymCategoryModel;
 import com.gymdaus.core.repository.GymCategoryRepository;
+import com.gymdaus.core.repository.GymMoreRegistrationGymCategoryRepository;
+import com.gymdaus.core.service.GymCategoryGymBeltService;
 import com.gymdaus.core.service.GymCategoryService;
+import com.gymdaus.core.util.Constants;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,12 +25,31 @@ public class GymCategoryServiceImpl implements GymCategoryService {
 
     @Autowired
     private MapperGymCategory mapperGymCategory;
+    @Autowired
+    private GymMoreRegistrationGymCategoryRepository gymMoreRegistrationGymCategoryRepository;
+    @Autowired
+    private GymCategoryGymBeltService gymCategoryGymBeltService;
 
     @Override
     public List<GymCategoryModel> findAllByGymId(Long gymId) {
         List<GymCategoryModel> gymCategoryModelList = new ArrayList<>();
         for (GymCategory gymCategory : gymCategoryRepository.findAllByGymIdOrderByPositionAsc(gymId)) {
             gymCategoryModelList.add(mapperGymCategory.entity2Model(gymCategory));
+        }
+        return gymCategoryModelList;
+    }
+
+    @Override
+    public List<GymCategoryModel> findAllByGymIdAndSelected(Long gymId, Long gymMoreRegistrationId) {
+        List<GymCategoryModel> gymCategoryModelList = findAllByGymId(gymId);
+        List<GymMoreRegistrationGymCategory> gymMoreRegistrationGymCategoryList = gymMoreRegistrationGymCategoryRepository.findByGymMoreRegistrationId(gymMoreRegistrationId);
+        for (GymCategoryModel gymCategoryModel : gymCategoryModelList) {
+            for (GymMoreRegistrationGymCategory gymMoreRegistrationGymCategoryModel : gymMoreRegistrationGymCategoryList) {
+                if (gymCategoryModel.getId().equals(gymMoreRegistrationGymCategoryModel.getGymCategoryId())) {
+                    gymCategoryModel.setSelected(Boolean.TRUE);
+                    break;
+                }
+            }
         }
         return gymCategoryModelList;
     }
@@ -54,7 +77,16 @@ public class GymCategoryServiceImpl implements GymCategoryService {
     public void delete(Long id) throws RemoveException {
         GymCategory gymCategory = gymCategoryRepository.findById(id).orElse(null);
         if (gymCategory != null) {
+            StringBuilder errorAdvice = new StringBuilder();
+            List<GymMoreRegistrationGymCategory> gymMoreRegistrationGymCategoryList = gymMoreRegistrationGymCategoryRepository.findByGymCategoryId(id);
+            if (!gymMoreRegistrationGymCategoryList.isEmpty()) {
+                for (GymMoreRegistrationGymCategory gymMoreRegistrationGymCategory : gymMoreRegistrationGymCategoryList) {
+                    errorAdvice.append(gymMoreRegistrationGymCategory.getGymMoreRegistrationId()).append(" ");
+                }
+                throw new RemoveException(Constants.DELETE_ADVICE, errorAdvice.toString());
+            }
             try {
+                gymCategoryGymBeltService.deleteByGymCategoryId(id);
                 gymCategoryRepository.deleteById(id);
                 List<GymCategory> gymCategoryList = gymCategoryRepository.findAllByGymIdOrderByPositionAsc(gymCategory.getGymId());
                 for (int i = 0; i < gymCategoryList.size(); i++) {
@@ -64,7 +96,7 @@ public class GymCategoryServiceImpl implements GymCategoryService {
                     }
                 }
             } catch (Exception e) {
-                throw new RemoveException("1000", e.getMessage());
+                throw new RemoveException(Constants.DELETE_ADVICE, e.getMessage());
             }
         }
     }

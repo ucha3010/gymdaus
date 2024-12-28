@@ -7,11 +7,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class GymMoreRegistrationBeltModel {
+public class GymMoreRegistrationGymBeltModel {
 
-    private Long id;
+    private GymMoreRegistrationModel gymMoreRegistrationModel;
     private GymBeltModel gymBeltModel;
     private int position;
-    private GymMoreRegistrationModel gymMoreRegistrationModel;
 
 }

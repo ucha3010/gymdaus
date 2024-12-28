@@ -11,7 +11,7 @@ import lombok.Setter;
 import java.util.Date;
 
 @Entity
-@IdClass(ParameterId.class)
+@IdClass(GymParameterId.class)
 @Table(name = "gym_parameter")
 @Getter
 @Setter

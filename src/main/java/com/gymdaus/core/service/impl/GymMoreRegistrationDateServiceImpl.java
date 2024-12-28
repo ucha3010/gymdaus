@@ -1,6 +1,7 @@
 package com.gymdaus.core.service.impl;
 
 import com.gymdaus.core.entity.GymMoreRegistrationDate;
+import com.gymdaus.core.entity.GymMoreRegistrationGymCategory;
 import com.gymdaus.core.mapper.MapperGymMoreRegistrationDate;
 import com.gymdaus.core.model.GymMoreRegistrationDateModel;
 import com.gymdaus.core.repository.GymMoreRegistrationDateRepository;
@@ -22,15 +23,6 @@ public class GymMoreRegistrationDateServiceImpl implements GymMoreRegistrationDa
     private MapperGymMoreRegistrationDate mapperGymMoreRegistrationDate;
 
     @Override
-    public List<GymMoreRegistrationDateModel> findAll() {
-        List<GymMoreRegistrationDateModel> gymMoreRegistrationDateModelList = new ArrayList<>();
-        for (GymMoreRegistrationDate gymMoreRegistrationDate : gymMoreRegistrationDateRepository.findAll()) {
-            gymMoreRegistrationDateModelList.add(mapperGymMoreRegistrationDate.entity2Model(gymMoreRegistrationDate));
-        }
-        return gymMoreRegistrationDateModelList;
-    }
-
-    @Override
     public List<GymMoreRegistrationDateModel> findAllByGymMoreRegistration(Long gymMoreRegistrationId) {
         List<GymMoreRegistrationDateModel> gymMoreRegistrationDateModelList = new ArrayList<>();
         for (GymMoreRegistrationDate gymMoreRegistrationDate : gymMoreRegistrationDateRepository.findAllByGymMoreRegistrationId(gymMoreRegistrationId)) {
@@ -49,17 +41,19 @@ public class GymMoreRegistrationDateServiceImpl implements GymMoreRegistrationDa
     }
 
     @Override
-    public void add(GymMoreRegistrationDateModel gymMoreRegistrationDateModel) {
-        gymMoreRegistrationDateRepository.save(mapperGymMoreRegistrationDate.model2Entity(gymMoreRegistrationDateModel));
-    }
-
-    @Override
-    public void update(GymMoreRegistrationDateModel gymMoreRegistrationDateModel) {
-        gymMoreRegistrationDateRepository.save(mapperGymMoreRegistrationDate.model2Entity(gymMoreRegistrationDateModel));
+    public GymMoreRegistrationDateModel add(GymMoreRegistrationDateModel gymMoreRegistrationDateModel) {
+        return mapperGymMoreRegistrationDate.entity2Model(gymMoreRegistrationDateRepository.save(mapperGymMoreRegistrationDate.model2Entity(gymMoreRegistrationDateModel)));
     }
 
     @Override
     public void delete(Long id) {
         gymMoreRegistrationDateRepository.deleteById(id);
+    }
+
+    @Override
+    public void emptyByGymMoreRegistrationId(Long gymMoreRegistrationId) {
+        for (GymMoreRegistrationDate gymMoreRegistrationDate : gymMoreRegistrationDateRepository.findAllByGymMoreRegistrationId(gymMoreRegistrationId)) {
+            gymMoreRegistrationDateRepository.delete(gymMoreRegistrationDate);
+        }
     }
 }

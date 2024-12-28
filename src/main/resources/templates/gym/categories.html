@@ -78,7 +78,8 @@
 
             <section class="marginTopBottom1Percentage text-center">
                 <div th:if="${removeProblem != null}" class="alert alert-danger" role="alert"><span
-                        th:text="#{error.deleting.item}"></span></div>
+                        th:text="#{menu1.more.registrations}"></span><span
+                        th:text="${' IDs: '+removeProblem}"></span></div>
             </section>
 
             <section>
@@ -107,18 +108,18 @@
                             <input type="text" th:field="*{name}" id="name" class="form-control" maxlength="50"/>
                         </div>
                         <div class="col-12 col-md-2">
-                            <label for="startBirthdayYear" th:text="#{start.birthday.year}"></label>
+                            <label for="startAge" th:text="#{start.age}"></label>
                         </div>
                         <div class="col-6 col-md-2">
-                            <input type="number" th:field="*{startBirthdayYear}" id="startBirthdayYear" class="form-control" step="1" min="1900"/>
+                            <input type="number" th:field="*{startAge}" id="startAge" class="form-control" step="1" min="1" max="100"/>
                         </div>
                         <div class="col-6 d-md-none">
                         </div>
                         <div class="col-12 col-md-2">
-                            <label for="endBirthdayYear" th:text="#{end.birthday.year}"></label>
+                            <label for="endAge" th:text="#{end.age}"></label>
                         </div>
                         <div class="col-6 col-md-2">
-                            <input type="number" th:field="*{endBirthdayYear}" id="endBirthdayYear" class="form-control" step="1" min="1900"/>
+                            <input type="number" th:field="*{endAge}" id="endAge" class="form-control" step="1" min="1" max="100"/>
                         </div>
                         <div class="col-6 col-md-1">
                         </div>
@@ -153,18 +154,18 @@
             </section>
 
             <section sec:authorize="hasRole('ROLE_ADMIN')">
-                <div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
-                    <div class="col pe-5">
+                <div class="row mt-3">
+                    <div class="col-md-4 mb-3">
                         <select id="gymCategoryId" class="form-select">
                             <option th:each="unit : ${gymCategoryModelList}" th:value="${unit.id}"
                                     th:text="${unit.name}"></option>
                         </select>
                         <a class="btn btn-danger" onclick="confirmDelete()"><span th:text="#{delete}"></span></a>
                     </div>
-                    <div class="col text-center">
+                    <div class="col-md-8 text-center mb-3">
                         <ul id="sortable" class="list-group mb-1">
                             <li th:each="unit : ${gymCategoryModelList}" th:value="${unit.id}"
-                                th:text="${unit.name+' / '+unit.startBirthdayYear+'-'+unit.endBirthdayYear+' / '+unit.beltNameList+' / '+unit.gymPoomsaeModel.name}"
+                                th:text="${unit.name+' / '+unit.startAge+'-'+unit.endAge+' / '+unit.beltNameList+' / '+unit.gymPoomsaeModel.name}"
                                 class="list-group-item move mb-1">
                             </li>
                         </ul>

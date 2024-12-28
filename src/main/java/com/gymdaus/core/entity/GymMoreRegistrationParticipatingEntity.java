@@ -7,6 +7,7 @@ import lombok.*;
 import java.util.Date;
 
 @Entity
+@IdClass(GymMoreRegistrationParticipatingEntityId.class)
 @Table(name = "gym_more_registration_participating_entity")
 @Getter
 @Setter
@@ -16,10 +17,8 @@ import java.util.Date;
 public class GymMoreRegistrationParticipatingEntity {
 
     @Id
-    @SequenceGenerator(name = "gymMoreRegistrationPEGenerator", sequenceName = "CHANGE_LOW_SEQUENCE", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gymMoreRegistrationPEGenerator")
-    private Long id;
     private Long gymMoreRegistrationId;
+    @Id
     private Long participatingEntityId;
     @Column(nullable = false)
     private Date registrationDate;

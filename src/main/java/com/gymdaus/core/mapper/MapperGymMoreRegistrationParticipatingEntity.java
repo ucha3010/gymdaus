@@ -12,7 +12,6 @@ public class MapperGymMoreRegistrationParticipatingEntity {
     public GymMoreRegistrationParticipatingEntityModel entity2Model(GymMoreRegistrationParticipatingEntity externObject) {
         GymMoreRegistrationParticipatingEntityModel localObject = new GymMoreRegistrationParticipatingEntityModel();
         if (externObject != null) {
-            localObject.setId(externObject.getId());
             localObject.setRegistrationDate(externObject.getRegistrationDate());
             localObject.setRegistrationUser(externObject.getRegistrationUser());
             localObject.setPosition(externObject.getPosition());
@@ -33,7 +32,6 @@ public class MapperGymMoreRegistrationParticipatingEntity {
     public GymMoreRegistrationParticipatingEntity model2Entity(GymMoreRegistrationParticipatingEntityModel externObject) {
         GymMoreRegistrationParticipatingEntity localObject = new GymMoreRegistrationParticipatingEntity();
         if (externObject != null) {
-            localObject.setId(externObject.getId());
             localObject.setRegistrationDate(externObject.getRegistrationDate());
             localObject.setRegistrationUser(externObject.getRegistrationUser());
             localObject.setPosition(externObject.getPosition());

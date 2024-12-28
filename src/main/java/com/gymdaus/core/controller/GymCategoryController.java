@@ -101,10 +101,9 @@ public class GymCategoryController {
         GymCategoryModel gymCategoryModel = gymCategoryService.findById(id);
         securityService.enabledAdministrationGymUser(user.getUsername(), gymCategoryModel.getGymModel().getId(), false, "/gymCategory/remove-category/");
         try {
-            gymCategoryGymBeltService.deleteByGymCategoryId(id);
             gymCategoryService.delete(id);
         } catch (RemoveException re) {
-            modelAndView.addObject("removeProblem", "removeProblem");
+            modelAndView.addObject("removeProblem", re.getMessage());
             LoggerMapper.log(Level.ERROR, Utils.getMethodName(), re.getMessage(), this.getClass());
         }
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());

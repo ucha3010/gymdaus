@@ -13,7 +13,6 @@ public class MapperGymMoreRegistrationGymCategory {
         GymMoreRegistrationGymCategoryModel localObject = null;
         if (externObject != null) {
             localObject = new GymMoreRegistrationGymCategoryModel();
-            localObject.setId(externObject.getId());
             localObject.setRegistrationDate(externObject.getRegistrationDate());
             localObject.setRegistrationUser(externObject.getRegistrationUser());
             GymMoreRegistrationModel gymMoreRegistrationModel = new GymMoreRegistrationModel();
@@ -29,7 +28,6 @@ public class MapperGymMoreRegistrationGymCategory {
     public GymMoreRegistrationGymCategory model2Entity(GymMoreRegistrationGymCategoryModel externObject) {
         GymMoreRegistrationGymCategory localObject = new GymMoreRegistrationGymCategory();
         if (externObject != null) {
-            localObject.setId(externObject.getId());
             localObject.setRegistrationDate(externObject.getRegistrationDate());
             localObject.setRegistrationUser(externObject.getRegistrationUser());
             if (externObject.getGymMoreRegistrationModel() != null) {

@@ -1,14 +1,17 @@
 package com.gymdaus.core.service.impl;
 
 import com.gymdaus.core.entity.GymMoreRegistrationGymCategory;
-import com.gymdaus.core.mapper.MapperGymMoreRegistrationGymCategory;
-import com.gymdaus.core.model.GymMoreRegistrationGymCategoryModel;
+import com.gymdaus.core.model.GymCategoryModel;
+import com.gymdaus.core.model.GymMoreRegistrationModel;
 import com.gymdaus.core.repository.GymMoreRegistrationGymCategoryRepository;
+import com.gymdaus.core.service.GymCategoryService;
+import com.gymdaus.core.service.GymMoreRegistrationGymBeltService;
 import com.gymdaus.core.service.GymMoreRegistrationGymCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service()
@@ -16,59 +19,42 @@ public class GymMoreRegistrationGymCategoryServiceImpl implements GymMoreRegistr
 
     @Autowired
     private GymMoreRegistrationGymCategoryRepository gymMoreRegistrationGymCategoryRepository;
-
     @Autowired
-    private MapperGymMoreRegistrationGymCategory mapperGymMoreRegistrationGymCategory;
+    private GymCategoryService gymCategoryService;
+    @Autowired
+    private GymMoreRegistrationGymBeltService gymMoreRegistrationGymBeltService;
 
     @Override
-    public List<GymMoreRegistrationGymCategoryModel> findAll() {
-        List<GymMoreRegistrationGymCategoryModel> gymMoreRegistrationGymCategoryModelList = new ArrayList<>();
-        for (GymMoreRegistrationGymCategory gymMoreRegistrationGymCategory : gymMoreRegistrationGymCategoryRepository.findAll()) {
-            gymMoreRegistrationGymCategoryModelList.add(mapperGymMoreRegistrationGymCategory.entity2Model(gymMoreRegistrationGymCategory));
-        }
-        return gymMoreRegistrationGymCategoryModelList;
-    }
-
-    @Override
-    public GymMoreRegistrationGymCategoryModel findById(Long id) {
-        return mapperGymMoreRegistrationGymCategory.entity2Model(gymMoreRegistrationGymCategoryRepository.findById(id).orElse(null));
-    }
-
-    @Override
-    public void add(GymMoreRegistrationGymCategoryModel gymMoreRegistrationGymCategoryModel) {
-        gymMoreRegistrationGymCategoryRepository.save(mapperGymMoreRegistrationGymCategory.model2Entity(gymMoreRegistrationGymCategoryModel));
-    }
-
-    @Override
-    public void update(GymMoreRegistrationGymCategoryModel gymMoreRegistrationGymCategoryModel) {
-        gymMoreRegistrationGymCategoryRepository.save(mapperGymMoreRegistrationGymCategory.model2Entity(gymMoreRegistrationGymCategoryModel));
-    }
-
-    @Override
-    public void delete(Long id) {
-        gymMoreRegistrationGymCategoryRepository.deleteById(id);
-    }
-
-    @Override
-    public List<GymMoreRegistrationGymCategoryModel> findByGymMoreRegistration(Long gymMoreRegistrationId) {
-        List<GymMoreRegistrationGymCategoryModel> gymMoreRegistrationGymCategoryModelList = new ArrayList<>();
+    public List<GymCategoryModel> findAllByGymMoreRegistration(Long gymMoreRegistrationId) {
+        List<GymCategoryModel> gymCategoryModelList = new ArrayList<>();
         for (GymMoreRegistrationGymCategory gymMoreRegistrationGymCategory : gymMoreRegistrationGymCategoryRepository.findByGymMoreRegistrationId(gymMoreRegistrationId)) {
-            gymMoreRegistrationGymCategoryModelList.add(mapperGymMoreRegistrationGymCategory.entity2Model(gymMoreRegistrationGymCategory));
+            gymCategoryModelList.add(gymCategoryService.findById(gymMoreRegistrationGymCategory.getGymCategoryId()));
         }
-        return gymMoreRegistrationGymCategoryModelList;
+        return gymCategoryModelList;
     }
 
     @Override
-    public List<GymMoreRegistrationGymCategoryModel> findByGymCategory(Long gymCategoryId) {
-        List<GymMoreRegistrationGymCategoryModel> gymMoreRegistrationGymCategoryModelList = new ArrayList<>();
-        for (GymMoreRegistrationGymCategory gymMoreRegistrationGymCategory : gymMoreRegistrationGymCategoryRepository.findByGymCategoryId(gymCategoryId)) {
-            gymMoreRegistrationGymCategoryModelList.add(mapperGymMoreRegistrationGymCategory.entity2Model(gymMoreRegistrationGymCategory));
+    public void addGymCategoryList(GymMoreRegistrationModel gymMoreRegistrationModel, String username) {
+        List<Long> gymCategoryIdList = gymMoreRegistrationModel.getGymCategoryIdList();
+        emptyByGymMoreRegistrationId(gymMoreRegistrationModel.getId());
+        if (gymCategoryIdList != null) {
+            GymMoreRegistrationGymCategory gymMoreRegistrationGymCategory = new GymMoreRegistrationGymCategory();
+            gymMoreRegistrationGymCategory.setRegistrationUser(username);
+            gymMoreRegistrationGymCategory.setRegistrationDate(new Date());
+            gymMoreRegistrationGymCategory.setGymMoreRegistrationId(gymMoreRegistrationModel.getId());
+            for (Long id : gymCategoryIdList) {
+                gymMoreRegistrationGymCategory.setGymCategoryId(id);
+                gymMoreRegistrationGymCategoryRepository.save(gymMoreRegistrationGymCategory);
+                gymMoreRegistrationGymBeltService.addFromCategory(gymMoreRegistrationModel.getId(), id);
+            }
         }
-        return gymMoreRegistrationGymCategoryModelList;
     }
 
     @Override
-    public GymMoreRegistrationGymCategoryModel findByGymMoreRegistrationAndGymCategory(Long gymMoreRegistrationId, Long gymCategoryId) {
-        return mapperGymMoreRegistrationGymCategory.entity2Model(gymMoreRegistrationGymCategoryRepository.findByGymMoreRegistrationIdAndGymCategoryId(gymMoreRegistrationId, gymCategoryId));
+    public void emptyByGymMoreRegistrationId(Long gymMoreRegistrationId) {
+        for (GymMoreRegistrationGymCategory gymMoreRegistrationGymCategory : gymMoreRegistrationGymCategoryRepository.findByGymMoreRegistrationId(gymMoreRegistrationId)) {
+            gymMoreRegistrationGymCategoryRepository.delete(gymMoreRegistrationGymCategory);
+        }
+        gymMoreRegistrationGymBeltService.emptyByGymMoreRegistrationId(gymMoreRegistrationId);
     }
 }

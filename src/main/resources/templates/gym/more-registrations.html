@@ -66,6 +66,8 @@
             <section class="marginTopBottom1Percentage text-center">
                 <div th:if="${updateOK != null}" class="alert alert-success" role="alert"><span
                         th:text="#{update.ok}"></span></div>
+                <div th:if="${eraseOK != null}" class="alert alert-success" role="alert"><span
+                        th:text="#{erase.ok}"></span></div>
             </section>
 
             <section>
@@ -131,6 +133,9 @@
                             <button class="btn">ID</button>
                         </th>
                         <th scope="col" class="fw-normal">
+                            <button class="btn"><span th:text="#{enabled}"></span></button>
+                        </th>
+                        <th scope="col" class="fw-normal">
                             <button class="btn"><span th:text="#{name}"></span></button>
                         </th>
                         <th scope="col" class="fw-normal">
@@ -144,6 +149,10 @@
                     <tbody>
                     <tr class="text-center" th:each="unit : ${gymMoreRegistrationModelList}" th:attr="onclick=|viewDetail('${unit.id}')|">
                         <td class="d-none d-lg-table-cell"><span th:text="${unit.id}"></span></td>
+                        <td>
+                            <img th:if="${unit.enabled}" class="check-img" src="#" th:src="@{/imgs/ok.png}" alt="Enabled">
+                            <img th:if="${!unit.enabled}" class="check-img" src="#" th:src="@{/imgs/ko.png}" alt="Disabled">
+                        </td>
                         <td><span th:text="${unit.name}"></span></td>
                         <td><span th:text="#{__${unit.moreRegistrationModel.name}__}"></span></td>
                         <td class="d-none d-lg-table-cell text-center"><span

@@ -1,8 +1,7 @@
 package com.gymdaus.core.mapper;
 
-import com.gymdaus.core.entity.GymMoreRegistrationBelt;
-import com.gymdaus.core.model.GymBeltModel;
-import com.gymdaus.core.model.GymMoreRegistrationBeltModel;
+import com.gymdaus.core.entity.GymMoreRegistrationGymBelt;
+import com.gymdaus.core.model.GymMoreRegistrationGymBeltModel;
 import com.gymdaus.core.model.GymMoreRegistrationModel;
 import com.gymdaus.core.service.GymBeltService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,27 +13,25 @@ public class MapperGymMoreRegistrationBelt {
     @Autowired
     private GymBeltService gymBeltService;
 
-    public GymMoreRegistrationBeltModel entity2Model(GymMoreRegistrationBelt externObject) {
-        GymMoreRegistrationBeltModel localObject = new GymMoreRegistrationBeltModel();
+    public GymMoreRegistrationGymBeltModel entity2Model(GymMoreRegistrationGymBelt externObject) {
+        GymMoreRegistrationGymBeltModel localObject = new GymMoreRegistrationGymBeltModel();
         if (externObject != null) {
-            localObject.setId(externObject.getId());
             localObject.setPosition(externObject.getPosition());
             if (externObject.getGymMoreRegistrationId() != 0) {
                 GymMoreRegistrationModel gymMoreRegistrationModel = new GymMoreRegistrationModel();
                 gymMoreRegistrationModel.setId(externObject.getGymMoreRegistrationId());
                 localObject.setGymMoreRegistrationModel(gymMoreRegistrationModel);
             }
-            if (externObject.getBeltId() != null) {
-                localObject.setGymBeltModel(gymBeltService.findById(externObject.getBeltId()));
+            if (externObject.getGymBeltId() != null) {
+                localObject.setGymBeltModel(gymBeltService.findById(externObject.getGymBeltId()));
             }
         }
         return localObject;
     }
 
-    public GymMoreRegistrationBelt model2Entity(GymMoreRegistrationBeltModel externObject) {
-        GymMoreRegistrationBelt localObject = new GymMoreRegistrationBelt();
+    public GymMoreRegistrationGymBelt model2Entity(GymMoreRegistrationGymBeltModel externObject) {
+        GymMoreRegistrationGymBelt localObject = new GymMoreRegistrationGymBelt();
         if (externObject != null) {
-            localObject.setId(externObject.getId());
             localObject.setPosition(externObject.getPosition());
             if (externObject.getGymMoreRegistrationModel() != null) {
                 localObject.setGymMoreRegistrationId(externObject.getGymMoreRegistrationModel().getId());
@@ -42,9 +39,9 @@ public class MapperGymMoreRegistrationBelt {
                 localObject.setGymMoreRegistrationId(0L);
             }
             if (externObject.getGymBeltModel() != null) {
-                localObject.setBeltId(externObject.getGymBeltModel().getId());
+                localObject.setGymBeltId(externObject.getGymBeltModel().getId());
             } else {
-                localObject.setBeltId(0L);
+                localObject.setGymBeltId(0L);
             }
         }
         return localObject;

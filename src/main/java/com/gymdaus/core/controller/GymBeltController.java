@@ -73,14 +73,14 @@ public class GymBeltController {
         return belts(modelAndView, gymId);
     }
 
-    @GetMapping("/removeBelt/{id}")
+    @GetMapping("/remove-belt/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ModelAndView removeBelt(ModelAndView modelAndView, @PathVariable Long id) {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), id, getClass());
-        securityService.userAccessValidation("/gymBelt/removeBelt/" + id);
+        securityService.userAccessValidation("/gymBelt/remove-belt/" + id);
         UserModel user = utilService.basicDataCharge(modelAndView);
         GymBeltModel gymBeltModel = gymBeltService.findById(id);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymBeltModel.getGymModel().getId(), false, "/gymBelt/removeBelt/");
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymBeltModel.getGymModel().getId(), false, "/gymBelt/remove-belt/");
         try {
             gymBeltService.delete(id);
         } catch (RemoveException re) {

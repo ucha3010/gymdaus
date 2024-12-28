@@ -12,8 +12,7 @@ import java.util.Date;
 @ToString
 public class GymMoreRegistrationGymCategoryModel {
 
-    private Long id;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date registrationDate;
     private String registrationUser;
     private GymMoreRegistrationModel gymMoreRegistrationModel;

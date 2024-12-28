@@ -10,8 +10,5 @@ import java.util.List;
 public interface GymMoreRegistrationGymCategoryRepository extends JpaRepository<GymMoreRegistrationGymCategory, Long> {
 
     List<GymMoreRegistrationGymCategory> findByGymMoreRegistrationId(Long gymMoreRegistrationId);
-
     List<GymMoreRegistrationGymCategory> findByGymCategoryId(Long gymCategoryId);
-
-    GymMoreRegistrationGymCategory findByGymMoreRegistrationIdAndGymCategoryId(Long gymMoreRegistrationId, Long gymCategoryId);
 }

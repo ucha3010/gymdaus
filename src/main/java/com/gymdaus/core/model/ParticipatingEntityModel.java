@@ -16,6 +16,6 @@ public class ParticipatingEntityModel {
     private String notes;
     private int position;
     private GymModel gymModel;
-    private List<GymMoreRegistrationParticipatingEntityModel> gymMoreRegistrationParticipatingEntityModelList;
+    private boolean selected;
 
 }

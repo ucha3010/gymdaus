@@ -1,15 +1,15 @@
 package com.gymdaus.core.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-public class ParameterId implements Serializable {
+public class GymParameterId implements Serializable {
 
     private String keyData;
     private Long gymId;

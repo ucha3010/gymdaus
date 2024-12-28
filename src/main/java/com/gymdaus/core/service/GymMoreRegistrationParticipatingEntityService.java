@@ -1,26 +1,16 @@
 package com.gymdaus.core.service;
 
 
-import com.gymdaus.core.model.GymMoreRegistrationParticipatingEntityModel;
+import com.gymdaus.core.model.GymMoreRegistrationModel;
+import com.gymdaus.core.model.ParticipatingEntityModel;
 
 import java.util.List;
 
 public interface GymMoreRegistrationParticipatingEntityService {
 
-    List<GymMoreRegistrationParticipatingEntityModel> findAll();
+    List<ParticipatingEntityModel> findAllByGymMoreRegistration(Long gymMoreRegistrationId);
 
-    List<GymMoreRegistrationParticipatingEntityModel> findAllByGymMoreRegistration(Long gymMoreRegistrationId);
+    void addParticipatingEntityList(GymMoreRegistrationModel gymMoreRegistrationModel, String username);
 
-    GymMoreRegistrationParticipatingEntityModel findById(Long id);
-
-    void add(GymMoreRegistrationParticipatingEntityModel model);
-
-    void update(GymMoreRegistrationParticipatingEntityModel model);
-
-    void delete(Long id);
-
-    void dragOfPosition(int initialPosition, int finalPosition);
-
-    int findMaxPosition();
-
+    void emptyByGymMoreRegistrationId(Long gymMoreRegistrationId);
 }

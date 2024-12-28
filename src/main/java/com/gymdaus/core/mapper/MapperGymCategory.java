@@ -25,8 +25,8 @@ public class MapperGymCategory {
         if (externObject != null) {
             localObject.setId(externObject.getId());
             localObject.setName(externObject.getName());
-            localObject.setStartBirthdayYear(externObject.getStartBirthdayYear());
-            localObject.setEndBirthdayYear(externObject.getEndBirthdayYear());
+            localObject.setStartAge(externObject.getStartAge());
+            localObject.setEndAge(externObject.getEndAge());
             localObject.setPosition(externObject.getPosition());
             if (externObject.getGymId() != 0) {
                 GymModel gymModel = new GymModel();
@@ -60,8 +60,8 @@ public class MapperGymCategory {
         if (externObject != null) {
             localObject.setId(externObject.getId());
             localObject.setName(externObject.getName());
-            localObject.setStartBirthdayYear(externObject.getStartBirthdayYear());
-            localObject.setEndBirthdayYear(externObject.getEndBirthdayYear());
+            localObject.setStartAge(externObject.getStartAge());
+            localObject.setEndAge(externObject.getEndAge());
             localObject.setPosition(externObject.getPosition());
             if (externObject.getGymModel() != null) {
                 localObject.setGymId(externObject.getGymModel().getId());

@@ -7,16 +7,14 @@ import java.util.List;
 
 public interface GymMoreRegistrationDateService {
 
-    List<GymMoreRegistrationDateModel> findAll();
-
     List<GymMoreRegistrationDateModel> findAllByGymMoreRegistration(Long gymMoreRegistrationId);
 
     GymMoreRegistrationDateModel findById(Long id);
 
-    void add(GymMoreRegistrationDateModel model);
-
-    void update(GymMoreRegistrationDateModel model);
+    GymMoreRegistrationDateModel add(GymMoreRegistrationDateModel model);
 
     void delete(Long id);
+
+    void emptyByGymMoreRegistrationId(Long gymMoreRegistrationId);
 
 }

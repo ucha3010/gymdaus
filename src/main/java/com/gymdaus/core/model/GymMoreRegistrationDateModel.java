@@ -13,9 +13,9 @@ import java.util.Date;
 public class GymMoreRegistrationDateModel {
 
     private Long id;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private Date startDateTime;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private Date endDateTime;
     private GymMoreRegistrationModel gymMoreRegistrationModel;
 

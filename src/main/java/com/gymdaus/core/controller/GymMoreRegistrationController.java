@@ -1,5 +1,6 @@
 package com.gymdaus.core.controller;
 
+import com.gymdaus.core.model.GymMoreRegistrationDateModel;
 import com.gymdaus.core.model.GymMoreRegistrationModel;
 import com.gymdaus.core.model.UserModel;
 import com.gymdaus.core.service.*;
@@ -21,17 +22,21 @@ public class GymMoreRegistrationController {
     @Autowired
     private CountryService countryService;
     @Autowired
-    private MoreRegistrationService moreRegistrationService;
-    @Autowired
-    private GymMoreRegistrationBeltService gymMoreRegistrationBeltService;
-    @Autowired
-    private GymMoreRegistrationDateService gymMoreRegistrationDateService;
+    private GymCategoryService gymCategoryService;
     @Autowired
     private GymMoreRegistrationGymCategoryService gymMoreRegistrationGymCategoryService;
     @Autowired
     private GymMoreRegistrationParticipatingEntityService gymMoreRegistrationParticipatingEntityService;
     @Autowired
+    private GymMoreRegistrationGymBeltService gymMoreRegistrationGymBeltService;
+    @Autowired
+    private GymMoreRegistrationDateService gymMoreRegistrationDateService;
+    @Autowired
     private GymService gymService;
+    @Autowired
+    private MoreRegistrationService moreRegistrationService;
+    @Autowired
+    private ParticipatingEntityService participatingEntityService;
     @Autowired
     private SecurityService securityService;
     @Autowired
@@ -55,7 +60,7 @@ public class GymMoreRegistrationController {
 
     @PostMapping("/more-registration")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ModelAndView addMoreRegistrationSchedule(ModelAndView modelAndView, @ModelAttribute("gymMoreRegistrationModel") GymMoreRegistrationModel gymMoreRegistrationModel) {
+    public ModelAndView addMoreRegistration(ModelAndView modelAndView, @ModelAttribute("gymMoreRegistrationModel") GymMoreRegistrationModel gymMoreRegistrationModel) {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymMoreRegistrationModel, getClass());
         securityService.userAccessValidation("/gymMoreRegistration/more-registration");
         UserModel user = utilService.basicDataCharge(modelAndView);
@@ -77,80 +82,145 @@ public class GymMoreRegistrationController {
         modelAndView.setViewName("gym/more-registration");
         modelAndView.addObject("gymModel", gymService.findByIdEnabled(gymMoreRegistrationModel.getGymModel().getId()));
         modelAndView.addObject("gymMoreRegistrationModel", gymMoreRegistrationModel);
-        modelAndView.addObject("gymMoreRegistrationBeltModelList", gymMoreRegistrationBeltService.findAllByGymMoreRegistration(gymMoreRegistrationId));
-        modelAndView.addObject("gymMoreRegistrationParticipatingEntityModelList", gymMoreRegistrationParticipatingEntityService.findAllByGymMoreRegistration(gymMoreRegistrationId));
-        modelAndView.addObject("gymMoreRegistrationGymCategoryModelList", gymMoreRegistrationGymCategoryService.findByGymMoreRegistration(gymMoreRegistrationId));
+        modelAndView.addObject("gymBeltModelList", gymMoreRegistrationGymBeltService.findAllByGymMoreRegistration(gymMoreRegistrationId));
+        modelAndView.addObject("participatingEntityModelList", gymMoreRegistrationParticipatingEntityService.findAllByGymMoreRegistration(gymMoreRegistrationId));
+        modelAndView.addObject("gymCategoryModelList", gymMoreRegistrationGymCategoryService.findAllByGymMoreRegistration(gymMoreRegistrationId));
         modelAndView.addObject("gymMoreRegistrationDateModelList", gymMoreRegistrationDateService.findAllByGymMoreRegistration(gymMoreRegistrationId));
         modelAndView.addObject("countryModelList", countryService.findAll());
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return modelAndView;
     }
-/*
-    @GetMapping("/remove-moreRegistration/{id}")
+
+    @PostMapping("/update-more-registration")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView updateMoreRegistration(ModelAndView modelAndView, @ModelAttribute("gymMoreRegistrationModel") GymMoreRegistrationModel gymMoreRegistrationModel) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymMoreRegistrationModel, getClass());
+        securityService.userAccessValidation("/gymMoreRegistration/update-more-registration");
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymMoreRegistrationModel.getGymModel().getId(), true, "/gymMoreRegistration/update-more-registration");
+        gymMoreRegistrationModel.setModificationUser(user.getUsername());
+        gymMoreRegistrationService.update(gymMoreRegistrationModel);
+        modelAndView.addObject("updateOK", "updateOK");
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return moreRegistration(modelAndView, gymMoreRegistrationModel.getId());
+    }
+
+    @GetMapping("/remove-more-registration/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ModelAndView removeMoreRegistration(ModelAndView modelAndView, @PathVariable Long id) {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), id, getClass());
-        securityService.userAccessValidation("/gymMoreRegistration/remove-moreRegistration/" + id);
+        securityService.userAccessValidation("/gymMoreRegistration/remove-more-registration/" + id);
         UserModel user = utilService.basicDataCharge(modelAndView);
         GymMoreRegistrationModel gymMoreRegistrationModel = gymMoreRegistrationService.findById(id);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymMoreRegistrationModel.getGymAddressModel().getGymModel().getId(), true, "/gymMoreRegistration/remove-moreRegistration/" + id);
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymMoreRegistrationModel.getGymModel().getId(), true, "/gymMoreRegistration/remove-more-registration/" + id);
+        gymMoreRegistrationDateService.emptyByGymMoreRegistrationId(id);
+        gymMoreRegistrationGymCategoryService.emptyByGymMoreRegistrationId(id);
+        gymMoreRegistrationParticipatingEntityService.emptyByGymMoreRegistrationId(id);
         gymMoreRegistrationService.delete(id);
+        modelAndView.addObject("eraseOK", "eraseOK");
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
-        return moreRegistrations(modelAndView, gymMoreRegistrationModel.getGymAddressModel().getGymModel().getId());
+        return moreRegistrations(modelAndView, gymMoreRegistrationModel.getGymModel().getId());
     }
 
-    @GetMapping("/changeMoreRegistrationSchedule/{gymMoreRegistrationId}/{oldIndex}/{newIndex}")
+    @GetMapping("/more-registration-date/{gymMoreRegistrationId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ModelAndView changeMoreRegistrationSchedule(ModelAndView modelAndView, @PathVariable Long gymMoreRegistrationId, @PathVariable int oldIndex, @PathVariable int newIndex) {
+    public ModelAndView moreRegistrationDate(ModelAndView modelAndView, @PathVariable Long gymMoreRegistrationId) {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymMoreRegistrationId, getClass());
-        securityService.userAccessValidation("/gymMoreRegistration/changeMoreRegistrationSchedule/" + gymMoreRegistrationId);
+        securityService.userAccessValidation("/gymMoreRegistration/more-registration-date/" + gymMoreRegistrationId);
         UserModel user = utilService.basicDataCharge(modelAndView);
         GymMoreRegistrationModel gymMoreRegistrationModel = gymMoreRegistrationService.findById(gymMoreRegistrationId);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymMoreRegistrationModel.getGymModel().getId(), false, "/gymMoreRegistration/changeMoreRegistrationSchedule/");
-        gymMoreRegistrationScheduleService.dragOfPosition(gymMoreRegistrationModel.getGymAddressModel().getId(), gymMoreRegistrationModel.getMoreRegistrationModel().getId(), oldIndex, newIndex);
-        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
-        return moreRegistration(modelAndView, gymMoreRegistrationId);
-    }
-
-    @GetMapping("/moreRegistrationSchedule/{gymMoreRegistrationScheduleId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ModelAndView moreRegistrationSchedule(ModelAndView modelAndView, @PathVariable Long gymMoreRegistrationScheduleId) {
-        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymMoreRegistrationScheduleId, getClass());
-        securityService.userAccessValidation("/gymMoreRegistration/moreRegistrationSchedule/" + gymMoreRegistrationScheduleId);
-        UserModel user = utilService.basicDataCharge(modelAndView);
-        GymMoreRegistrationScheduleModel gymMoreRegistrationScheduleModel = gymMoreRegistrationScheduleService.findById(gymMoreRegistrationScheduleId);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymMoreRegistrationScheduleModel.getGymAddressModel().getGymModel().getId(), true, "/gymMoreRegistration/moreRegistrationSchedule/" + gymMoreRegistrationScheduleId);
-        modelAndView.setViewName("gym/moreRegistrationSchedule");
-        modelAndView.addObject("gymModel", gymService.findByIdEnabled(gymMoreRegistrationScheduleModel.getGymAddressModel().getGymModel().getId()));
-        modelAndView.addObject("gymMoreRegistrationScheduleModel", gymMoreRegistrationScheduleModel);
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymMoreRegistrationModel.getGymModel().getId(), true, "/gymMoreRegistration/more-registration-date/" + gymMoreRegistrationId);
+        modelAndView.setViewName("gym/more-registration-date");
+        modelAndView.addObject("gymModel", gymService.findByIdEnabled(gymMoreRegistrationModel.getGymModel().getId()));
+        modelAndView.addObject("gymMoreRegistrationModel", gymMoreRegistrationModel);
+        modelAndView.addObject("gymMoreRegistrationDateModel", new GymMoreRegistrationDateModel());
+        modelAndView.addObject("gymMoreRegistrationDateModelList", gymMoreRegistrationDateService.findAllByGymMoreRegistration(gymMoreRegistrationId));
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return modelAndView;
     }
 
-    @PostMapping("/update-moreRegistrationSchedule")
+    @PostMapping("/add-more-registration-date")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ModelAndView updateMoreRegistrationSchedule(ModelAndView modelAndView, @ModelAttribute("gymMoreRegistrationScheduleModel") GymMoreRegistrationScheduleModel gymMoreRegistrationScheduleModel) {
-        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymMoreRegistrationScheduleModel, getClass());
-        securityService.userAccessValidation("/gymMoreRegistration/update-moreRegistrationSchedule");
+    public ModelAndView addMoreRegistrationDate(ModelAndView modelAndView, @ModelAttribute("gymMoreRegistrationDateModel") GymMoreRegistrationDateModel gymMoreRegistrationDateModel) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymMoreRegistrationDateModel, getClass());
+        securityService.userAccessValidation("/gymMoreRegistration/add-more-registration-date");
         UserModel user = utilService.basicDataCharge(modelAndView);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymMoreRegistrationScheduleModel.getGymAddressModel().getGymModel().getId(), false, "/gymMoreRegistration/update-moreRegistrationSchedule");
-        gymMoreRegistrationScheduleService.update(gymMoreRegistrationScheduleModel);
-        modelAndView.addObject("updateOK", "updateOK");
+        GymMoreRegistrationModel gymMoreRegistrationModel = gymMoreRegistrationService.findById(gymMoreRegistrationDateModel.getGymMoreRegistrationModel().getId());
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymMoreRegistrationModel.getGymModel().getId(), true, "/gymMoreRegistration/add-more-registration-date");
+        gymMoreRegistrationDateModel = gymMoreRegistrationDateService.add(gymMoreRegistrationDateModel);
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
-        return moreRegistrationSchedule(modelAndView, gymMoreRegistrationScheduleModel.getId());
+        return moreRegistrationDate(modelAndView, gymMoreRegistrationDateModel.getGymMoreRegistrationModel().getId());
     }
 
-    @GetMapping("/remove-moreRegistrationSchedule/{id}")
+    @GetMapping("/remove-more-registration-date/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ModelAndView removeMoreRegistrationSchedule(ModelAndView modelAndView, @PathVariable Long id) {
+    public ModelAndView removeMoreRegistrationDate(ModelAndView modelAndView, @PathVariable Long id) {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), id, getClass());
-        securityService.userAccessValidation("/gymMoreRegistration/remove-moreRegistrationSchedule/" + id);
+        securityService.userAccessValidation("/gymMoreRegistration/remove-more-registration-date/" + id);
         UserModel user = utilService.basicDataCharge(modelAndView);
-        GymMoreRegistrationScheduleModel gymMoreRegistrationScheduleModel = gymMoreRegistrationScheduleService.findById(id);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymMoreRegistrationScheduleModel.getGymAddressModel().getGymModel().getId(), true, "/gymMoreRegistration/remove-moreRegistrationSchedule/" + id);
-        gymMoreRegistrationScheduleService.delete(id);
+        GymMoreRegistrationDateModel gymMoreRegistrationDateModel = gymMoreRegistrationDateService.findById(id);
+        GymMoreRegistrationModel gymMoreRegistrationModel = gymMoreRegistrationService.findById(gymMoreRegistrationDateModel.getGymMoreRegistrationModel().getId());
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymMoreRegistrationModel.getGymModel().getId(), true, "/gymMoreRegistration/remove-more-registration-date/" + id);
+        gymMoreRegistrationDateService.delete(id);
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
-        return moreRegistration(modelAndView, gymMoreRegistrationScheduleModel.getGymMoreRegistrationModel().getId());
+        return moreRegistrationDate(modelAndView, gymMoreRegistrationDateModel.getGymMoreRegistrationModel().getId());
     }
-*/
+
+    @GetMapping("/more-registration-category/{gymMoreRegistrationId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView moreRegistrationCategory(ModelAndView modelAndView, @PathVariable Long gymMoreRegistrationId) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymMoreRegistrationId, getClass());
+        securityService.userAccessValidation("/gymMoreRegistration/more-registration-category/" + gymMoreRegistrationId);
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        GymMoreRegistrationModel gymMoreRegistrationModel = gymMoreRegistrationService.findById(gymMoreRegistrationId);
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymMoreRegistrationModel.getGymModel().getId(), true, "/gymMoreRegistration/more-registration-category/" + gymMoreRegistrationId);
+        modelAndView.setViewName("gym/more-registration-category");
+        modelAndView.addObject("gymModel", gymService.findByIdEnabled(gymMoreRegistrationModel.getGymModel().getId()));
+        modelAndView.addObject("gymMoreRegistrationModel", gymMoreRegistrationModel);
+        modelAndView.addObject("gymCategoryList", gymCategoryService.findAllByGymIdAndSelected(gymMoreRegistrationModel.getGymModel().getId(), gymMoreRegistrationId));
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return modelAndView;
+    }
+
+    @PostMapping("/add-more-registration-category")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView addMoreRegistrationCategory(ModelAndView modelAndView, @ModelAttribute("gymMoreRegistrationModel") GymMoreRegistrationModel gymMoreRegistrationModel) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymMoreRegistrationModel, getClass());
+        securityService.userAccessValidation("/gymMoreRegistration/add-more-registration-category");
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        GymMoreRegistrationModel gymMoreRegistrationModelAux = gymMoreRegistrationService.findById(gymMoreRegistrationModel.getId());
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymMoreRegistrationModelAux.getGymModel().getId(), true, "/gymMoreRegistration/add-more-registration-category");
+        gymMoreRegistrationGymCategoryService.addGymCategoryList(gymMoreRegistrationModel, user.getUsername());
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return moreRegistration(modelAndView, gymMoreRegistrationModel.getId());
+    }
+
+    @GetMapping("/participating-entities/{gymMoreRegistrationId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView participatingEntities(ModelAndView modelAndView, @PathVariable Long gymMoreRegistrationId) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymMoreRegistrationId, getClass());
+        securityService.userAccessValidation("/gymMoreRegistration/participating-entities/" + gymMoreRegistrationId);
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        GymMoreRegistrationModel gymMoreRegistrationModel = gymMoreRegistrationService.findById(gymMoreRegistrationId);
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymMoreRegistrationModel.getGymModel().getId(), true, "/gymMoreRegistration/participating-entities/" + gymMoreRegistrationId);
+        modelAndView.setViewName("gym/participating-entities");
+        modelAndView.addObject("gymModel", gymService.findByIdEnabled(gymMoreRegistrationModel.getGymModel().getId()));
+        modelAndView.addObject("gymMoreRegistrationModel", gymMoreRegistrationModel);
+        modelAndView.addObject("participatingEntityList", participatingEntityService.findAllByGymIdAndSelected(gymMoreRegistrationModel.getGymModel().getId(), gymMoreRegistrationId));
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return modelAndView;
+    }
+
+    @PostMapping("/add-participating-entity")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView addParticipatingEntity(ModelAndView modelAndView, @ModelAttribute("gymMoreRegistrationModel") GymMoreRegistrationModel gymMoreRegistrationModel) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymMoreRegistrationModel, getClass());
+        securityService.userAccessValidation("/gymMoreRegistration/add-participating-entity");
+        UserModel user = utilService.basicDataCharge(modelAndView);
+        GymMoreRegistrationModel gymMoreRegistrationModelAux = gymMoreRegistrationService.findById(gymMoreRegistrationModel.getId());
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymMoreRegistrationModelAux.getGymModel().getId(), true, "/gymMoreRegistration/add-participating-entity");
+        gymMoreRegistrationParticipatingEntityService.addParticipatingEntityList(gymMoreRegistrationModel, user.getUsername());
+        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
+        return moreRegistration(modelAndView, gymMoreRegistrationModel.getId());
+    }
 }

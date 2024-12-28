@@ -55,7 +55,7 @@
                 var participant = document.getElementById('participatingEntityId').selectedOptions[0];
                 let deleteAsk = $('#deleteAsk').val();
                 if(confirm(deleteAsk + " " + participant.text + "?")){
-                    var relativeUrl = "participatingEntity/removeParticipant/" + participant.value;
+                    var relativeUrl = "participatingEntity/remove-participating-entity/" + participant.value;
                     var domain = getDomain(location.href);
                     location.href = domain + relativeUrl;
                     return true;
@@ -78,7 +78,8 @@
 
             <section class="marginTopBottom1Percentage text-center">
                 <div th:if="${removeProblem != null}" class="alert alert-danger" role="alert"><span
-                        th:text="#{error.deleting.item}"></span></div>
+                        th:text="#{menu1.more.registrations}"></span><span
+                        th:text="${' IDs: '+removeProblem}"></span></div>
             </section>
 
             <section>

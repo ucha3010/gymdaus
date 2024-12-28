@@ -63,14 +63,16 @@ public class GymBeltServiceImpl implements GymBeltService {
     public void delete(Long id) throws RemoveException {
         GymBelt gymBelt = gymBeltRepository.findById(id).orElse(null);
         if (gymBelt != null) {
-            List<GymCategory> gymCategoryList = gymCategoryRepository.findAllByGymIdOrderByPositionAsc(gymBelt.getGymId());
-            for (GymCategory gymCategory : gymCategoryList) {
-                List<GymCategoryGymBelt> gymCategoryGymBeltList = gymCategoryGymBeltRepository.findByGymCategoryId(gymCategory.getId());
+            StringBuilder errorAdvice = new StringBuilder();
+            List<GymCategoryGymBelt> gymCategoryGymBeltList = gymCategoryGymBeltRepository.findByGymBeltId(id);
+            if (!gymCategoryGymBeltList.isEmpty()) {
                 for (GymCategoryGymBelt gymCategoryGymBelt : gymCategoryGymBeltList) {
-                    if (id.equals(gymCategoryGymBelt.getGymBeltId())) {
-                        throw new RemoveException(Constants.DELETE_ADVICE, "error.deleting.item.in.use");
+                    GymCategory gymCategory = gymCategoryRepository.findById(gymCategoryGymBelt.getGymCategoryId()).orElse(null);
+                    if (gymCategory != null) {
+                        errorAdvice.append(gymCategory.getName()).append(" ");
                     }
                 }
+                throw new RemoveException(Constants.DELETE_ADVICE, errorAdvice.toString());
             }
             try {
                 gymBeltRepository.deleteById(id);
@@ -82,7 +84,7 @@ public class GymBeltServiceImpl implements GymBeltService {
                     }
                 }
             } catch (Exception e) {
-                throw new RemoveException("1000", "error.deleting.item");
+                throw new RemoveException(Constants.DELETE_ADVICE, "error.deleting.item");
             }
         }
     }

@@ -15,16 +15,16 @@ public class GymMoreRegistrationModel {
 
     private Long id;
     private String name;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date registrationDate;
     private String registrationUser;
     private boolean enabled;
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date modificationDate;
     private String modificationUser;
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startRegistrationAvailable;
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endRegistrationAvailable;
     private String addressStreet;
     private String addressNumber;
@@ -37,9 +37,11 @@ public class GymMoreRegistrationModel {
     private GymModel gymModel;
     private List<EnrollmentModel> enrollmentModelList;
     private MoreRegistrationModel moreRegistrationModel;
-    private List<GymMoreRegistrationBeltModel> gymMoreRegistrationBeltModelList;
     private List<GymMoreRegistrationDateModel> gymMoreRegistrationDateModelList;
+    private List<GymBeltModel> gymBeltModelList;
     private List<GymCategoryModel> gymCategoryModelList;
-    private List<GymMoreRegistrationParticipatingEntityModel> gymMoreRegistrationParticipatingEntityModelList;
+    private List<Long> gymCategoryIdList;
+    private List<ParticipatingEntityModel> participatingEntityModelList;
+    private List<Long> participatingEntityIdList;
 
 }

@@ -1,11 +1,14 @@
 package com.gymdaus.core.service.impl;
 
+import com.gymdaus.core.entity.GymMoreRegistrationParticipatingEntity;
 import com.gymdaus.core.entity.ParticipatingEntity;
 import com.gymdaus.core.exception.RemoveException;
 import com.gymdaus.core.mapper.MapperParticipatingEntity;
 import com.gymdaus.core.model.ParticipatingEntityModel;
+import com.gymdaus.core.repository.GymMoreRegistrationParticipatingEntityRepository;
 import com.gymdaus.core.repository.ParticipatingEntityRepository;
 import com.gymdaus.core.service.ParticipatingEntityService;
+import com.gymdaus.core.util.Constants;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,8 @@ public class ParticipatingEntityServiceImpl implements ParticipatingEntityServic
 
     @Autowired
     private MapperParticipatingEntity mapperParticipatingEntity;
+    @Autowired
+    private GymMoreRegistrationParticipatingEntityRepository gymMoreRegistrationParticipatingEntityRepository;
 
     @Override
     public List<ParticipatingEntityModel> findAllByGymId(Long gymId) {
@@ -54,6 +59,14 @@ public class ParticipatingEntityServiceImpl implements ParticipatingEntityServic
     public void delete(Long id) throws RemoveException {
         ParticipatingEntity participatingEntity = participatingEntityRepository.findById(id).orElse(null);
         if (participatingEntity != null) {
+            StringBuilder errorAdvice = new StringBuilder();
+            List<GymMoreRegistrationParticipatingEntity> gymMoreRegistrationParticipatingEntityList = gymMoreRegistrationParticipatingEntityRepository.findAllByParticipatingEntityId(id);
+            if (!gymMoreRegistrationParticipatingEntityList.isEmpty()) {
+                for (GymMoreRegistrationParticipatingEntity gymMoreRegistrationParticipatingEntity : gymMoreRegistrationParticipatingEntityList) {
+                    errorAdvice.append(gymMoreRegistrationParticipatingEntity.getGymMoreRegistrationId()).append(" ");
+                }
+                throw new RemoveException(Constants.DELETE_ADVICE, errorAdvice.toString());
+            }
             try {
                 participatingEntityRepository.deleteById(id);
                 List<ParticipatingEntity> participatingEntityList = participatingEntityRepository.findAllByGymIdOrderByPositionAsc(participatingEntity.getGymId());
@@ -64,7 +77,7 @@ public class ParticipatingEntityServiceImpl implements ParticipatingEntityServic
                     }
                 }
             } catch (Exception e) {
-                throw new RemoveException("1000", e.getMessage());
+                throw new RemoveException(Constants.DELETE_ADVICE, e.getMessage());
             }
         }
     }
@@ -94,6 +107,21 @@ public class ParticipatingEntityServiceImpl implements ParticipatingEntityServic
         } else {
             return -1;
         }
+    }
+
+    @Override
+    public List<ParticipatingEntityModel> findAllByGymIdAndSelected(Long gymId, Long gymMoreRegistrationId) {
+        List<ParticipatingEntityModel> participatingEntityModelList = findAllByGymId(gymId);
+        List<GymMoreRegistrationParticipatingEntity> gymMoreRegistrationParticipatingEntityList = gymMoreRegistrationParticipatingEntityRepository.findAllByGymMoreRegistrationIdOrderByPositionAsc(gymMoreRegistrationId);
+        for (ParticipatingEntityModel participatingEntityModel : participatingEntityModelList) {
+            for (GymMoreRegistrationParticipatingEntity gymMoreRegistrationParticipatingEntity : gymMoreRegistrationParticipatingEntityList) {
+                if (participatingEntityModel.getId().equals(gymMoreRegistrationParticipatingEntity.getParticipatingEntityId())) {
+                    participatingEntityModel.setSelected(Boolean.TRUE);
+                    break;
+                }
+            }
+        }
+        return participatingEntityModelList;
     }
 
     private void moveItem(Long gymId, int position, boolean moveUp) {

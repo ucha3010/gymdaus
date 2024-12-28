@@ -55,15 +55,13 @@
                 var belt = document.getElementById('gymBeltId').selectedOptions[0];
                 let deleteAsk = $('#deleteAsk').val();
                 if(confirm(deleteAsk + " " + belt.text + "?")){
-                    var relativeUrl = "gymBelt/removeBelt/" + belt.value;
+                    var relativeUrl = "gymBelt/remove-belt/" + belt.value;
                     var domain = getDomain(location.href);
                     location.href = domain + relativeUrl;
                     return true;
                 }
                 return false;
             }
-
-
         </script>
 
     </head>
@@ -78,7 +76,8 @@
 
             <section class="marginTopBottom1Percentage text-center">
                 <div th:if="${removeProblem != null}" class="alert alert-danger" role="alert"><span
-                        th:text="#{__${removeProblem}__}"></span></div>
+                        th:text="#{categories}"></span><span
+                        th:text="${': '+removeProblem}"></span></div>
             </section>
 
             <section>

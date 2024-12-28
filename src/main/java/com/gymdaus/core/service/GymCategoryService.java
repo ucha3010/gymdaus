@@ -10,6 +10,8 @@ public interface GymCategoryService {
 
     List<GymCategoryModel> findAllByGymId(Long gymId);
 
+    List<GymCategoryModel> findAllByGymIdAndSelected(Long gymId, Long gymMoreRegistrationId);
+
     GymCategoryModel findById(Long id);
 
     GymCategoryModel add(GymCategoryModel model);

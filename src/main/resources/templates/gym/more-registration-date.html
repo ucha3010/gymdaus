@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta th:replace="~{static/headerMeta :: meta}">
+    <link th:replace="~{static/headerLink :: link}">
+    <script th:replace="~{static/headerScript :: script}"></script>
+    <script th:replace="~{static/headerScriptJquery :: script}"></script>
+
+    <title th:text="#{dates}"></title>
+
+    <script type="text/javascript">
+
+            function validate(){
+                var campo = ['startDateTime','endDateTime'];
+                restore();
+                var validated = true;
+                for(var i=0; i < campo.length; i++){
+                    var rolName = document.getElementById(campo[i]);
+                    if(rolName.value==''){
+                        rolName.style.borderColor="red";
+                        validated = false;
+                    }
+                }
+                return validated;
+            }
+
+            function restore(){
+                var campos = document.getElementsByClassName("form-control");
+                for (var i = 0; i < campos.length; i++) {
+                    campos[i].style.borderColor="#ced4da";
+                }
+            }
+
+            function confirmDelete(id){
+                let deleteAsk = $('#deleteAsk').val();
+                if(confirm(deleteAsk + "?")){
+                    var relativeUrl = "gymMoreRegistration/remove-more-registration-date/" + id;
+                    var domain = getDomain(location.href);
+                    location.href = domain + relativeUrl;
+                    return true;
+                }
+                return false;
+            }
+    </script>
+
+</head>
+<body>
+<div th:replace="~{static/barraUser :: div}"></div>
+<div th:replace="~{static/barraNav :: nav}"></div>
+<div th:replace="~{static/barraAdminRootButtons :: section}"></div>
+
+<div class="container">
+    <input type="hidden" id="deleteAsk" th:value="#{confirm.delete}"/>
+
+    <section class="marginTopBottom1Percentage text-center">
+        <div th:if="${removeProblem != null}" class="alert alert-danger" role="alert"><span
+                th:text="#{__${removeProblem}__}"></span></div>
+    </section>
+
+    <section>
+        <div class="row align-items-center justify-content-end">
+            <div class="col-md-2">
+            </div>
+            <div class="col-9 col-md-8 colorGreen">
+                <h1><span th:text="#{dates}"></span> <span th:text="${gymMoreRegistrationModel.name}"></span></h1>
+            </div>
+            <div class="col-3 col-md-2">
+                <a class="btn btn-info" href="#"
+                   th:href="@{/gymMoreRegistration/more-registration/__${gymMoreRegistrationModel.id}__}"><span
+                        th:text="#{back}"></span></a>
+            </div>
+        </div>
+    </section>
+
+    <section sec:authorize="hasRole('ROLE_ADMIN')">
+        <form action="#" th:action="@{/gymMoreRegistration/add-more-registration-date}"
+              th:object="${gymMoreRegistrationDateModel}"
+              method="post" onsubmit="return validate()">
+            <input type="hidden" name="gymMoreRegistrationModel.id" th:value="${gymMoreRegistrationModel.id}"/>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <div class="mb-1">
+                        <label for="startDateTime" th:text="#{event.start.date}"></label>
+                        <input type="datetime-local" th:field="*{startDateTime}" id="startDateTime"
+                               class="form-control"/>
+                        <label for="endDateTime" th:text="#{event.end.date}"></label>
+                        <input type="datetime-local" th:field="*{endDateTime}" id="endDateTime"
+                               class="form-control"/>
+                        <button class="btn btn-success" type="submit"><span th:text="#{save}"></span></button>
+                    </div>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+        </form>
+        <div class="row mt-3" th:each="unit : ${gymMoreRegistrationDateModelList}">
+            <div class="col text-center">
+                <h3>
+                    <span th:text="${#calendars.format(unit.startDateTime,'dd/MM/yyyy HH:mm')+' - '+#calendars.format(unit.endDateTime,'dd/MM/yyyy HH:mm')+' '}"></span>
+                    <a class="btn btn-danger" id="eventDate" th:attr="onclick=|confirmDelete('${unit.id}')|"><span
+                            th:text="#{delete}"></span></a>
+                </h3>
+            </div>
+        </div>
+    </section>
+</div>
+
+</body>
+
+<footer th:replace="~{static/footer :: footer}"></footer>
+</html>

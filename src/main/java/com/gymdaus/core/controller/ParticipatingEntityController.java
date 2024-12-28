@@ -73,18 +73,18 @@ public class ParticipatingEntityController {
         return participants(modelAndView, gymId);
     }
 
-    @GetMapping("/removeParticipant/{id}")
+    @GetMapping("/remove-participating-entity/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ModelAndView removeParticipant(ModelAndView modelAndView, @PathVariable Long id) {
+    public ModelAndView removeParticipatingEntity(ModelAndView modelAndView, @PathVariable Long id) {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), id, getClass());
-        securityService.userAccessValidation("/participatingEntity/removeParticipant/" + id);
+        securityService.userAccessValidation("/participatingEntity/remove-participating-entity/" + id);
         UserModel user = utilService.basicDataCharge(modelAndView);
         ParticipatingEntityModel participatingEntityModel = participatingEntityService.findById(id);
-        securityService.enabledAdministrationGymUser(user.getUsername(), participatingEntityModel.getGymModel().getId(), false, "/participatingEntity/removeParticipant/" + id);
+        securityService.enabledAdministrationGymUser(user.getUsername(), participatingEntityModel.getGymModel().getId(), false, "/participatingEntity/remove-participating-entity/" + id);
         try {
             participatingEntityService.delete(id);
         } catch (RemoveException re) {
-            modelAndView.addObject("removeProblem", "removeProblem");
+            modelAndView.addObject("removeProblem", re.getMessage());
             LoggerMapper.log(Level.ERROR, Utils.getMethodName(), re.getMessage(), this.getClass());
         }
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());

@@ -9,6 +9,5 @@ import java.util.List;
 @Repository()
 public interface GymMoreRegistrationRepository extends JpaRepository<GymMoreRegistration, Long> {
 
-    List<GymMoreRegistration> findAllByGymIdAndEnabledTrueOrderByRegistrationDateAsc(Long gymId);
-
+    List<GymMoreRegistration> findAllByGymIdOrderByRegistrationDateAsc(Long gymId);
 }

@@ -21,4 +21,6 @@ public interface ParticipatingEntityService {
     void dragOfPosition(Long gymId, int initialPosition, int finalPosition);
 
     int findMaxPosition(Long gymId);
+
+    List<ParticipatingEntityModel> findAllByGymIdAndSelected(Long gymId, Long gymMoreRegistrationId);
 }

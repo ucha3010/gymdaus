@@ -2,8 +2,6 @@ package com.gymdaus.core.service.impl;
 
 import com.gymdaus.core.entity.GymMoreRegistration;
 import com.gymdaus.core.mapper.MapperGymMoreRegistration;
-import com.gymdaus.core.model.GymCategoryModel;
-import com.gymdaus.core.model.GymMoreRegistrationGymCategoryModel;
 import com.gymdaus.core.model.GymMoreRegistrationModel;
 import com.gymdaus.core.repository.GymMoreRegistrationRepository;
 import com.gymdaus.core.service.GymMoreRegistrationGymCategoryService;
@@ -38,7 +36,7 @@ public class GymMoreRegistrationServiceImpl implements GymMoreRegistrationServic
     @Override
     public List<GymMoreRegistrationModel> findAllByGymId(Long gymId) {
         List<GymMoreRegistrationModel> gymMoreRegistrationModelList = new ArrayList<>();
-        for (GymMoreRegistration gymMoreRegistration : gymMoreRegistrationRepository.findAllByGymIdAndEnabledTrueOrderByRegistrationDateAsc(gymId)) {
+        for (GymMoreRegistration gymMoreRegistration : gymMoreRegistrationRepository.findAllByGymIdOrderByRegistrationDateAsc(gymId)) {
             gymMoreRegistrationModelList.add(mapperGymMoreRegistration.entity2Model(gymMoreRegistration));
         }
         return gymMoreRegistrationModelList;
@@ -48,15 +46,7 @@ public class GymMoreRegistrationServiceImpl implements GymMoreRegistrationServic
     public GymMoreRegistrationModel findById(Long id) {
         GymMoreRegistrationModel gymMoreRegistrationModel = mapperGymMoreRegistration.entity2Model(gymMoreRegistrationRepository.findById(id).orElse(null));
         if (gymMoreRegistrationModel != null) {
-            List<GymMoreRegistrationGymCategoryModel> gymMoreRegistrationGymCategoryModelList =
-                    gymMoreRegistrationGymCategoryService.findByGymMoreRegistration(id);
-            if (gymMoreRegistrationGymCategoryModelList != null && !gymMoreRegistrationGymCategoryModelList.isEmpty()) {
-                List<GymCategoryModel> gymCategoryModelList = new ArrayList<>();
-                for (GymMoreRegistrationGymCategoryModel gymMoreRegistrationGymCategoryModel : gymMoreRegistrationGymCategoryModelList) {
-                    gymCategoryModelList.add(gymMoreRegistrationGymCategoryModel.getGymCategoryModel());
-                }
-                gymMoreRegistrationModel.setGymCategoryModelList(gymCategoryModelList);
-            }
+            gymMoreRegistrationModel.setGymCategoryModelList(gymMoreRegistrationGymCategoryService.findAllByGymMoreRegistration(id));
         }
         return gymMoreRegistrationModel;
 
@@ -71,6 +61,8 @@ public class GymMoreRegistrationServiceImpl implements GymMoreRegistrationServic
 
     @Override
     public void update(GymMoreRegistrationModel gymMoreRegistrationModel) {
+        gymMoreRegistrationModel.setRegistrationDate(findById(gymMoreRegistrationModel.getId()).getRegistrationDate());
+        gymMoreRegistrationModel.setRegistrationUser(findById(gymMoreRegistrationModel.getId()).getRegistrationUser());
         gymMoreRegistrationModel.setModificationDate(new Date());
         gymMoreRegistrationRepository.save(mapperGymMoreRegistration.model2Entity(gymMoreRegistrationModel));
     }

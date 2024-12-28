@@ -67,6 +67,7 @@ public class UserService implements UserDetailsService {
     public void updatePass(UserModel userModel) throws PersistenceException {
         userModel.setModificationDate(new Date());
         try {
+            userModel.setRegistrationDate(findByUsername(userModel.getUsername()).getRegistrationDate());
             userRepository.save(mapperUser.model2Entity(userModel));
         } catch (Exception exception) {
             throw new PersistenceException();
@@ -102,7 +103,9 @@ public class UserService implements UserDetailsService {
 
     public UserModel addOrUpdate(UserModel userModel) throws PersistenceException {
         try {
-            userModel.setPassword(findModelByUsername(userModel.getUsername()).getPassword());
+            UserModel userModelAux = findModelByUsername(userModel.getUsername());
+            userModel.setPassword(userModelAux.getPassword());
+            userModel.setRegistrationDate(userModelAux.getRegistrationDate());
         } catch (NoResultException ignored) {
         }
         userModel.setModificationDate(new Date());

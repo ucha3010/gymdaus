@@ -12,7 +12,6 @@ import java.util.Date;
 @ToString
 public class GymMoreRegistrationParticipatingEntityModel {
 
-    private Long id;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date registrationDate;
     private String registrationUser;
