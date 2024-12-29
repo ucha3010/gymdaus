@@ -39,8 +39,6 @@
                             <a th:if="${gymUserModel.gymRole == 'ROLE_MANAGER'}" class="btn btn-primary"
                                th:href="@{/gym/gym-user/__${gymModel.id}__}"><span
                                     th:text="#{administrators}"></span></a>
-                            <a th:if="${gymUserModel.gymRole == 'ROLE_MANAGER'}" class="btn btn-primary"
-                               th:href="@{/gym/parameters/__${gymModel.id}__}"><span th:text="#{parameters}"></span></a>
                             <a class="btn btn-primary" th:href="@{/gym/photos/__${gymModel.id}__}"><span
                                     th:text="#{photos}"></span></a>
                             <a class="btn btn-primary" th:href="@{/gym/addresses/__${gymModel.id}__}"><span

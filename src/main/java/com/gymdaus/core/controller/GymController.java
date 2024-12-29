@@ -21,7 +21,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -39,8 +38,8 @@ public class GymController {
     private GymDocumentManagerService gymDocumentManagerService;
     @Autowired
     private GymPhotoService gymPhotoService;
-    @Autowired
-    private GymParameterService gymParameterService;
+    /*    @Autowired
+        private GymParameterService gymParameterService;*/
     @Autowired
     private GymUserService gymUserService;
     @Autowired
@@ -194,7 +193,7 @@ public class GymController {
         return gymUser(modelAndView, gymId);
     }
 
-    @GetMapping("/parameters/{gymId}")
+    /*@GetMapping("/parameters/{gymId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ModelAndView gymParameters(ModelAndView modelAndView, @PathVariable Long gymId) {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymId, getClass());
@@ -266,7 +265,7 @@ public class GymController {
         }
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return emailPassword(modelAndView, passwordModel.getGymId());
-    }
+    }*/
 
     @GetMapping("/photos/{gymId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
