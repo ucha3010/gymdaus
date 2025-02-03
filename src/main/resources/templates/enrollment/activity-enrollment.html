@@ -1,140 +1,260 @@
 <!DOCTYPE html>
-<html lang="es">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Formulario Completo</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-        function toggleAdditionalOptions() {
-            const additionalSection = document.getElementById("additionalSection");
-            const option2Selected = document.getElementById("radioOption2").checked;
-            additionalSection.style.display = option2Selected ? "block" : "none";
-        }
+        <meta th:replace="~{static/headerMeta :: meta}">
+        <link th:replace="~{static/headerLink :: link}">
+        <script th:replace="~{static/headerScript :: script}"></script>
 
-        function toggleTextFields() {
-            const switchState = document.getElementById("primerSwitch").checked;
-            const textFields = document.querySelectorAll(".toggle-text-field");
-            textFields.forEach(field => field.disabled = !switchState);
-        }
-    </script>
+        <title th:text="#{__${activity.name}__}"></title>
+        <script>
+            function toggleAuthorizationOptions() {
+                const authorizationSection = document.getElementById("authorizationSection");
+                const radioAuthorizationSelected = document.getElementById("radioAuthorization").checked;
+                authorizationSection.style.display = radioAuthorizationSelected ? "block" : "none";
+            }
+
+            function toggleTextFields() {
+                const switchState = document.getElementById("sepaSwitch").checked;
+                const textFields = document.querySelectorAll(".toggle-text-field");
+                textFields.forEach(field => field.disabled = !switchState);
+            }
+            
+            function validate(){
+    
+                var field = ['authorizerEnrollmentName'];
+                restore();
+                var validated = true;
+                for(var i=0; i < field.length; i++){
+                    var rolName = document.getElementById(field[i]);
+                    var rolNameError = document.getElementById(field[i]+'Error');
+                    if(rolName.value==''){
+                        if(rolNameError != null){
+                            rolNameError.className = "colorRed";
+                        }
+                        rolName.style.borderColor="red";
+                        validated = false;
+                    }
+                }
+
+                const radioAuthorizationChecked = document.getElementById("radioAuthorization").checked;
+                const radioAuthorizationMinorChecked = document.getElementById("radioAuthorizationMinor").checked;
+                const radioAuthorizationInclusiveChecked = document.getElementById("radioAuthorizationInclusive").checked;
+                if(radioAuthorizationChecked){
+                    field = ['userEnrollmentName','userEnrollmentLastname','userEnrollmentBirthdate'];
+                    for(var i=0; i < field.length; i++){
+                        var rolName = document.getElementById(field[i]);
+                        if(rolName.value==''){
+                            rolName.style.borderColor="red";
+                            validated = false;
+                        }
+                    }
+                    if(radioAuthorizationMinorChecked){
+                        var userEnrollmentBirthdate = document.getElementById("userEnrollmentBirthdate");
+                        if(adult(userEnrollmentBirthdate, 16)){
+                            userEnrollmentBirthdate.style.borderColor="red";
+                            document.getElementById("userEnrollmentBirthdateError").className = "colorRed";
+                            validated = false;
+                        }
+                    }
+                }
+
+                if(document.getElementById("sepaSwitch").checked) {
+                    document.getElementById("sepaDirectDebit").value = true;
+                    field = ['sepaAccountPerson','sepaAccountNumber'];
+                    for(var i=0; i < field.length; i++){
+                        var rolName = document.getElementById(field[i]);
+                        if(rolName.value==''){
+                            rolName.style.borderColor="red";
+                            validated = false;
+                        }
+                    }
+                }
+    
+                if(validated){
+                    if(radioAuthorizationChecked) {
+                        document.getElementById("own").value = false;
+                        if(radioAuthorizationInclusiveChecked) {
+                            document.getElementById("inclusive").value = true;
+                        } else {
+                            document.getElementById("minor").value = true;
+                        }
+                    } else {
+                        document.getElementById("userEnrollmentSex").value = null;
+                        document.getElementById("authorizerEnrollmentAs").value = null;
+                    }
+                    if (nullOrEmpty(document.getElementById("language").value)) {
+                        document.getElementById("documentLanguage").value = navigator.languages;
+                    } else {
+                        document.getElementById("documentLanguage").value = document.getElementById("language").value;
+                    }
+                    return true;
+                } else {
+                    document.getElementById('thereIsError').className = "colorRed";
+                    return false;
+                }
+            }
+            function restore(){
+                var errorSpan = document.getElementsByName('errorSpan');
+                for (var i = 0; i < errorSpan.length; i++) {
+                    errorSpan[i].className = "d-none";
+                }
+                var fields = document.getElementsByClassName("form-control");
+                for (var i = 0; i < fields.length; i++) {
+                    fields[i].style.borderColor="#ced4da";
+                }
+            }
+        </script>
     </head>
     <body>
+        <div th:replace="~{static/barraUser :: div}"></div>
+        <div th:replace="~{static/barraNav :: nav}"></div>
+        <div th:replace="~{static/barraAdminRootButtons :: section}"></div>
+
         <div class="container mt-5">
-            <h1 class="text-center mb-4">Inscripción a Crossfit en Gimnasio Cobeña</h1>
+            <h1 class="text-center mb-4">
+                <span th:text="#{registration.form.to}"></span> <span th:text="#{__${activity.name}__}"></span> <span th:text="#{in}"></span> <span th:text="${gymAddress.gymModel.name}"></span> (<span th:text="${gymAddress.name}"></span>)
+            </h1>
+            <form action="#" th:action="@{/enrollment/activity}" th:object="${enrollmentModel}" method="post"
+                  onsubmit="return validate()">
 
-            <div class="mb-3">
-                <label for="primerDesplegable" class="form-label">
-                    Dirección del gimnasio donde desea realizar la inscripción
-                </label>
-                <select class="form-select" id="primerDesplegable">
-                    <option value="1.1">Dirección 1</option>
-                    <option value="1.2">Dirección 2</option>
-                    <option value="1.3">Dirección 3</option>
-                </select>
-            </div>
+                <input type="hidden" th:field="*{authorizerEnrollmentIdCard}"/>
+                <input type="hidden" name="own" id="own" th:value=true />
+                <input type="hidden" name="minor" id="minor" th:value=false />
+                <input type="hidden" name="inclusive" id="inclusive" th:value=false />
+                <input type="hidden" name="sepaDirectDebit" id="sepaDirectDebit" th:value=false />
+                <input type="hidden" name="needsSignature" id="needsSignature" th:value=true />
+                <input type="hidden" name="documentLanguage" id="documentLanguage" />
+                <input type="hidden" name="activityName" th:value="${activity.name}" />
+                <input type="hidden" name="gymName" th:value="${gymAddress.gymModel.name}" />
+                <input type="hidden" name="gymModel.id" th:value="${gymAddress.gymModel.id}" />
+                <input type="hidden" name="gymActivityScheduleModel.gymAddressModel.id" th:value="${gymAddress.id}" />
 
-            <div class="mb-3">
-                <div>
-                    <input type="radio" class="btn-check" name="options" id="radioOption1" onclick="toggleAdditionalOptions()" autocomplete="off" checked>
-                    <label class="btn btn-outline-primary" for="radioOption1">Inscripción propia</label>
-                    <input type="radio" class="btn-check" name="options" id="radioOption2" onclick="toggleAdditionalOptions()" autocomplete="off">
-                    <label class="btn btn-outline-primary" for="radioOption2">Autorización</label>
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <label for="primerTexto" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="primerTexto">
-            </div>
-            <div class="mb-3">
-                <label for="segundoTexto" class="form-label">Primer apellido</label>
-                <input type="text" class="form-control" id="segundoTexto">
-            </div>
-            <div class="mb-3">
-                <label for="tercerTexto" class="form-label">Segundo apellido</label>
-                <input type="text" class="form-control" id="tercerTexto">
-            </div>
-
-            <p>Al darse de alta transmitiremos sus datos a Gimnasio Cobeña.</p>
-
-            <div class="mb-3">
-                <label for="segundoDesplegable" class="form-label">Opciones de horario e importe</label>
-                <select class="form-select" id="segundoDesplegable">
-                    <option value="2.1">L, X, V de 12hs a 13hs - 50€</option>
-                    <option value="2.2">L, X, V de 13hs a 14hs - 50€</option>
-                    <option value="2.3">L, X, V de 14hs a 15hs - 50€</option>
-                </select>
-            </div>
-
-            <div id="additionalSection" style="display: none;">
                 <div class="mb-3">
                     <div>
-                        <input type="radio" class="btn-check" name="additionalOptions" id="radioOptionA" autocomplete="off" checked>
-                        <label class="btn btn-outline-success" for="radioOptionA">Autorización menor de edad</label>
-                        <input type="radio" class="btn-check" name="additionalOptions" id="radioOptionB" autocomplete="off">
-                        <label class="btn btn-outline-success" for="radioOptionB">Autorización inclusiva</label>
+                        <input type="radio" class="btn-check" name="options" id="radioOwnRegistration" onclick="toggleAuthorizationOptions()" autocomplete="off" checked>
+                        <label class="btn btn-outline-primary" for="radioOwnRegistration" th:text="#{Own.registration}"></label>
+                        <input type="radio" class="btn-check" name="options" id="radioAuthorization" onclick="toggleAuthorizationOptions()" autocomplete="off">
+                        <label class="btn btn-outline-primary" for="radioAuthorization" th:text="#{Authorization}"></label>
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="tercerDesplegable" class="form-label">
-                        La autorización la realizo en calidad de
-                    </label>
-                    <select class="form-select" id="tercerDesplegable">
-                        <option value="3.1">Madre</option>
-                        <option value="3.2">Padre</option>
-                        <option value="3.3">Tutor</option>
+                    <label for="authorizerEnrollmentName" class="form-label" th:text="#{name}"></label>
+                    <input type="text" class="form-control" th:field="*{authorizerEnrollmentName}" id="authorizerEnrollmentName" disabled/>
+                </div>
+                <div class="mb-3">
+                    <label for="authorizerEnrollmentLastname" class="form-label" th:text="#{lastname}"></label>
+                    <input type="text" class="form-control" th:field="*{authorizerEnrollmentLastname}" id="authorizerEnrollmentLastname" disabled/>
+                </div>
+                <div class="mb-3">
+                    <label for="authorizerEnrollmentSecondLastname" class="form-label" th:text="#{secondLastname}"></label>
+                    <input type="text" class="form-control" th:field="*{authorizerEnrollmentSecondLastname}" id="authorizerEnrollmentSecondLastname" disabled/>
+                </div>
+
+                <p><span th:text="#{we.will.transmit.your.data.to}"></span> <span th:text="${gymAddress.gymModel.name}"></span>.</p>
+
+                <div class="mb-3">
+                    <label for="gymActivityScheduleModel" class="form-label" th:text="#{time.and.amount.options}"></label>
+                    <select class="form-select" id="gymActivityScheduleModel" th:field="*{gymActivityScheduleModel.id}">
+                        <option th:each="unit : ${gymActivityScheduleModelList}" th:value="${unit.id}" th:text="${unit.description}"></option>
                     </select>
                 </div>
 
-                <h2 class="mt-4">Datos de la persona autorizada</h2>
+                <div id="authorizationSection" style="display: none;">
+                    <div class="mb-3">
+                        <div>
+                            <input type="radio" class="btn-check" name="additionalOptions" id="radioAuthorizationMinor" autocomplete="off" checked>
+                            <label class="btn btn-outline-success" for="radioAuthorizationMinor" th:text="#{Authorization.minor}"></label>
+                            <input type="radio" class="btn-check" name="additionalOptions" id="radioAuthorizationInclusive" autocomplete="off">
+                            <label class="btn btn-outline-success" for="radioAuthorizationInclusive" th:text="#{Authorization.inclusive}"></label>
+                        </div>
+                    </div>
 
-                <div class="mb-3">
-                    <label for="cuartoTexto" class="form-label">Nombre</label>
-                    <input type="text" class="form-control" id="cuartoTexto">
-                </div>
-                <div class="mb-3">
-                    <label for="quintoTexto" class="form-label">Primer apellido</label>
-                    <input type="text" class="form-control" id="quintoTexto">
-                </div>
-                <div class="mb-3">
-                    <label for="sextoTexto" class="form-label">Segundo apellido</label>
-                    <input type="text" class="form-control" id="sextoTexto">
-                </div>
-                <div class="mb-3">
-                    <label for="septimoTexto" class="form-label">Fecha de nacimiento</label>
-                    <input type="date" class="form-control" id="septimoTexto">
-                </div>
-                <div class="mb-3">
-                    <label for="octavoTexto" class="form-label">DNI</label>
-                    <input type="text" class="form-control" id="octavoTexto">
-                </div>
-            </div>
+                    <div class="mb-3">
+                        <label for="authorizerEnrollmentAs" class="form-label" th:text="#{I.make.the.authorization.as}"></label>
+                        <select class="form-select" id="authorizerEnrollmentAs" th:field="*{authorizerEnrollmentAs}">
+                            <option th:each="unit : ${enrollmentAsModelList}" th:value="${unit.name}" th:text="#{__${unit.name}__}"></option>
+                        </select>
+                    </div>
 
-            <div class="form-check form-switch mb-3">
-                <input class="form-check-input" type="checkbox" role="switch" id="primerSwitch" onclick="toggleTextFields()">
-                <label class="form-check-label" for="primerSwitch">Débito automático</label>
-            </div>
+                    <h2 class="mt-4" th:text="#{Authorized.person.data}"></h2>
 
-            <div class="mb-3">
-                <label for="novenoTexto" class="form-label">Nombre y apellidos</label>
-                <input type="text" class="form-control toggle-text-field" id="novenoTexto" disabled>
-            </div>
-            <div class="mb-3">
-                <label for="decimoTexto" class="form-label">IBAN</label>
-                <input type="text" class="form-control toggle-text-field" id="decimoTexto" disabled>
-            </div>
-            <div class="mb-3">
-                <label for="decimoprimerTexto" class="form-label">SWIFT</label>
-                <input type="text" class="form-control toggle-text-field" id="decimoprimerTexto" disabled>
-            </div>
+                    <div class="mb-3">
+                        <label for="userEnrollmentName" class="form-label" th:text="#{name}"></label>
+                        <input type="text" class="form-control" th:field="*{userEnrollmentName}" id="userEnrollmentName" maxlength="100">
+                    </div>
+                    <div class="mb-3">
+                        <label for="userEnrollmentLastname" class="form-label" th:text="#{lastname}"></label>
+                        <input type="text" class="form-control" th:field="*{userEnrollmentLastname}" id="userEnrollmentLastname" maxlength="100">
+                    </div>
+                    <div class="mb-3">
+                        <label for="userEnrollmentSecondLastname" class="form-label" th:text="#{secondLastname}"></label>
+                        <input type="text" class="form-control" th:field="*{userEnrollmentSecondLastname}" id="userEnrollmentSecondLastname" maxlength="100">
+                    </div>
+                    <div class="mb-3">
+                        <label for="userEnrollmentBirthdate" class="form-label" th:text="#{birthdate}"></label>
+                        <input type="date" class="form-control" th:field="*{userEnrollmentBirthdate}" id="userEnrollmentBirthdate">
+                        <span id="userEnrollmentBirthdateError" name="errorSpan" class="d-none" th:text="#{Must.be.under.age}"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userEnrollmentIdCard" class="form-label" th:text="#{username}"></label>
+                        <input type="text" class="form-control" th:field="*{userEnrollmentIdCard}" id="userEnrollmentIdCard" maxlength="50">
+                    </div>
+                    <div class="mb-3">
+                        <label for="userEnrollmentSex" class="form-label" th:text="#{sex}"></label>
+                        <select th:field="*{userEnrollmentSex}" id="userEnrollmentSex" class="form-select">
+                            <option th:each="s : ${sexList}" th:value="${s}" th:text="#{__${s}__}"></option>
+                        </select>
+                    </div>
+                </div>
 
-            <div class="d-flex justify-content-between">
-                <button type="button" class="btn btn-secondary">Volver</button>
-                <button type="submit" class="btn btn-primary">Guardar</button>
-            </div>
+                <section>
+                    <div class="form-check mb-3">
+                        <input type="checkbox" th:field="*{whatsappForm}" class="form-check-input" id="whatsappForm" />
+                        <label class="form-check-label" for="whatsappForm" th:text="#{Authorization.whatsapp}"></label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input type="checkbox" th:field="*{federationForm}" class="form-check-input" id="federationForm" />
+                        <label class="form-check-label" for="federationForm" th:text="#{Authorization.specific.federative.mandate}"></label>
+                    </div>
+                </section>
+
+                <section th:if="${gymAddress.sepaDirectDebitAvailable}">
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" role="switch" id="sepaSwitch" onclick="toggleTextFields()">
+                        <label class="form-check-label" for="sepaSwitch" th:text="#{Sepa.direct.debit}"></label>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="sepaAccountPerson" class="form-label" th:text="#{full.name}"></label>
+                        <input type="text" class="form-control toggle-text-field" th:field="*{sepaAccountPerson}" id="sepaAccountPerson" maxlength="100" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="sepaAccountNumber" class="form-label" th:text="#{IBAN}"></label>
+                        <input type="text" class="form-control toggle-text-field" th:field="*{sepaAccountNumber}" id="sepaAccountNumber" maxlength="34" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="swift" class="form-label" th:text="#{SWIFT}"></label>
+                        <input type="text" class="form-control toggle-text-field" th:field="*{swift}" id="swift" maxlength="11" disabled>
+                    </div>
+                </section>
+                <section th:if="${not gymAddress.sepaDirectDebitAvailable}">
+                    <span th:id="sepaSwitch" th:value="false"></span>
+                </section>
+
+                <div class="d-flex justify-content-between">
+                    <a class="btn btn-info" href="#" th:href="@{/enrollment/activity/__${activity.id}__}">
+                        <span th:text="#{back}"></span>
+                    </a>
+                    <button class="btn btn-success" type="submit"><span th:text="#{save}"></span></button>
+                </div>
+
+                <div class="mb-3 text-center">
+                    <span id="thereIsError" name="errorSpan" class="d-none" th:text="#{fillObligatory}"></span>
+                </div>
+            </form>
         </div>
     </body>
+
+    <footer th:replace="~{static/footer :: footer}"></footer>
 </html>

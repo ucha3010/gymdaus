@@ -14,7 +14,6 @@ public class MapperEnrollmentMoreData {
             localObject.setCategory(externObject.getCategory());
             localObject.setBelt(externObject.getBelt());
             localObject.setPoomsae(externObject.getPoomsae());
-            localObject.setWhatsappAuthorization(externObject.isWhatsappAuthorization());
             localObject.setNotes(externObject.getNotes());
         }
         return localObject;
@@ -27,7 +26,6 @@ public class MapperEnrollmentMoreData {
             localObject.setCategory(externObject.getCategory());
             localObject.setBelt(externObject.getBelt());
             localObject.setPoomsae(externObject.getPoomsae());
-            localObject.setWhatsappAuthorization(externObject.isWhatsappAuthorization());
             localObject.setNotes(externObject.getNotes());
         }
         return localObject;

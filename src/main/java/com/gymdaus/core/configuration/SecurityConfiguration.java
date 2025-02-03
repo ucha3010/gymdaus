@@ -31,6 +31,7 @@ public class SecurityConfiguration {
 						authorizeRequests
 								.requestMatchers("/css/**", "/imgs/**", "/js/**", "/favicon.ico", "/photos/**").permitAll()
 								.requestMatchers("/","/login-page/*", "/forgot-pass", "/new-pass", "/pass-new", "/change-pass", "/user/new-user").permitAll()
+								.requestMatchers("/enrollment/activity/*").permitAll()
 								.anyRequest().authenticated()
 				)
 				.formLogin(formLogin ->

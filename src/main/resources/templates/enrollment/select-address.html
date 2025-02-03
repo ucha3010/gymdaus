@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta th:replace="~{static/headerMeta :: meta}">
+        <link th:replace="~{static/headerLink :: link}">
+        <script th:replace="~{static/headerScript :: script}"></script>
+
+        <title th:text="#{__${activity}__}"></title>
+
+        <script>
+            function sendCall(activityId, gymAddressId) {
+                const language = document.getElementById("language").value;
+                var relativeUrl = "enrollment/form/" + activityId + "/" + gymAddressId + "?language=" + language;
+                var domain = getDomain(location.href);
+                location.href = domain + relativeUrl;
+            }
+        </script>
+    </head>
+    <body>
+        <div th:replace="~{static/barraUser :: div}"></div>
+        <div th:replace="~{static/barraNav :: nav}"></div>
+        <div th:replace="~{static/barraAdminRootButtons :: section}"></div>
+
+        <div class="container text-center marginBottom2Percentage">
+            <section>
+                <div class="row align-items-center justify-content-end">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-6 col-md-8 colorGreen">
+                        <h3><span th:text="#{__${activity}__}"></span></h3>
+                    </div>
+                    <div class="col-3 col-md-2">
+                        <a class="btn btn-info" href="#" th:href="@{/}"><span th:text="#{back}"></span></a>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <div class="col"></div>
+                    <div class="col">
+                        <div class="d-grid gap-2">
+                            <button th:each="unit : ${gymActivityModelList}" class="btn btn-primary" type="button" th:attr="onclick=|sendCall('${unit.activityModel.id}','${unit.gymAddressModel.id}')|">
+                                <span th:text="${unit.gymModel.name+' / '+unit.gymAddressModel.name+' / '+unit.gymAddressModel.addressStreet+' '+unit.gymAddressModel.addressNumber+' ('+unit.gymAddressModel.addressZip+') '+unit.gymAddressModel.addressCity}"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col"></div>
+                </div>
+                <div th:if="${gymActivityModelList == null or #lists.isEmpty(gymActivityModelList)}" class="row text-center">
+                    <h4><span th:text="#{gyms.not.offer.activity}"></span></h4>
+                </div>
+            </section>
+
+        </div>
+    </body>
+
+    <footer th:replace="~{static/footer :: footer}"></footer>
+</html>

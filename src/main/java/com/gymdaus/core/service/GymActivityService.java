@@ -11,6 +11,8 @@ public interface GymActivityService {
 
     List<GymActivityModel> findAllByGymId(Long gymId);
 
+    List<GymActivityModel> findAllByActivityId(Long activityId);
+
     GymActivityModel findById(Long id);
 
     GymActivityModel add(GymActivityModel model);
@@ -18,4 +20,6 @@ public interface GymActivityService {
     void update(GymActivityModel model);
 
     void delete(Long id);
+
+    List<GymActivityModel> sortByZipCode(List<GymActivityModel> gymActivityModelList);
 }

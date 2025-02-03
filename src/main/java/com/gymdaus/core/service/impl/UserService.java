@@ -42,6 +42,9 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         com.gymdaus.core.entity.User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException(username);
+        }
         List<GrantedAuthority> authorities = buildAuthorities(user.getUserRole());
         return buildUser(user, authorities);
     }

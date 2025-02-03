@@ -34,23 +34,15 @@ public class SignatureServiceImpl implements SignatureService {
 
     @Override
     public SignatureModel findById(Long id) {
-        try {
-            return mapperSignature.entity2Model(signatureRepository.findById(id).orElse(null));
-        } catch (EntityNotFoundException e) {
-            return new SignatureModel();
-        }
+        return mapperSignature.entity2Model(signatureRepository.findById(id).orElse(null));
+
     }
 
     @Override
-    public SignatureModel add(SignatureModel signatureModel) {
+    public SignatureModel addOrUpdate(SignatureModel signatureModel) {
         SignatureModel signatureModel1 = mapperSignature.entity2Model(signatureRepository.save(mapperSignature.model2Entity(signatureModel)));
-        LoggerMapper.methodOut(Level.INFO, "add", signatureModel1, getClass());
+        LoggerMapper.methodOut(Level.INFO, "addOrUpdate", signatureModel1, getClass());
         return signatureModel1;
-    }
-
-    @Override
-    public SignatureModel update(SignatureModel signatureModel) {
-        return mapperSignature.entity2Model(signatureRepository.save(mapperSignature.model2Entity(signatureModel)));
     }
 
     @Override
@@ -65,11 +57,7 @@ public class SignatureServiceImpl implements SignatureService {
     }
 
     @Override
-    public SignatureModel findByOperationId(Long operationId) {
-        try {
-            return mapperSignature.entity2Model(signatureRepository.findByOperationId(operationId));
-        } catch (EntityNotFoundException e) {
-            return new SignatureModel();
-        }
+    public SignatureModel findByOperationIdAndOperationName(Long operationId, String operationName) {
+        return mapperSignature.entity2Model(signatureRepository.findByOperationIdAndOperationName(operationId, operationName));
     }
 }

@@ -105,7 +105,7 @@
                         <label for="secondLastname" th:text="#{enabled}"></label>
                     </div>
                     <div class="col-9 col-md-8">
-                        <label th:if="${userModel.username != user.username}" class="containercheckbox">
+                        <label th:if="${userModel.username != user.username}" class="containerCheckbox">
                             <a href="#" th:href="@{/root/user/enabled/__${userModel.username}__}">
                                 <input type="checkbox" th:checked="${userModel.enabled}">
                                 <span class="checkmark"></span>

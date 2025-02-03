@@ -38,8 +38,6 @@ public class GymController {
     private GymDocumentManagerService gymDocumentManagerService;
     @Autowired
     private GymPhotoService gymPhotoService;
-    /*    @Autowired
-        private GymParameterService gymParameterService;*/
     @Autowired
     private GymUserService gymUserService;
     @Autowired
@@ -180,7 +178,7 @@ public class GymController {
         try {
             UserModel userInvited = userService.findModelByUsername(username);
             GymModel gymModel = gymService.findByIdEnabled(gymId);
-            Locale locale = Locale.of(language);
+            Locale locale = Locale.forLanguageTag(language);
             LocaleContextHolder.setLocale(locale);
             emailService.sendAdminInvitation(user, userInvited, gymModel, messageSource, locale);
             modelAndView.addObject("confirmationOk", "email.sent.ok");
@@ -192,80 +190,6 @@ public class GymController {
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return gymUser(modelAndView, gymId);
     }
-
-    /*@GetMapping("/parameters/{gymId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ModelAndView gymParameters(ModelAndView modelAndView, @PathVariable Long gymId) {
-        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymId, getClass());
-        securityService.userAccessValidation("/gym/parameters/" + gymId);
-        UserModel user = utilService.basicDataCharge(modelAndView);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, true, "/gym/parameters/");
-        modelAndView.setViewName("gym/gym-parameter");
-        EmailModel emailModel = emailService.getGymParameters(gymId);
-        if (Utils.isNullOrEmpty(emailModel.getPassword())) {
-            modelAndView.addObject("emptyPass", true);
-        } else {
-            modelAndView.addObject("emptyPass", false);
-            emailModel.setPassword(null);
-        }
-        modelAndView.addObject("emailModel", emailModel);
-        modelAndView.addObject("gymModel", gymService.findByIdEnabled(gymId));
-        modelAndView.addObject("utilListHost", Utils.chargeListHostProvider());
-        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
-        return modelAndView;
-    }
-
-    @PostMapping("/update-parameters")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ModelAndView gymUpdateParameters(ModelAndView modelAndView, @ModelAttribute("emailModel") EmailModel emailModel) {
-        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), emailModel, getClass());
-        securityService.userAccessValidation("/gym/update-parameters");
-        UserModel user = utilService.basicDataCharge(modelAndView);
-        securityService.enabledAdministrationGymUser(user.getUsername(), emailModel.getGymId(), true, "/gym/update-parameters");
-        emailService.updateGymParameters(emailModel, user.getUsername());
-        modelAndView.addObject("updateOK", "updateOK");
-        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
-        return gymParameters(modelAndView, emailModel.getGymId());
-    }
-
-    @GetMapping("/email-pass/{gymId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ModelAndView emailPassword(ModelAndView modelAndView, @PathVariable Long gymId) {
-        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), gymId, getClass());
-        securityService.userAccessValidation("/gym/email-pass/" + gymId);
-        UserModel user = utilService.basicDataCharge(modelAndView);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, true, "/gym/email-pass/");
-        modelAndView.setViewName("gym/gym-parameter-change-pass");
-        modelAndView.addObject("passwordModel", new PasswordModel());
-        modelAndView.addObject("gymModel", gymService.findByIdEnabled(gymId));
-        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
-        return modelAndView;
-    }
-
-    @PostMapping("/update-email-pass")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ModelAndView gymUpdateEmailPass(ModelAndView modelAndView, @ModelAttribute("passwordModel") PasswordModel passwordModel) {
-        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), passwordModel.getGymId(), getClass());
-        securityService.userAccessValidation("/gym/update-email-pass");
-        UserModel user = utilService.basicDataCharge(modelAndView);
-        securityService.enabledAdministrationGymUser(user.getUsername(), passwordModel.getGymId(), true, "/gym/update-email-pass");
-        if (!gymParameterService.comparePassword(passwordModel.getGymId(), passwordModel.getOldPassword())) {
-            modelAndView.addObject("oldDifferent", "oldDifferent");
-        } else {
-            GymParameterModel gymParameterModel = new GymParameterModel();
-            gymParameterModel.setKeyData(Constants.EMAIL_PASSWORD);
-            GymModel gymModel = new GymModel();
-            gymModel.setId(passwordModel.getGymId());
-            gymParameterModel.setGymModel(gymModel);
-            gymParameterModel.setValue(passwordModel.getNewPassword());
-            gymParameterModel.setModificationDate(new Date());
-            gymParameterModel.setModificationUsername(user.getUsername());
-            gymParameterService.update(gymParameterModel);
-            modelAndView.addObject("modifiedPass", "modifiedPass");
-        }
-        LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
-        return emailPassword(modelAndView, passwordModel.getGymId());
-    }*/
 
     @GetMapping("/photos/{gymId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -339,23 +263,17 @@ public class GymController {
         return modelAndView;
     }
 
-    @GetMapping("/address/{gymId}/{gymAddressId}")
+    @GetMapping("/address/{gymAddressId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ModelAndView gymAddressDetail(ModelAndView modelAndView, @PathVariable Long gymId, @PathVariable Long gymAddressId) {
-        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), "gymId=" + gymId + ", gymAddressId=" + gymAddressId, getClass());
-        securityService.userAccessValidation("/gym/address/" + gymId + "/" + gymAddressId);
+    public ModelAndView gymAddressDetail(ModelAndView modelAndView, @PathVariable Long gymAddressId) {
+        LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), "gymAddressId=" + gymAddressId, getClass());
+        securityService.userAccessValidation("/gym/address/" + gymAddressId);
         UserModel user = utilService.basicDataCharge(modelAndView);
-        securityService.enabledAdministrationGymUser(user.getUsername(), gymId, false, "/gym/address/" + gymId + "/" + gymAddressId);
-        modelAndView.setViewName("gym/address");
         GymAddressModel gymAddressModel = gymAddressService.findById(gymAddressId);
-        if (Utils.isNullOrEmpty(gymAddressModel.getEmailPassword())) {
-            modelAndView.addObject("emptyPass", true);
-        } else {
-            modelAndView.addObject("emptyPass", false);
-            gymAddressModel.setEmailPassword(null);
-        }
+        securityService.enabledAdministrationGymUser(user.getUsername(), gymAddressModel.getGymModel().getId(), false, "/gym/address/" + gymAddressId);
+        modelAndView.setViewName("gym/address");
         modelAndView.addObject("gymAddressModel", gymAddressModel);
-        modelAndView.addObject("utilListHost", Utils.chargeListHostProvider());
+//        modelAndView.addObject("utilListHost", Utils.chargeListHostProvider());
         utilService.chargeBasicDataSelect(modelAndView);
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return modelAndView;
@@ -368,13 +286,10 @@ public class GymController {
         securityService.userAccessValidation("/gym/address");
         UserModel user = utilService.basicDataCharge(modelAndView);
         securityService.enabledAdministrationGymUser(user.getUsername(), gymAddressModel.getGymModel().getId(), false, "/gym/address");
-        if (Utils.isNullOrEmpty(gymAddressModel.getEmailPassword())) {
-            gymAddressModel.setEmailPassword(gymAddressService.findById(gymAddressModel.getId()).getEmailPassword());
-        }
         gymAddressService.update(gymAddressModel);
         modelAndView.addObject("updateOK", "updateOK");
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
-        return gymAddressDetail(modelAndView, gymAddressModel.getGymModel().getId(), gymAddressModel.getId());
+        return gymAddressDetail(modelAndView, gymAddressModel.getId());
     }
 
     @GetMapping("/enabled/address/{gymAddressId}")
@@ -388,7 +303,7 @@ public class GymController {
         gymAddressService.enableDisable(gymAddressId);
         modelAndView.addObject("updateOK", "updateOK");
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
-        return gymAddressDetail(modelAndView, gymAddressModel.getGymModel().getId(), gymAddressModel.getId());
+        return gymAddressDetail(modelAndView, gymAddressModel.getId());
     }
 
     @GetMapping("/remove-address/{id}")
@@ -416,7 +331,7 @@ public class GymController {
         GymAddressModel gymAddressModel = new GymAddressModel();
         gymAddressModel.setGymModel(gymModel);
         modelAndView.addObject("gymAddressModel", gymAddressModel);
-        modelAndView.addObject("utilListHost", Utils.chargeListHostProvider());
+//        modelAndView.addObject("utilListHost", Utils.chargeListHostProvider());
         utilService.chargeBasicDataSelect(modelAndView);
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return modelAndView;
@@ -434,7 +349,7 @@ public class GymController {
         return gymAddresses(modelAndView, gymAddressModel.getGymModel().getId());
     }
 
-    @GetMapping("/address/email-pass/{gymAddressId}")
+    /*@GetMapping("/address/email-pass/{gymAddressId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ModelAndView gymAddressEmailPass(ModelAndView modelAndView, @PathVariable Long gymAddressId) {
         LoggerMapper.methodIn(Level.INFO, Utils.getMethodName(), "gymAddressId=" + gymAddressId, getClass());
@@ -470,7 +385,7 @@ public class GymController {
             LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), "updateOK", getClass());
             return gymAddressDetail(modelAndView, gymAddressModel.getGymModel().getId(), gymAddressModel.getId());
         }
-    }
+    }*/
 
     @GetMapping("/documents/{gymId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

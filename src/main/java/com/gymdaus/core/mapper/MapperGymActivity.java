@@ -2,8 +2,8 @@ package com.gymdaus.core.mapper;
 
 import com.gymdaus.core.entity.GymActivity;
 import com.gymdaus.core.model.GymActivityModel;
-import com.gymdaus.core.model.GymAddressModel;
 import com.gymdaus.core.model.GymModel;
+import com.gymdaus.core.repository.GymRepository;
 import com.gymdaus.core.service.ActivityService;
 import com.gymdaus.core.service.GymAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,8 @@ public class MapperGymActivity {
     private ActivityService activityService;
     @Autowired
     private GymAddressService gymAddressService;
+    @Autowired
+    private GymRepository gymRepository;
 
     public GymActivityModel entity2Model(GymActivity externObject) {
         GymActivityModel localObject = new GymActivityModel();
@@ -27,11 +29,11 @@ public class MapperGymActivity {
             if (externObject.getGymId() != 0) {
                 GymModel gymModel = new GymModel();
                 gymModel.setId(externObject.getGymId());
+                gymModel.setName(gymRepository.getNameById(externObject.getGymId()));
                 localObject.setGymModel(gymModel);
             }
             if (externObject.getGymAddressId() != 0) {
-                GymAddressModel gymAddressModel = gymAddressService.findById(externObject.getGymAddressId());
-                localObject.setGymAddressModel(gymAddressModel);
+                localObject.setGymAddressModel(gymAddressService.findById(externObject.getGymAddressId()));
             }
             localObject.setRegistrationDate(externObject.getRegistrationDate());
             localObject.setRegistrationUser(externObject.getRegistrationUser());

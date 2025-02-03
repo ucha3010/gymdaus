@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta th:replace="~{static/headerMeta :: meta}">
+    <link th:replace="~{static/headerLink :: link}">
+    <script th:replace="~{static/headerScript :: script}"></script>
+
+    <title th:text="#{Validation.code}"></title>
+
+    <script type="text/javascript">
+		function validar(){
+			var field = ['code'];
+            restore();
+            var validated = true;
+            for(var i=0; i < field.length; i++){
+                var rolName = document.getElementById(field[i]);
+                var rolNameError = document.getElementById(field[i]+'Error');
+                if(rolName.value==''){
+                    if(rolNameError != null){
+                        rolNameError.className = "colorRed";
+                    }
+                    rolName.style.borderColor="red";
+                    validated = false;
+                }
+            }
+
+			if(validated){
+				buttonBlock(document.getElementById('continueButton'));
+				buttonBlock(document.getElementById('cancelButton'));
+				return true;
+			} else {
+                document.getElementById('thereIsError').className = "colorRed";
+				return false;
+			}
+		}
+        function restore(){
+            var errorSpan = document.getElementsByName('errorSpan');
+            for (var i = 0; i < errorSpan.length; i++) {
+                errorSpan[i].className = "d-none";
+            }
+            var fields = document.getElementsByClassName("form-control");
+            for (var i = 0; i < fields.length; i++) {
+                fields[i].style.borderColor="#ced4da";
+            }
+        }
+    </script>
+
+</head>
+
+<body>
+    <div th:replace="~{static/barraUser :: div}"></div>
+    <div th:replace="~{static/barraNav :: nav}"></div>
+    <div th:replace="~{static/barraAdminRootButtons :: section}"></div>
+
+    <div class="container mt-5">
+
+        <div th:if="${enrollmentError != null}" class="alert alert-danger text-center" role="alert"><span
+                th:text="${enrollmentError}"></span></div>
+
+        <form action="#" th:action="@{/security/validate-code}" th:object="${signatureModel}" method="post"
+              onsubmit="return validate()">
+            <input type="hidden" name="operationId" th:value="*{operationId}"/>
+            <input type="hidden" name="operationName" th:value="*{operationName}"/>
+
+            <div class="row mb-3">
+                <div class="col-md-2">
+                </div>
+                <div class="col-12 col-md-8 text-center">
+                    <h2><span th:text="#{To.confirm.validation}"></span> <span th:if="${userEmail != null}" th:text="${userEmail}"></span>
+                    </h2>
+                    <h2 th:text="#{It.has.15.minutes.3.attempts}"></h2>
+                </div>
+                <div class="col-md-2">
+                </div>
+            </div>
+
+            <div class="row mb-5">
+                <div class="col-md-2">
+                </div>
+                <div class="col-3 col-md-2 text-center">
+                    <label for="code"><span th:text="#{Validation.code}"></span>* </label>
+                </div>
+                <div class="col-9 col-md-4">
+                    <input type="text" th:field="*{code}" id="code" class="form-control" size="6"/>
+                </div>
+                <div class="col-md-4">
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-4">
+                </div>
+                <div class="col-8">
+                    <a class="colorOrange" href="#"
+                       th:href="@{'/security/send-new-code/' + ${signatureModel.operationName} + '/' + ${signatureModel.operationId}}">
+                        <span th:text="#{Send.new.code}"></span>
+                    </a>
+                </div>
+            </div>
+
+            <section class="row mb-3 text-center">
+                <div>
+                    <a th:each="unit : ${downloadDocumentModelList}" class="btn btn-link" th:href="@{/document/download/__${unit.documentKind}__/__${unit.signatureId}__}">
+                        <span th:text="${unit.documentName}"></span>
+                    </a>
+                </div>
+            </section>
+
+            <div class="d-flex justify-content-between">
+                <a class="btn btn-info" id="cancelButton" href="#" th:href="@{/}">
+                    <span th:text="#{Exit}"></span>
+                </a>
+                <button class="btn btn-success" id="continueButton" type="submit"><span th:text="#{Sign}"></span></button>
+            </div>
+
+            <div class="mb-3 text-center">
+                <span id="thereIsError" name="errorSpan" class="d-none" th:text="#{fillObligatory}"></span>
+            </div>
+
+        </form>
+
+    </div>
+</body>
+
+<footer th:replace="~{static/footer :: footer}"></footer>
+</html>

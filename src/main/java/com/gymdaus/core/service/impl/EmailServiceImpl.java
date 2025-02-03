@@ -1,6 +1,5 @@
 package com.gymdaus.core.service.impl;
 
-import com.gymdaus.core.entity.User;
 import com.gymdaus.core.exception.SenderException;
 import com.gymdaus.core.model.*;
 import com.gymdaus.core.service.EmailService;
@@ -112,14 +111,41 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendCodeValidation(User user, String code, List<File> files) throws SenderException {// envía plataforma
+    public void sendCodeValidation(UserModel user, String code, List<File> files, MessageSource messageSource, Locale locale) throws SenderException {
         try {
             ManagerParameterModel utilManagerModel = managerParameterService.get();
             sendMessage.sendEmail(new EmailModel(utilManagerModel.getEmail(), user.getEmail(),
-                    "Código de validación", textMessageCodeValidation(user, code), files,
+                    messageSource.getMessage("Validation.code", null, locale),
+                    textMessageValidationCode(user, code, messageSource, locale), files,
                     utilManagerModel.getEmailHost(), utilManagerModel.getEmailPort(), utilManagerModel.getPassword(), null));
         } catch (Exception e) {
             throw new SenderException(Constants.EMAIL_ADVICE, e.getMessage());
+        }
+    }
+
+    @Override
+    public void sendUserEnrollment(PdfModel pdfModel, List<File> files, MessageSource messageSource, Locale locale) throws SenderException {
+        try {
+            ManagerParameterModel utilManagerModel = managerParameterService.get();
+            sendMessage.sendEmail(new EmailModel(utilManagerModel.getEmail(), pdfModel.getEmail(),
+                    messageSource.getMessage("Enrollment.confirmation", null, locale),
+                    textMessageUserEnrollment(pdfModel, messageSource, locale), files,
+                    utilManagerModel.getEmailHost(), utilManagerModel.getEmailPort(), utilManagerModel.getPassword(), pdfModel.getGymId()));
+        } catch (Exception e) {
+            throw new SenderException(Constants.EMAIL_ADVICE,e.getMessage());
+        }
+    }
+
+    @Override
+    public void confirmAdminGymEnrollment(PdfModel pdfModel, MessageSource messageSource, Locale locale) throws SenderException {
+        try {
+            ManagerParameterModel utilManagerModel = managerParameterService.get();
+            sendMessage.sendEmail(new EmailModel(utilManagerModel.getEmail(), pdfModel.getGymEmail(),
+                    messageSource.getMessage("Enrollment.confirmation", null, locale),
+                    textMessageConfirmAdminGymJoining(pdfModel, messageSource, locale), null,
+                    utilManagerModel.getEmailHost(), utilManagerModel.getEmailPort(), utilManagerModel.getPassword(), pdfModel.getGymId()));
+        } catch (Exception e) {
+            throw new SenderException(Constants.EMAIL_ADVICE,e.getMessage());
         }
     }
 /*
@@ -148,30 +174,6 @@ public class EmailServiceImpl implements EmailService {
             throw new SenderException(Constants.AVISO_EMAIL,e.getMessage());
         }
 
-    }
-
-    @Override
-    public void sendGymJoining(InscripcionTaekwondoModel inscripcionTaekwondoModel, List<File> files) throws SenderException {// envía gimnasio
-        try {
-            GimnasioModel gimnasioModel = gimnasioService.findById(inscripcionTaekwondoModel.getCodigoGimnasio());
-            sendMessage.enviarCorreo(new EmailModel(gimnasioModel.getCorreo(), inscripcionTaekwondoModel.getMayorCorreo(), "Confirmación inscripción gimnasio",
-                    textMessageGymJoining(inscripcionTaekwondoModel), files, gimnasioModel.getEmailHost(), gimnasioModel.getEmailPort(), gimnasioModel.getEmailPassword()));
-        } catch (Exception e) {
-            throw new SenderException(Constants.AVISO_EMAIL_ARCHIVO_ADJUNTO,e.getMessage());
-        }
-    }
-
-    @Override
-    public void confirmAdminGymJoining(InscripcionTaekwondoModel inscripcionTaekwondoModel) throws SenderException {// envía plataforma
-        try {
-            ManagerParameterModel utilManagerModel = managerParameterService.get();
-            GimnasioModel gimnasioModel = gimnasioService.findById(inscripcionTaekwondoModel.getCodigoGimnasio());
-            sendMessage.enviarCorreo(new EmailModel(utilManagerModel.getEmail(), gimnasioModel.getCorreo(), "Nueva inscripción en el gimnasio",
-                    textMessageConfirmAdminGymJoining(inscripcionTaekwondoModel), null,
-                    utilManagerModel.getEmailHost(), utilManagerModel.getEmailPort(), utilManagerModel.getPassword()));
-        } catch (Exception e) {
-            throw new SenderException(Constants.AVISO_EMAIL,e.getMessage());
-        }
     }
 
     @Override
@@ -312,21 +314,64 @@ public class EmailServiceImpl implements EmailService {
         return stringBuilder.toString();
     }
 
-    private String textMessageCodeValidation(User user, String code) {
+    private String textMessageValidationCode(UserModel userModel, String code, MessageSource messageSource, Locale locale) {
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<!DOCTYPE html>");
         stringBuilder.append("<HTML><BODY>");
-        String name = user.getName() != null ? " " + user.getName() : "";
-        stringBuilder.append("<h1>Hola<b>").append(name).append("</b>!</h1><br>");
-        stringBuilder.append("<p>El código de validación que debes utilizar es el siguiente</p>");
+        String name = userModel.getName() != null ? " " + userModel.getName() : "";
+        stringBuilder.append("<h1>")
+                .append(messageSource.getMessage("Hello", null, locale))
+                .append("<b>").append(name).append("</b>!</h1><br>");
+        stringBuilder.append("<p>")
+                .append(messageSource.getMessage("text.message.the.validation.code.you.must.use", null, locale))
+                .append("</p>");
         stringBuilder.append("<br>");
         stringBuilder.append("<h2>").append(code).append("</h2>");
         stringBuilder.append("<br><br>");
-        stringBuilder.append("<p>Este código tiene una validez de 15 minutos.</p>");
+        stringBuilder.append("<p>")
+                .append(messageSource.getMessage("text.message.this.code.has.a.validation.of", null, locale))
+                .append(".</p>");
         stringBuilder.append("<br><br>");
-        stringBuilder.append("<p>Al firmar con este código, estarás firmando todos los documentos que requieran " +
-                "firma y estén adjuntos en este correo.</p>");
+        stringBuilder.append("<p>")
+                .append(messageSource.getMessage("text.message.by.signing.with.this.code", null, locale))
+                .append(".</p>");
+        stringBuilder.append("<br><br>");
+        stringBuilder.append("<p>")
+                .append(messageSource.getMessage("email.greeting", null, locale))
+                .append("!</p>");
+        stringBuilder.append("</BODY></HTML>");
+        return stringBuilder.toString();
+    }
+
+    //TODO en los siguiente métodos hacer multiidioma
+
+    private String textMessageUserEnrollment(PdfModel pdfModel, MessageSource messageSource, Locale locale) {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<!DOCTYPE html>");
+        stringBuilder.append("<HTML><BODY>");
+        stringBuilder.append("<h1>Hola <b>").append(pdfModel.getAuthorizerName()).append("</b>!</h1><br>");
+        stringBuilder.append("<p>Te adjuntamos la confirmación de inscripción al Gimnasio.</p>");
+        stringBuilder.append("<br><br>");
+        stringBuilder.append("<p>¡Que pases un buen día!</p>");
+        stringBuilder.append("</BODY></HTML>");
+        return stringBuilder.toString();
+    }
+
+    private String textMessageConfirmAdminGymJoining(PdfModel pdfModel, MessageSource messageSource, Locale locale) {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<!DOCTYPE html>");
+        stringBuilder.append("<HTML><BODY>");
+        stringBuilder.append("<h1>Hola<b>").append("</b>!</h1><br>");
+        if (pdfModel.isOwn()) {
+            stringBuilder.append("<p>¡Se acaba de inscribir ").append(pdfModel.getAuthorizerName()).append(" en el gimnasio!</p>");
+        } else {
+            stringBuilder.append("<p>¡Se acaba de inscribir ").append(pdfModel.getMinorName()).append(" (que es menor de edad) en el gimnasio!</p>");
+            stringBuilder.append("<p>Está autorizado por su ").append(pdfModel.getEnrollmentAs()).append(" que se llama ");
+            stringBuilder.append(pdfModel.getAuthorizerName()).append(".</p>");
+        }
         stringBuilder.append("<br><br>");
         stringBuilder.append("<p>¡Que pases un buen día!</p>");
         stringBuilder.append("</BODY></HTML>");
@@ -341,49 +386,6 @@ public class EmailServiceImpl implements EmailService {
         String name = userModel.getName() != null ? " " + userModel.getName() : "";
         stringBuilder.append("<h1>Hola <b>").append(name).append("</b>!</h1><br>");
         stringBuilder.append("<p>Te adjuntamos la confirmación de inscripción al Torneo.</p>");
-        stringBuilder.append("<br><br>");
-        stringBuilder.append("<p>¡Que pases un buen día!</p>");
-        stringBuilder.append("</BODY></HTML>");
-        return stringBuilder.toString();
-    }
-
-    private String textMessageGymJoining(InscripcionTaekwondoModel inscripcionTaekwondoModel) {
-
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<!DOCTYPE html>");
-        stringBuilder.append("<HTML><BODY>");
-        stringBuilder.append("<h1>Hola <b>").append(inscripcionTaekwondoModel.getMayorNombre()).append("</b>!</h1><br>");
-        stringBuilder.append("<p>Te adjuntamos la confirmación de inscripción al Gimnasio.</p>");
-        if (inscripcionTaekwondoModel.isDomiciliacionSEPA()) {
-            stringBuilder.append("<p>Por favor no olvides enviarnos la autorización de domiciliación firmada.</p>");
-            stringBuilder.append("<p>Es un proceso muy sencillo y lo debes hacer desde la misma página de inscripción.</p>");
-            stringBuilder.append("<br><br>");
-        }
-        stringBuilder.append("<br><br>");
-        stringBuilder.append("<p>¡Que pases un buen día!</p>");
-        stringBuilder.append("</BODY></HTML>");
-        return stringBuilder.toString();
-    }
-
-    private String textMessageConfirmAdminGymJoining(InscripcionTaekwondoModel insc) {
-
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<!DOCTYPE html>");
-        stringBuilder.append("<HTML><BODY>");
-        String mayor = insc.getMayorNombre() + " " + insc.getMayorApellido1() +
-                (Utils.isNullOrEmpty(insc.getMayorApellido2()) ? "" : " " + insc.getMayorApellido2());
-        String autorizado = null;
-        if(!Utils.isNullOrEmpty(insc.getAutorizadoNombre())) {
-            autorizado = insc.getAutorizadoNombre() + " " + insc.getAutorizadoApellido1() +
-                    (Utils.isNullOrEmpty(insc.getAutorizadoApellido2()) ? "" : " " + insc.getAutorizadoApellido2());
-        }
-        stringBuilder.append("<h1>Hola<b>").append("</b>!</h1><br>");
-        if (autorizado == null) {
-            stringBuilder.append("<p>¡Se acaba de inscribir ").append(mayor).append(" en el gimnasio!</p>");
-        } else {
-            stringBuilder.append("<p>¡Se acaba de inscribir ").append(autorizado).append(" (que es menor de edad) en el gimnasio!</p>");
-            stringBuilder.append("<p>Está autorizado por su ").append(insc.getMayorCalidad()).append(" que se llama ").append(mayor).append(".</p>");
-        }
         stringBuilder.append("<br><br>");
         stringBuilder.append("<p>¡Que pases un buen día!</p>");
         stringBuilder.append("</BODY></HTML>");

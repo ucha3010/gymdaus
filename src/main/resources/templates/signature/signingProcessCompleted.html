@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta th:replace="~{static/headerMeta :: meta}">
+        <link th:replace="~{static/headerLink :: link}">
+        <script th:replace="~{static/headerScript :: script}"></script>
+
+        <title></title>
+    </head>
+    <body>
+        <div th:replace="~{static/barraUser :: div}"></div>
+        <div th:replace="~{static/barraNav :: nav}"></div>
+        <div th:replace="~{static/barraAdminRootButtons :: section}"></div>
+
+        <div sec:authorize="isAuthenticated()" class="container mt-5">
+
+            <section class="mb-3 text-center">
+                <div th:if="${enrollmentError != null}" class="alert alert-danger textAlignCenter" role="alert"><span th:text="#{__${enrollmentError}__}"></span></div>
+                <div th:if="${enrollmentOk != null}" class="alert alert-success textAlignCenter" role="alert"><span th:text="#{__${enrollmentOk}__}"></span>!</div>
+            </section>
+
+            <section class="mb-3 text-center">
+                <div class="mb-1">
+                    <img src="#" th:src="@{/imgs/signature_ok.png}" alt="Signing Process Completed" class="w-50"/>
+                </div>
+                <div>
+                    <a th:each="unit : ${downloadDocumentModelList}" class="btn btn-link" th:href="@{/document/download/__${unit.documentKind}__/__${unit.signatureId}__}">
+                        <span th:text="${unit.documentName}"></span>
+                    </a>
+                </div>
+            </section>
+
+            <div class="d-flex justify-content-center">
+                <form action="#" th:action="@{/}">
+                    <button class="btn btn-primary btn-lg" type="submit" th:text="#{back.main.page}"></button>
+                </form>
+            </div>
+
+        </div>
+    </body>
+
+    <footer th:replace="~{static/footer :: footer}"></footer>
+</html>

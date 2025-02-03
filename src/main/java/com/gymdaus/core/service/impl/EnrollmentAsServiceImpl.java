@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service()
-public class EnrollmentAsyServiceImpl implements EnrollmentAsService {
+public class EnrollmentAsServiceImpl implements EnrollmentAsService {
 
     @Autowired
     private EnrollmentAsRepository enrollmentAsRepository;

@@ -29,6 +29,11 @@ public class Utils {
         }
     }
 
+    public static String formatFullDate2String(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        return sdf.format(date);
+    }
+
     public static String generateSecurePassword() {
 
         // create character rule for lower case
@@ -145,6 +150,21 @@ public class Utils {
         return absolute[0];
     }
 
+    public static String getTempFolder() {
+        //TODO DAMIAN revisar si cambio esta ruta a files/temp
+        String tempFolder = "src".concat(File.separator).concat("main").concat(File.separator)
+                .concat("resources").concat(File.separator).concat("static").concat(File.separator)
+                .concat("files").concat(File.separator).concat("temp");
+        File tempDirectory = new File(tempFolder);
+        if (!tempDirectory.exists()) {
+            if(!tempDirectory.mkdirs()) {
+                LoggerMapper.methodIn(Level.ERROR, Utils.getMethodName(), "Problems making folder ".concat(tempDirectory.getName()), Utils.class);
+            }
+        }
+        tempFolder+=File.separator;
+        return tempFolder;
+    }
+
     public static String getFileExtension(MultipartFile file) {
         String fileName = file.getOriginalFilename();
         if (fileName != null) {
@@ -195,5 +215,35 @@ public class Utils {
 
     public static List<String> getGymUserRoles() {
         return List.of(Constants.ROLE_MANAGER, Constants.ROLE_EMPLOYEE);
+    }
+
+    public static String getCurrencySymbol(String isoCode) {
+        try {
+            int numericCode = Integer.parseInt(isoCode);
+            for (Currency currency : Currency.getAvailableCurrencies()) {
+                if (currency.getNumericCode() == numericCode) {
+                    return currency.getSymbol();
+                }
+            }
+        } catch (NumberFormatException e) {
+            return "N/A";
+        }
+        return "N/A";
+    }
+
+    public static String getLocalCurrencySymbol() {
+        Locale defaultLocale = Locale.getDefault();
+        Currency currency = Currency.getInstance(defaultLocale);
+        return currency.getSymbol();
+    }
+
+    public static String calculateSeason(Date date) {
+        String[] dateArray = new SimpleDateFormat("dd-MM-yyyy").format(date).split("-");
+        int season = Integer.parseInt(dateArray[2]);
+        // en noviembre y diciembre se hace la autorización para la temporada del año siguiente
+        if ("11".equals(dateArray[1]) || "12".equals(dateArray[1])) {
+            season++;
+        }
+        return String.valueOf(season);
     }
 }

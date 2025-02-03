@@ -311,7 +311,6 @@ public class RootController {
         securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/gym/" + gymId + "/address/" + gymAddressId);
         modelAndView.setViewName("root/gym-address");
         modelAndView.addObject("gymAddressModel", gymAddressService.findById(gymAddressId));
-        modelAndView.addObject("utilListHost", Utils.chargeListHostProvider());
         utilService.chargeBasicDataSelect(modelAndView);
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return modelAndView;
@@ -324,7 +323,6 @@ public class RootController {
         securityService.userAccessValidation("/root/gym/address");
         UserModel user = utilService.basicDataCharge(modelAndView);
         securityService.roleValidation(user.getUsername(), Constants.ROLE_ROOT, "/root/gym/address");
-        gymAddressModel.setEmailPassword(gymAddressService.findById(gymAddressModel.getId()).getEmailPassword());
         gymAddressService.update(gymAddressModel);
         modelAndView.addObject("updateOK", "updateOK");
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
@@ -344,7 +342,6 @@ public class RootController {
         GymAddressModel gymAddressModel = new GymAddressModel();
         gymAddressModel.setGymModel(gymModel);
         modelAndView.addObject("gymAddressModel", gymAddressModel);
-        modelAndView.addObject("utilListHost", Utils.chargeListHostProvider());
         utilService.chargeBasicDataSelect(modelAndView);
         LoggerMapper.methodOut(Level.INFO, Utils.getMethodName(), modelAndView, getClass());
         return modelAndView;

@@ -24,7 +24,6 @@ public class EnrollmentMoreData {
     private String belt;
     @Column(length = Constants.POOMSAE_NAME)
     private String poomsae;
-    private boolean whatsappAuthorization;
     @Column(columnDefinition = "TEXT")
     private String notes;
 

@@ -15,7 +15,6 @@ public class EnrollmentMoreDataModel {
     private String category;
     private String belt;
     private String poomsae;
-    private boolean whatsappAuthorization;
     private String notes;
     private EnrollmentModel enrollmentModel;
 

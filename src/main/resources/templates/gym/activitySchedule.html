@@ -132,6 +132,7 @@
                     <input type="hidden" th:field="*{gymAddressModel.id}"/>
                     <input type="hidden" th:field="*{gymAddressModel.gymModel.id}"/>
                     <input type="hidden" th:field="*{position}"/>
+                    <input type="hidden" th:field="*{enabled}"/>
 
                     <div class="row align-items-center text-center">
                         <div class="col-6 col-lg-1 p-0">
@@ -207,13 +208,13 @@
                     </div>
 
                     <div class="row align-items-center d-flex flex-wrap">
-                        <div class="col-4 col-lg-2 p-0">
+                        <div class="col-4 col-lg-1 p-0">
                             <div class="form-check">
                                 <input type="checkbox" th:field="*{monday}" class="form-check-input" id="monday" />
                                 <label class="form-check-label" for="monday" th:text="#{monday}" name="label-week"></label>
                             </div>
                         </div>
-                        <div class="col-4 col-lg-2 p-0">
+                        <div class="col-4 col-lg-1 p-0">
                             <div class="form-check">
                                 <input type="checkbox" th:field="*{tuesday}" class="form-check-input" id="tuesday" />
                                 <label class="form-check-label" for="tuesday" th:text="#{tuesday}" name="label-week"></label>
@@ -225,28 +226,45 @@
                                 <label class="form-check-label" for="wednesday" th:text="#{wednesday}" name="label-week"></label>
                             </div>
                         </div>
-                        <div class="col-4 col-lg-2 p-0">
+                        <div class="col-3 col-lg-2 p-0">
                             <div class="form-check">
                                 <input type="checkbox" th:field="*{thursday}" class="form-check-input" id="thursday" />
                                 <label class="form-check-label" for="thursday" th:text="#{thursday}" name="label-week"></label>
                             </div>
                         </div>
-                        <div class="col-4 col-lg-2 p-0">
+                        <div class="col-3 col-lg-2 p-0">
                             <div class="form-check">
                                 <input type="checkbox" th:field="*{friday}" class="form-check-input" id="friday" />
                                 <label class="form-check-label" for="friday" th:text="#{friday}" name="label-week"></label>
                             </div>
                         </div>
-                        <div class="col-4 col-lg-2 p-0">
+                        <div class="col-3 col-lg-2 p-0">
                             <div class="form-check">
                                 <input type="checkbox" th:field="*{saturday}" class="form-check-input" id="saturday" />
                                 <label class="form-check-label" for="saturday" th:text="#{saturday}" name="label-week"></label>
                             </div>
                         </div>
-                        <div class="col-4 col-lg-2 p-0">
+                        <div class="col-3 col-lg-2 p-0">
                             <div class="form-check">
                                 <input type="checkbox" th:field="*{sunday}" class="form-check-input" id="sunday" />
                                 <label class="form-check-label" for="sunday" th:text="#{sunday}" name="label-week"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row align-items-center d-flex flex-wrap">
+                        <div class="col-1 col-lg-4 p-0">
+                        </div>
+                        <div class="col-5 col-lg-3 p-0">
+                            <div class="form-check">
+                                <input type="checkbox" th:field="*{federationForm}" class="form-check-input" id="federationForm" />
+                                <label class="form-check-label" for="federationForm" th:text="#{Form.federation}"></label>
+                            </div>
+                        </div>
+                        <div class="col-5 col-lg-3 p-0">
+                            <div class="form-check">
+                                <input type="checkbox" th:field="*{whatsappForm}" class="form-check-input" id="whatsappForm" />
+                                <label class="form-check-label" for="whatsappForm" th:text="#{Form.whatsapp}"></label>
                             </div>
                         </div>
                     </div>

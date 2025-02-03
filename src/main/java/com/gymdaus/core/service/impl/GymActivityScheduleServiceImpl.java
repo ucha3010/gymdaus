@@ -5,12 +5,15 @@ import com.gymdaus.core.mapper.MapperGymActivitySchedule;
 import com.gymdaus.core.model.GymActivityScheduleModel;
 import com.gymdaus.core.repository.GymActivityScheduleRepository;
 import com.gymdaus.core.service.GymActivityScheduleService;
+import com.gymdaus.core.util.Constants;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Service()
 public class GymActivityScheduleServiceImpl implements GymActivityScheduleService {
@@ -100,6 +103,72 @@ public class GymActivityScheduleServiceImpl implements GymActivityScheduleServic
             return gymActivitySchedule.getPosition();
         } else {
             return -1;
+        }
+    }
+
+    @Override
+    public void fillDescription(List<GymActivityScheduleModel> gymActivityScheduleModelList, MessageSource messageSource, Locale locale) {
+        for (GymActivityScheduleModel gymActivityScheduleModel : gymActivityScheduleModelList) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(gymActivityScheduleModel.getName()).append(" - ");
+            if (gymActivityScheduleModel.isMonday()) {
+                sb.append(messageSource.getMessage("monday.short", null, locale));
+                if (Constants.MONDAY.equalsIgnoreCase(gymActivityScheduleModel.getLastDayOfWeek())) {
+                    sb.append(" ");
+                } else {
+                    sb.append(", ");
+                }
+            }
+            if (gymActivityScheduleModel.isTuesday()) {
+                sb.append(messageSource.getMessage("tuesday.short", null, locale));
+                if (Constants.TUESDAY.equalsIgnoreCase(gymActivityScheduleModel.getLastDayOfWeek())) {
+                    sb.append(" ");
+                } else {
+                    sb.append(", ");
+                }
+            }
+            if (gymActivityScheduleModel.isWednesday()) {
+                sb.append(messageSource.getMessage("wednesday.short", null, locale));
+                if (Constants.WEDNESDAY.equalsIgnoreCase(gymActivityScheduleModel.getLastDayOfWeek())) {
+                    sb.append(" ");
+                } else {
+                    sb.append(", ");
+                }
+            }
+            if (gymActivityScheduleModel.isThursday()) {
+                sb.append(messageSource.getMessage("thursday.short", null, locale));
+                if (Constants.THURSDAY.equalsIgnoreCase(gymActivityScheduleModel.getLastDayOfWeek())) {
+                    sb.append(" ");
+                } else {
+                    sb.append(", ");
+                }
+            }
+            if (gymActivityScheduleModel.isFriday()) {
+                sb.append(messageSource.getMessage("friday.short", null, locale));
+                if (Constants.FRIDAY.equalsIgnoreCase(gymActivityScheduleModel.getLastDayOfWeek())) {
+                    sb.append(" ");
+                } else {
+                    sb.append(", ");
+                }
+            }
+            if (gymActivityScheduleModel.isSaturday()) {
+                sb.append(messageSource.getMessage("saturday.short", null, locale));
+                if (Constants.SATURDAY.equalsIgnoreCase(gymActivityScheduleModel.getLastDayOfWeek())) {
+                    sb.append(" ");
+                } else {
+                    sb.append(", ");
+                }
+            }
+            if (gymActivityScheduleModel.isSunday()) {
+                sb.append(messageSource.getMessage("sunday.short", null, locale));
+                sb.append(" ");
+            }
+            sb.append(messageSource.getMessage("from", null, locale)).append(" ");
+            sb.append(gymActivityScheduleModel.getStartTime()).append(" ");
+            sb.append(messageSource.getMessage("to", null, locale)).append(" ");
+            sb.append(gymActivityScheduleModel.getEndTime()).append(" - ");
+            sb.append(gymActivityScheduleModel.getPrice()).append(gymActivityScheduleModel.getCurrency());
+            gymActivityScheduleModel.setDescription(sb.toString());
         }
     }
 

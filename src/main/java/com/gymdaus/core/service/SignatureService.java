@@ -11,12 +11,9 @@ public interface SignatureService {
 
     SignatureModel findById(Long id);
 
-    SignatureModel add(SignatureModel model);
-
-    SignatureModel update(SignatureModel model);
+    SignatureModel addOrUpdate(SignatureModel model);
 
     void delete(Long id);
 
-    SignatureModel findByOperationId(Long operationId);
-
+    SignatureModel findByOperationIdAndOperationName(Long operationId, String operationName);
 }

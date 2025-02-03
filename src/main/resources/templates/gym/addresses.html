@@ -10,8 +10,8 @@
         <title th:text="#{addresses}"></title>
 
         <script type="text/javascript">
-            function viewDetail(gymId, gymAddressId){
-                var relativeUrl = "gym/address/" + gymId + "/" + gymAddressId;
+            function viewDetail(gymAddressId){
+                var relativeUrl = "gym/address/" + gymAddressId;
                 var domain = getDomain(location.href);
                 location.href = domain + relativeUrl;
             }
@@ -79,7 +79,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="text-center" th:each="unit : ${gymModel.gymAddressModelList}" th:attr="onclick=|viewDetail('${gymModel.id}','${unit.id}')|">
+                    <tr class="text-center" th:each="unit : ${gymModel.gymAddressModelList}" th:attr="onclick=|viewDetail('${unit.id}')|">
                         <td class="d-none d-lg-table-cell"><span th:text="${unit.id}"></span></td>
                         <td><span th:text="${unit.name}"></span></td>
                         <td>

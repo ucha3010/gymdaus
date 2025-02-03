@@ -12,9 +12,6 @@ public class Constants {
 	public static final String ROLE_MANAGER= "ROLE_MANAGER";
 	public static final String ROLE_EMPLOYEE= "ROLE_EMPLOYEE";
 
-
-	public static final String ERROR_BORRAR_MENU = "102";
-	public static final String ERROR_BORRAR_MENU_CON_SUBMENU = "103";
     public static final String EMAIL_ADVICE = "1000";
 
 	// generales
@@ -23,8 +20,8 @@ public class Constants {
 
 	// entity length
 	public static final int ACTIVITY_NAME = 100;
-	public static final int AGE_CATEGORY_NAME = 100;
 	public static final int COUNTRY_NAME = 50;
+	public static final int CURRENCY_CODE = 3;
 	public static final int ENROLLMENT_NAME = 100;
 	public static final int ENROLLMENT_AS_NAME = 50;
 	public static final int GYM_NAME = 100;
@@ -63,9 +60,7 @@ public class Constants {
 	public static final int MORE_REGISTRATION_NAME = 100;
 	public static final int KEY = 100;
 	public static final int VALUE = 200;
-	public static final int MENU_NAME = 30;
 	public static final int URL = 200;
-	public static final int ADVISE = 30;
 	public static final int OPERATION_NAME = 100;
 	public static final int SIGNATURE_CODE = 6;
 	public static final int TOKEN_ID = 36;
@@ -79,6 +74,35 @@ public class Constants {
 	public static final String EMAIL_HOST = "email.host";
 	public static final String EMAIL_PORT = "email.port";
 	public static final String EMAIL_PASSWORD = "email.password";
+	public static final int MAXIMUM_SENT_CODE_ATTEMPTS = 15;
+	public static final int MAXIMUM_ATTEMPTS_TO_EVALUATE_CODE = 3;
+	public static final int PARAGRAPH_LINE_BREAK = 20;
+	public static final String TABLE_ENROLLMENT = "tableEnrollment";
+	public static final String TABLE_GYM_DOCUMENT_MANAGER = "tableGymDocumentManager";
+	public static final int TABLE_TO_SEARCH = 50;
 	public static final String TOKEN_EXPIRED = "5000";
 	public static final String TOKEN_MAXIMUM_ATTEMPTS = "5001";
+    public static final String VALIDATION_ADVICE_DATA_IN_ERROR = "300";
+	public static final String VALIDATION_ADVICE_TIMEOUT = "301";
+	public static final String VALIDATION_ADVICE_INVALID_INPUT_DATA = "302";
+	public static final String VALIDATION_ADVICE_EXCEEDED_VALID_ATTEMPTS = "303";
+	public static final String VALIDATION_ADVICE_OPERATION_SIGNED_PREVIOUSLY = "304";
+	public static final String VALIDATION_ADVICE_OPERATION_SIGNATURE_LOCKED = "305";
+
+	// Document kind
+	public static final int AUTHORIZATION = 1;
+	public static final String DOCUMENT_AUTHORIZATION = "enrollment";
+	public static final int FEDERATIVE_MANDATE = 2;
+	public static final String DOCUMENT_FEDERATIVE_MANDATE = "Form.federation";
+	public static final int WHATSAPP = 3;
+	public static final String DOCUMENT_SEPA_DIRECT_DEBIT = "Form.sepa";
+	public static final int SEPA_DIRECT_DEBIT = 4;
+	public static final String DOCUMENT_WHATSAPP = "Form.whatsapp";
+	public static final String MONDAY = "monday";
+	public static final String TUESDAY = "tuesday";
+	public static final String WEDNESDAY = "wednesday";
+	public static final String THURSDAY = "thursday";
+	public static final String FRIDAY = "friday";
+	public static final String SATURDAY = "saturday";
+	public static final String SUNDAY = "sunday";
 }

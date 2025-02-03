@@ -21,6 +21,7 @@ public class GymActivityScheduleModel {
     private boolean friday;
     private boolean saturday;
     private boolean sunday;
+    private String lastDayOfWeek;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date specificStartDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -36,11 +37,15 @@ public class GymActivityScheduleModel {
     private boolean minor;
     private boolean inclusive;
     private Double price;
+    private String currency;
     private int capacity;
     private GymActivityModel gymActivityModel;
     private GymAddressModel gymAddressModel;
     private ActivityModel activityModel;
     private int position;
     private boolean enabled;
+    private boolean federationForm;
+    private boolean whatsappForm;
+    private String description;
 
 }

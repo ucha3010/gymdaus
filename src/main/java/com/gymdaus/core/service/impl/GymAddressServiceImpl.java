@@ -5,9 +5,7 @@ import com.gymdaus.core.mapper.MapperGymAddress;
 import com.gymdaus.core.model.GymAddressModel;
 import com.gymdaus.core.repository.GymAddressRepository;
 import com.gymdaus.core.service.GymAddressService;
-import com.gymdaus.core.util.EmailEnum;
 import com.gymdaus.core.util.LoggerMapper;
-import com.gymdaus.core.util.Utils;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.logging.log4j.Level;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,13 +52,11 @@ public class GymAddressServiceImpl implements GymAddressService {
 
     @Override
     public void add(GymAddressModel gymAddressModel) {
-        chargePort(gymAddressModel);
         gymAddressRepository.save(mapperGymAddress.model2Entity(gymAddressModel));
     }
 
     @Override
     public void update(GymAddressModel gymAddressModel) {
-        chargePort(gymAddressModel);
         gymAddressRepository.save(mapperGymAddress.model2Entity(gymAddressModel));
     }
 
@@ -79,20 +75,5 @@ public class GymAddressServiceImpl implements GymAddressService {
             LoggerMapper.log(Level.ERROR, "enableDisable", e.getMessage(), this.getClass());
         }
         return gymAddressModel;
-    }
-
-    private void chargePort(GymAddressModel gymAddressModel) {
-        for (EmailEnum emailEnum : EmailEnum.values()) {
-            if (emailEnum.getHost().equals(gymAddressModel.getEmailHost())) {
-                gymAddressModel.setEmailPort(emailEnum.getPort());
-                break;
-            }
-        }
-    }
-
-    @Override
-    public boolean comparePassword(String oldPassword, Long id) {
-        GymAddress gymAddress = gymAddressRepository.findById(id).orElse(new GymAddress());
-        return !Utils.isNullOrEmpty(oldPassword) && oldPassword.equals(gymAddress.getEmailPassword());
     }
 }

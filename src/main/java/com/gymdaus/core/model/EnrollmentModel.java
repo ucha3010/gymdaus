@@ -13,6 +13,7 @@ import java.util.Date;
 public class EnrollmentModel {
 
     private Long id;
+    private String documentLanguage;
     private int enrollmentKind;
     private boolean own;
     private boolean minor;
@@ -20,6 +21,7 @@ public class EnrollmentModel {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date enrollmentDate;
     private String name; //del torneo, licencia o lo que sea
+    private String activityName;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date tournamentDate;
     private String gymName;
@@ -33,7 +35,7 @@ public class EnrollmentModel {
     private String userEnrollmentLastname;
     private String userEnrollmentSecondLastname;
     private String userEnrollmentIdCard;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date userEnrollmentBirthdate;
     private String userEnrollmentSex;
     private String authorizerEnrollmentAddressStreet;
@@ -46,7 +48,7 @@ public class EnrollmentModel {
     private String authorizerEnrollmentLastname;
     private String authorizerEnrollmentSecondLastname;
     private String authorizerEnrollmentIdCard;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date authorizerEnrollmentBirthdate;
     private String authorizerEnrollmentAs;
     private String email;
@@ -58,13 +60,19 @@ public class EnrollmentModel {
     private String sepaAccountNumber;
     private String sepaAccountPerson;
     private String swift;
+    private boolean needsSignature;
     private boolean signed;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date signedDate;
     private GymModel gymModel;
     private UserModel userModel;
     private GymActivityModel gymActivityModel;
+    private GymActivityScheduleModel gymActivityScheduleModel;
     private GymMoreRegistrationModel gymMoreRegistrationModel;
     private EnrollmentAsModel enrollmentAsModel;
     private EnrollmentMoreDataModel enrollmentMoreDataModel;
     private SignatureModel signatureModel;
+    private boolean federationForm;
+    private boolean whatsappForm;
 
 }

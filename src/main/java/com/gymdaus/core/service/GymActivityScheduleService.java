@@ -2,8 +2,10 @@ package com.gymdaus.core.service;
 
 
 import com.gymdaus.core.model.GymActivityScheduleModel;
+import org.springframework.context.MessageSource;
 
 import java.util.List;
+import java.util.Locale;
 
 public interface GymActivityScheduleService {
 
@@ -23,4 +25,5 @@ public interface GymActivityScheduleService {
 
     int findMaxPosition(Long gymAddressId, Long activityId);
 
+    void fillDescription(List<GymActivityScheduleModel> gymActivityScheduleModelList, MessageSource messageSource, Locale locale);
 }

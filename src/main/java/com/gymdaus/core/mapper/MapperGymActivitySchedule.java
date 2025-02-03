@@ -5,6 +5,9 @@ import com.gymdaus.core.model.ActivityModel;
 import com.gymdaus.core.model.GymActivityModel;
 import com.gymdaus.core.model.GymActivityScheduleModel;
 import com.gymdaus.core.service.GymAddressService;
+import com.gymdaus.core.util.Constants;
+import com.gymdaus.core.util.Utils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,6 +42,7 @@ public class MapperGymActivitySchedule {
             localObject.setFriday(externObject.isFriday());
             localObject.setSaturday(externObject.isSaturday());
             localObject.setSunday(externObject.isSunday());
+            evaluateLastDayOfWeek(localObject);
             localObject.setSpecificStartDate(externObject.getSpecificStartDate());
             localObject.setSpecificEndDate(externObject.getSpecificEndDate());
             localObject.setStartTime(externObject.getStartTime().toLocalTime());
@@ -49,9 +53,16 @@ public class MapperGymActivitySchedule {
             localObject.setMinor(externObject.isMinor());
             localObject.setInclusive(externObject.isInclusive());
             localObject.setPrice(externObject.getPrice());
+            if (!StringUtils.isBlank(externObject.getCurrency())) {
+                localObject.setCurrency(Utils.getCurrencySymbol(externObject.getCurrency()));
+            } else {
+                localObject.setCurrency(Utils.getLocalCurrencySymbol());
+            }
             localObject.setCapacity(externObject.getCapacity());
             localObject.setPosition(externObject.getPosition());
             localObject.setEnabled(externObject.isEnabled());
+            localObject.setFederationForm(externObject.isFederationForm());
+            localObject.setWhatsappForm(externObject.isWhatsappForm());
         }
         return localObject;
     }
@@ -92,10 +103,31 @@ public class MapperGymActivitySchedule {
             localObject.setMinor(externObject.isMinor());
             localObject.setInclusive(externObject.isInclusive());
             localObject.setPrice(externObject.getPrice());
+            localObject.setCurrency(externObject.getCurrency());
             localObject.setCapacity(externObject.getCapacity());
             localObject.setPosition(externObject.getPosition());
             localObject.setEnabled(externObject.isEnabled());
+            localObject.setFederationForm(externObject.isFederationForm());
+            localObject.setWhatsappForm(externObject.isWhatsappForm());
         }
         return localObject;
+    }
+
+    private void evaluateLastDayOfWeek(GymActivityScheduleModel localObject) {
+        if (!localObject.isTuesday() && !localObject.isWednesday() && !localObject.isThursday() && !localObject.isFriday() && !localObject.isSaturday() && !localObject.isSunday()) {
+            localObject.setLastDayOfWeek(Constants.MONDAY);
+        } else if (!localObject.isWednesday() && !localObject.isThursday() && !localObject.isFriday() && !localObject.isSaturday() && !localObject.isSunday()) {
+            localObject.setLastDayOfWeek(Constants.TUESDAY);
+        } else if (!localObject.isThursday() && !localObject.isFriday() && !localObject.isSaturday() && !localObject.isSunday()) {
+            localObject.setLastDayOfWeek(Constants.WEDNESDAY);
+        } else if (!localObject.isFriday() && !localObject.isSaturday() && !localObject.isSunday()) {
+            localObject.setLastDayOfWeek(Constants.THURSDAY);
+        } else if (!localObject.isSaturday() && !localObject.isSunday()) {
+            localObject.setLastDayOfWeek(Constants.FRIDAY);
+        } else if (!localObject.isSunday()) {
+            localObject.setLastDayOfWeek(Constants.SATURDAY);
+        } else {
+            localObject.setLastDayOfWeek(Constants.SUNDAY);
+        }
     }
 }

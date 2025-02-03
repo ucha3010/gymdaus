@@ -24,12 +24,6 @@ public class GymAddress {
     private boolean enabled;
     @Column(nullable = false, length = Constants.EMAIL)
     private String email;
-    @Column(length = Constants.EMAIL_HOST_LENGTH)
-    private String emailHost;
-    @Column(length = Constants.PASSWORD)
-    private String emailPassword;
-    @Column(length = Constants.EMAIL_PORT_LENGTH)
-    private String emailPort;
     @Column(length = Constants.PHONE)
     private String phone;
     @Column(nullable = false, length = Constants.ADDRESS_STREET)
@@ -42,6 +36,7 @@ public class GymAddress {
     private String addressCity;
     @Column(nullable = false, length = Constants.ADDRESS_ZIP)
     private String addressZip;
+    private boolean sepaDirectDebitAvailable;
     private Long countryId;
 
 }

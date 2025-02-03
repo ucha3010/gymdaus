@@ -10,5 +10,6 @@ import java.util.List;
 public interface GymActivityRepository extends JpaRepository<GymActivity, Long> {
 
     List<GymActivity> findAllByGymIdAndEnabledTrueOrderByRegistrationDateAsc(Long gymId);
+    List<GymActivity> findAllByActivityIdAndEnabledTrue(Long activityId);
 
 }

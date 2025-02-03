@@ -3,6 +3,7 @@ package com.gymdaus.core.repository;
 import com.gymdaus.core.entity.Gym;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,4 +24,6 @@ public interface GymRepository extends JpaRepository<Gym, Long> {
     Gym findByPosition(int position);
 
     Gym findTopByOrderByPositionDesc();
+    @Query("SELECT m.name FROM Gym m WHERE m.id = :id")
+    String getNameById(@Param("id") Long id);
 }

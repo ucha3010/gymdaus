@@ -9,13 +9,22 @@ import org.springframework.stereotype.Component;
 public class MapperSignature {
 
     public SignatureModel entity2Model(Signature externObject) {
-        SignatureModel localObject = new SignatureModel();
+        SignatureModel localObject = null;
         if (externObject != null) {
+            localObject = new SignatureModel();
             localObject.setId(externObject.getId());
             localObject.setOperationId(externObject.getOperationId());
             localObject.setOperationName(externObject.getOperationName());
-            localObject.setAttempts(externObject.getAttempts());
+            localObject.setUsername(externObject.getUsername());
             localObject.setSigned(externObject.isSigned());
+            localObject.setRegistrationDate(externObject.getRegistrationDate());
+            localObject.setCode(externObject.getCode());
+            localObject.setAttempts(externObject.getAttempts());
+            localObject.setExpirationDate(externObject.getExpirationDate());
+            localObject.setSentCodeAttempts(externObject.getSentCodeAttempts());
+            localObject.setSignatureLocked(externObject.isSignatureLocked());
+            localObject.setTableToSearch(externObject.getTableToSearch());
+            localObject.setLanguage(externObject.getLanguage());
             if (externObject.getGymId() != 0) {
                 GymModel gymModel = new GymModel();
                 gymModel.setId(externObject.getGymId());
@@ -31,8 +40,16 @@ public class MapperSignature {
             localObject.setId(externObject.getId());
             localObject.setOperationId(externObject.getOperationId());
             localObject.setOperationName(externObject.getOperationName());
-            localObject.setAttempts(externObject.getAttempts());
+            localObject.setUsername(externObject.getUsername());
             localObject.setSigned(externObject.isSigned());
+            localObject.setRegistrationDate(externObject.getRegistrationDate());
+            localObject.setCode(externObject.getCode());
+            localObject.setAttempts(externObject.getAttempts());
+            localObject.setExpirationDate(externObject.getExpirationDate());
+            localObject.setSentCodeAttempts(externObject.getSentCodeAttempts());
+            localObject.setSignatureLocked(externObject.isSignatureLocked());
+            localObject.setTableToSearch(externObject.getTableToSearch());
+            localObject.setLanguage(externObject.getLanguage());
             if (externObject.getGymModel() != null) {
                 localObject.setGymId(externObject.getGymModel().getId());
             } else {

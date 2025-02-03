@@ -6,15 +6,13 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class GymAddressModel {
 
     private Long id;
     private String name;
     private boolean enabled;
     private String email;
-    private String emailHost;
-    private String emailPassword;
-    private String emailPort;
     private String phone;
     private String addressStreet;
     private String addressNumber;
@@ -22,25 +20,6 @@ public class GymAddressModel {
     private String addressCity;
     private String addressZip;
     private CountryModel countryModel;
+    private boolean sepaDirectDebitAvailable;
     private GymModel gymModel;
-
-    @Override
-    public String toString() {
-        return "GymAddressModel{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", enabled=" + enabled +
-                ", email='" + email + '\'' +
-                ", emailHost='" + emailHost + '\'' +
-                ", emailPort='" + emailPort + '\'' +
-                ", phone='" + phone + '\'' +
-                ", addressStreet='" + addressStreet + '\'' +
-                ", addressNumber='" + addressNumber + '\'' +
-                ", addressOther='" + addressOther + '\'' +
-                ", addressCity='" + addressCity + '\'' +
-                ", addressZip='" + addressZip + '\'' +
-                ", countryModel=" + countryModel +
-                ", gymModel=" + gymModel +
-                '}';
-    }
 }

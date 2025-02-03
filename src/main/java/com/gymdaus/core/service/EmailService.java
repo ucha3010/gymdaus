@@ -3,10 +3,7 @@ package com.gymdaus.core.service;
 
 import com.gymdaus.core.entity.User;
 import com.gymdaus.core.exception.SenderException;
-import com.gymdaus.core.model.EmailModel;
-import com.gymdaus.core.model.GymModel;
-import com.gymdaus.core.model.TokenModel;
-import com.gymdaus.core.model.UserModel;
+import com.gymdaus.core.model.*;
 import org.springframework.context.MessageSource;
 
 import java.io.File;
@@ -23,15 +20,13 @@ public interface EmailService {
 
     void sendChangePassword(UserModel userModel, TokenModel tokenModel) throws SenderException;
 
-    void sendCodeValidation(User userModel, String code, List<File> files) throws SenderException;
+    void sendCodeValidation(UserModel userModel, String code, List<File> files, MessageSource messageSource, Locale locale) throws SenderException;
+    void sendUserEnrollment(PdfModel pdfModel, List<File> files, MessageSource messageSource, Locale locale) throws SenderException;
+    void confirmAdminGymEnrollment(PdfModel pdfModel, MessageSource messageSource, Locale locale) throws SenderException;
 /*
     void sendTournamentRegistration(UserModel userModel, DocumentManagerModel documentManagerModel, TournamentRegistrationModel tournamentRegistrationModel) throws SenderException;
 
     void confirmAdminTournamentRegistration(UserAutorizacionModel userAutorizacionModel, TournamentRegistrationModel tournamentRegistrationModel) throws SenderException;
-
-    void sendGymJoining(InscripcionTaekwondoModel inscripcionTaekwondoModel, List<File> files) throws SenderException;
-
-    void confirmAdminGymJoining(InscripcionTaekwondoModel inscripcionTaekwondoModel) throws SenderException;
 
     void confirmAdminSepaSigned(InscripcionTaekwondoModel inscripcionTaekwondoModel) throws SenderException;
 

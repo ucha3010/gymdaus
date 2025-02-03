@@ -18,6 +18,8 @@ public class Enrollment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
+    private String documentLanguage;
     private int enrollmentKind;
     private boolean own;
     private boolean minor;
@@ -28,9 +30,11 @@ public class Enrollment {
     @Column(nullable = false, length = Constants.USERNAME_OR_ID_CARD)
     private String username;
     private Long gymActivityId;
+    private Long gymActivityScheduleId;
     private Long gymMoreRegistrationId;
     @Column(nullable = false, length = Constants.ENROLLMENT_NAME)
     private String name; //del torneo, licencia o lo que sea
+    private String activityName;
     private Date tournamentDate;
     @Column(length = Constants.GYM_NAME)
     private String gymName;
@@ -93,6 +97,10 @@ public class Enrollment {
     private String sepaAccountPerson;
     @Column(length = Constants.SWIFT)
     private String swift;
+    private boolean needsSignature;
     private boolean signed;
+    private Date signedDate;
+    private boolean federationForm;
+    private boolean whatsappForm;
 
 }

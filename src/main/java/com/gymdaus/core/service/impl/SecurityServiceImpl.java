@@ -4,19 +4,23 @@ import com.gymdaus.core.configuration.SessionData;
 import com.gymdaus.core.entity.User;
 import com.gymdaus.core.exception.ValidationException;
 import com.gymdaus.core.model.GymUserModel;
-import com.gymdaus.core.model.SignatureCodeModel;
 import com.gymdaus.core.model.SignatureModel;
 import com.gymdaus.core.model.UserModel;
 import com.gymdaus.core.service.*;
 import com.gymdaus.core.util.Constants;
+import com.gymdaus.core.util.LoggerMapper;
 import com.gymdaus.core.util.Utils;
+import org.apache.logging.log4j.Level;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 
@@ -25,8 +29,6 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Autowired
     private SignatureServiceImpl signatureService;
-    @Autowired
-    private SignatureCodeService signatureCodeService;
     @Autowired
     private EmailService emailService;
     @Autowired
@@ -39,70 +41,58 @@ public class SecurityServiceImpl implements SecurityService {
     private SessionData sessionData;
 
     @Override
-    public String getCode() {
-        String alphabet = "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
-
-        Random r = new Random();
-        StringBuilder code = new StringBuilder();
-        for (int i = 0; i < 6; i++) {
-            code.append(alphabet.charAt(r.nextInt(alphabet.length())));
-        }
-        return code.toString();
-    }
-
-    @Override
-    public ModelAndView sendSignatureCode(ModelAndView modelAndView, SignatureCodeModel signatureCodeModel, User userLogged, List<File> files) {
-        modelAndView.setViewName("firma/envioCodigo");
+    public SignatureModel sendSignatureCode(ModelAndView modelAndView, SignatureModel signatureModel, UserModel userLogged, List<File> files, MessageSource messageSource, Locale locale) {
+        modelAndView.setViewName("signature/sendCode");
         try {
-            signatureCodeModel = signatureCodeService.add(signatureCodeModel);
-            emailService.sendCodeValidation(userLogged, signatureCodeModel.getCode(), files);
+            SignatureModel signatureModelPrevious = signatureService.findByOperationIdAndOperationName(signatureModel.getOperationId(), signatureModel.getOperationName());
+            if (signatureModelPrevious != null) {
+                fillSignature(signatureModel, signatureModelPrevious);
+            }
+            if (signatureModel.isSigned()) {
+                throw new ValidationException(Constants.VALIDATION_ADVICE_OPERATION_SIGNED_PREVIOUSLY, "Operation.signed.previously");
+            } else if (signatureModel.isSignatureLocked()) {
+                throw new ValidationException(Constants.VALIDATION_ADVICE_OPERATION_SIGNATURE_LOCKED, "Operation.signature.locked");
+            }
+            signatureModel.setCode(getCode());
+            signatureModel.setAttempts(0);
+            signatureModel.setRegistrationDate(new Date());
+            signatureModel.setExpirationDate(Utils.addSubtractMinutes(15));
+            SignatureModel signatureModelAux = signatureModel;
+            signatureModel = signatureService.addOrUpdate(signatureModelAux);
+            emailService.sendCodeValidation(userLogged, signatureModel.getCode(), files, messageSource, locale);
+            modelAndView.addObject("userEmail", Utils.obfuscate(userLogged.getEmail()));
+            modelAndView.addObject("signatureModel", new SignatureModel(signatureModel.getOperationId(), signatureModel.getOperationName()));
+        } catch (ValidationException e) {
+            LoggerMapper.log(Level.ERROR, signatureModel.getOperationName(), e.getMessage(), getClass());
+            modelAndView.addObject("enrollmentError", messageSource.getMessage( e.getMessage(), null, locale));
         } catch (Exception e) {
-//            LoggerMapper.log(Level.ERROR, signatureCodeModel.getOperativaOriginal(), e.getMessage(), getClass());
+            LoggerMapper.log(Level.ERROR, signatureModel.getOperationName(), e.getMessage(), getClass());
+            modelAndView.addObject("enrollmentError", messageSource.getMessage("error.sending.email", null, locale));
         }
-
-        if (signatureCodeModel.getId() != 0) {
-            modelAndView.addObject("direccionCorreo", Utils.obfuscate(userLogged.getEmail()));
-/*            modelAndView.addObject("signatureCodeModel", new SignatureCodeModel(signatureCodeModel.getIdOperacion(),
-                    null, null, null, signatureCodeModel.getOperativaOriginal(), signatureCodeModel.getCodigoGimnasio()));*/
-        } else {
-            modelAndView.addObject("inscripcionError", "Ha ocurrido un error. Por favor contacte con el soporte técnico.");
-        }
-        return modelAndView;
+        return signatureModel;
     }
 
     @Override
-    public void codeValidation(String codeSentByUser, String dni, SignatureCodeModel signatureCodeModel) throws ValidationException {
-        if (signatureCodeModel == null || codeSentByUser == null || dni == null) {
-//            throw new ValidationException(Constants.AVISO_VALIDACION_ERROR_DATOS_ENTRADA, "No existen datos a validar");
-        } else {
-            SignatureModel signatureModel = signatureService.findByOperationId(signatureCodeModel.getOperationId());
-            if (signatureModel.getId() == 0) {
-//                throw new ValidationException(Constants.AVISO_VALIDACION_TIEMPO_EXCEDIDO, "Tiempo de validación de código excedido");
-            }
-            signatureModel.setAttempts(signatureModel.getAttempts() + 1);
-            if (!codeSentByUser.equals(signatureCodeModel.getCode()) || !dni.equals(signatureCodeModel.getUsername())) {
-                signatureService.update(signatureModel);
-//                throw new ValidationException(Constants.AVISO_VALIDACION_DATOS_NO_VALIDOS, "Datos de entrada no válidos");
-            } else {
-                signatureModel.setSigned(Boolean.TRUE);
-//                signatureModel.setOperativaOriginal(signatureCodeModel.getOperativaOriginal());
-                signatureService.update(signatureModel);
-            }
+    public void codeValidation(String codeSentByUser, String dni, SignatureModel signatureModel) throws ValidationException {
+        if (Utils.isNullOrEmpty(codeSentByUser) || Utils.isNullOrEmpty(dni)) {
+            throw new ValidationException(Constants.VALIDATION_ADVICE_DATA_IN_ERROR, "there.is.no.data.to.validate");
+        } else if (signatureModel == null || signatureModel.isSignatureLocked()) {
+            throw new ValidationException(Constants.VALIDATION_ADVICE_TIMEOUT, "Code.validation.timeout");
         }
-    }
-
-    @Override
-    public void attemptsValidation(Long operationId) throws ValidationException {
-        SignatureModel signatureModel = signatureService.findByOperationId(operationId);
-        if (signatureModel.getAttempts() > 2) {
-//            throw new ValidationException(Constants.AVISO_VALIDACION_NUMERO_INTENTOS_SUPERADO, "Ha superado el número de intentos válidos");
-        } else if (signatureModel.isSigned()) {
-//            throw new ValidationException(Constants.AVISO_VALIDACION_OPERACION_FIRMADA_ANTES, "La operación ha sido firmada con anterioridad");
-        } else if (signatureModel.getAttempts() == 0) {
-            if (signatureModel.getId() != 0) {
-                signatureService.delete(signatureModel.getId());
-            }
-            signatureService.add(new SignatureModel(operationId));
+        if (signatureModel.isSigned()) {
+            throw new ValidationException(Constants.VALIDATION_ADVICE_OPERATION_SIGNED_PREVIOUSLY, "Operation.signed.previously");
+        }
+        signatureModel.setAttempts(signatureModel.getAttempts() + 1);
+        if (signatureModel.getAttempts() > Constants.MAXIMUM_ATTEMPTS_TO_EVALUATE_CODE) {
+            signatureService.addOrUpdate(signatureModel);
+            throw new ValidationException(Constants.VALIDATION_ADVICE_EXCEEDED_VALID_ATTEMPTS, "You.have.exceeded.valid.attempts");
+        }
+        if (!codeSentByUser.equals(signatureModel.getCode()) || !dni.equals(signatureModel.getUsername())) {
+            signatureService.addOrUpdate(signatureModel);
+            throw new ValidationException(Constants.VALIDATION_ADVICE_INVALID_INPUT_DATA, "Invalid.input.data");
+        } else {
+            signatureModel.setSigned(Boolean.TRUE);
+            signatureService.addOrUpdate(signatureModel);
         }
     }
 
@@ -137,12 +127,19 @@ public class SecurityServiceImpl implements SecurityService {
     @Override
     public void userAccessValidation(String uri) throws AccessDeniedException {
         User user = userService.getLoggedUser();
-        if (sessionData.getUserModel() == null) {
+        if (sessionData.getUserModel() == null || Utils.isNullOrEmpty(sessionData.getUserModel().getUsername())) {
             assignUserLoggedToSession();
         }
         if (user == null || Utils.isNullOrEmpty(user.getUsername()) ||
                 Utils.isNullOrEmpty(sessionData.getUserModel().getUsername()) ||
                 !user.getUsername().equalsIgnoreCase(sessionData.getUserModel().getUsername())) {
+            throw new AccessDeniedException(uri);
+        }
+    }
+
+    @Override
+    public void compareUserValidation(String loggedUsername, String compareUsername, String uri) throws AccessDeniedException {
+        if (Utils.isNullOrEmpty(loggedUsername) || Utils.isNullOrEmpty(compareUsername) || !loggedUsername.equalsIgnoreCase(compareUsername)) {
             throw new AccessDeniedException(uri);
         }
     }
@@ -162,5 +159,27 @@ public class SecurityServiceImpl implements SecurityService {
                 throw new AccessDeniedException(uri);
             }
         }
+    }
+
+    private void fillSignature(SignatureModel signatureModel, SignatureModel signatureModelPrevious) {
+        signatureModel.setId(signatureModelPrevious.getId());
+        signatureModel.setGymModel(signatureModelPrevious.getGymModel());
+        signatureModel.setSigned(signatureModelPrevious.isSigned());
+        signatureModel.setSentCodeAttempts(signatureModelPrevious.getSentCodeAttempts() + 1);
+        if (signatureModel.getSentCodeAttempts() > Constants.MAXIMUM_SENT_CODE_ATTEMPTS && !signatureModelPrevious.isSigned()) {
+            signatureModel.setSignatureLocked(Boolean.TRUE);
+        }
+        signatureModel.setTableToSearch(signatureModelPrevious.getTableToSearch());
+    }
+
+    private String getCode() {
+        String alphabet = "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
+
+        Random r = new Random();
+        StringBuilder code = new StringBuilder();
+        for (int i = 0; i < 6; i++) {
+            code.append(alphabet.charAt(r.nextInt(alphabet.length())));
+        }
+        return code.toString();
     }
 }

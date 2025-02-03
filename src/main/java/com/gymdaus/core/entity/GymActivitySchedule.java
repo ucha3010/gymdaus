@@ -45,8 +45,12 @@ public class GymActivitySchedule {
     private boolean inclusive;
     @Column(nullable = false)
     private Double price;
+    @Column(length = Constants.CURRENCY_CODE)
+    private String currency;
     private int capacity;
     private int position;
     private boolean enabled;
+    private boolean federationForm;
+    private boolean whatsappForm;
 
 }

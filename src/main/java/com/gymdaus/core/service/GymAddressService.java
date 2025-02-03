@@ -21,5 +21,4 @@ public interface GymAddressService {
 
     GymAddressModel enableDisable(Long gymAddressId);
 
-    boolean comparePassword(String oldPassword, Long id);
 }

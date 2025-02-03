@@ -1,4 +1,4 @@
-function validarCif(cif){
+function validateCif(cif){
 	if (!cif || cif.length !== 9) {
 		return false;
 	}
@@ -51,12 +51,12 @@ function validarCif(cif){
 	return String(digit) === control || letters[digit] === control;
 }
 
-function validarEmail(email) {
+function validateEmail(email) {
 	var regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 	return regex.test(email) ? true : false;
 }
 
-function validarNifNie(nifnie) {
+function validateNifNie(nifnie) {
 	  var validChars = 'TRWAGMYFPDXBNJZSQVHLCKET';
 	  var nifRexp = /^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i;
 	  var nieRexp = /^[XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i;
@@ -77,17 +77,17 @@ function validarNifNie(nifnie) {
 	  return false;
 	}
 
-function validarDecimal(valor) {
+function validateDecimal(value) {
     var RE = /^\d*\.?\d*$/;
-    if (RE.test(valor)) {
+    if (RE.test(value)) {
         return true;
     } else {
         return false;
     }
 }
 
-function cambiarComaPorPunto(valor) {
-	return valor.replace(",",".");
+function changeCommaToDot(value) {
+	return value.replace(",",".");
 }
 
 function getAge(dateString) {
@@ -101,9 +101,9 @@ function getAge(dateString) {
     return age;
 }
 
-function mayorEdad(fechaNacimiento, edadLimite) {
-    var edad = getAge(fechaNacimiento);
-    if(edad >= edadLimite) {
+function adult(birthDate, startAdultAge) {
+    var age = getAge(birthDate.value);
+    if(age >= startAdultAge) {
         return true;
     } else {
         return false;

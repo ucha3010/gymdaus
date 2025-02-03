@@ -1,8 +1,11 @@
 package com.gymdaus.core.configuration;
 
+import com.gymdaus.core.util.LoggerMapper;
+import com.gymdaus.core.util.Utils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.logging.log4j.Level;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -22,5 +25,6 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
         } else {
             response.sendRedirect("/login-page/");
         }
+        LoggerMapper.log(Level.WARN, Utils.getMethodName(), exception.getMessage(), this.getClass());
     }
 }

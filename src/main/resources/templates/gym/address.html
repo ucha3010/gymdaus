@@ -9,14 +9,6 @@
         <title th:text="#{address}"></title>
 
         <script type="text/javascript">
-            function showPass() {
-                var x = document.getElementById("emailPassword");
-                    if (x.type === "password") {
-                    x.type = "text";
-                } else {
-                    x.type = "password";
-                }
-            }
 
             function validate(){
 
@@ -115,7 +107,7 @@
                             <label th:text="#{enabled}"></label>
                         </div>
                         <div class="col-9 col-md-8">
-                            <label class="containercheckbox">
+                            <label class="containerCheckbox">
                                 <a href="#" th:href="@{/gym/enabled/address/__${gymAddressModel.id}__}">
                                     <input type="checkbox" th:checked="${gymAddressModel.enabled}">
                                     <span class="checkmark"></span>
@@ -137,7 +129,7 @@
                         </div>
                     </div>
 
-                    <div class="row mb-1">
+                    <!--<div class="row mb-1">
                         <div class="col-3 col-md-2 text-center">
                             <label th:text="#{host.provider}"></label>
                         </div>
@@ -176,7 +168,7 @@
                         <div class="col-9 col-md-10">
                             <input type="checkbox" onclick="showPass()"/><span th:text="#{show.password}"></span>
                         </div>
-                    </div>
+                    </div>-->
 
                     <div class="row mb-1">
                         <div class="col-3 col-md-2 text-center">
@@ -184,6 +176,17 @@
                         </div>
                         <div class="col-9 col-md-8">
                             <input type="text" th:field="*{phone}" id="phone" class="form-control"/>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-3 col-md-2 text-center">
+                            <label th:text="#{Sepa.direct.debit.available}"></label>
+                        </div>
+                        <div class="col-9 col-md-8">
+                            <input type="checkbox" th:field="*{sepaDirectDebitAvailable}" class="form-check-input" id="sepaDirectDebitAvailable" />
                         </div>
                         <div class="col-md-2">
                         </div>

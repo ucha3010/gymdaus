@@ -92,7 +92,7 @@
                             <label th:text="#{enabled}"></label>
                         </div>
                         <div class="col-9 col-md-8">
-                            <label class="containercheckbox">
+                            <label class="containerCheckbox">
                                 <a href="#" th:href="@{/root/gym/enabled/address/__${unit.id}__}">
                                     <input type="checkbox" th:checked="${unit.enabled}">
                                     <span class="checkmark"></span>
@@ -116,22 +116,22 @@
 
                     <div class="row mb-1">
                         <div class="col-3 col-md-2 text-center">
-                            <label th:text="#{host.provider}"></label>
+                            <label th:text="#{phone}"></label>
                         </div>
-                        <div class="col-9 col-md-3">
-                            <input type="text" th:value="${unit.emailHost+':'+unit.emailPort}" class="form-control"
-                                   readonly/>
+                        <div class="col-9 col-md-8">
+                            <input type="text" th:value="${unit.phone}" class="form-control" readonly/>
                         </div>
-                        <div class="col-md-7">
+                        <div class="col-md-2">
                         </div>
                     </div>
 
                     <div class="row mb-1">
                         <div class="col-3 col-md-2 text-center">
-                            <label th:text="#{phone}"></label>
+                            <label th:text="#{Sepa.direct.debit.available}"></label>
                         </div>
                         <div class="col-9 col-md-8">
-                            <input type="text" th:value="${unit.phone}" class="form-control" readonly/>
+                            <img th:if="${unit.sepaDirectDebitAvailable}" class="check-img" src="#" th:src="@{/imgs/ok.png}" alt="Enabled">
+                            <img th:if="${!unit.sepaDirectDebitAvailable}" class="check-img" src="#" th:src="@{/imgs/ko.png}" alt="Disabled">
                         </div>
                         <div class="col-md-2">
                         </div>
